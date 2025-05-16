@@ -197,6 +197,29 @@ COMPOSE_FILE=docker-compose.yml:docker-compose.collabora.yml:traefik/opencloud.y
 
 This allows tools like Ansible or CI/CD pipelines to deploy the stack without modifying the compose files.
 
+### Custom compose file overrides
+
+You can create custom compose files to override specific settings after creating a `custom` directory:
+```bash
+mkdir -p custom
+```
+
+Then create a `docker-compose.override.yml` file in the `custom` directory with your overrides.
+
+This folder is ignored by git, allowing you to customize your deployment without affecting the repository. This can be useful in scenarios like portainer where the git repository is configured as a stack.
+
+You can for example add custom labels to the OpenCloud service:
+
+```yaml
+services:
+  opencloud:
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.opencloud.rule=Host(`cloud.opencloud.test`)"
+      - "traefik.http.services.opencloud.loadbalancer.server.port=80"
+      - "traefik.http.routers.opencloud.tls.certresolver=my-resolver"
+```
+
 ## Troubleshooting
 
 ### Common Issues
