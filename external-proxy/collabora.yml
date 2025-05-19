@@ -1,0 +1,10 @@
+---
+services:
+  collaboration:
+    ports:
+      # expose the wopi server
+      - "9300:9300"
+  collabora:
+    ports:
+      # expose the collabora server
+      - "9980:9980"

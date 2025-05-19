@@ -1,0 +1,60 @@
+---
+services:
+  opencloud:
+    image: ${OC_DOCKER_IMAGE:-opencloudeu/opencloud-rolling}:${OC_DOCKER_TAG:-latest}
+    # changelog: https://github.com/opencloud-eu/opencloud/tree/main/changelog
+    # release notes: https://docs.opencloud.eu/opencloud_release_notes.html
+    networks:
+      opencloud-net:
+    entrypoint:
+      - /bin/sh
+    # run opencloud init to initialize a configuration file with random secrets
+    # it will fail on subsequent runs, because the config file already exists
+    # therefore we ignore the error and then start the opencloud server
+    command: ["-c", "opencloud init || true; opencloud server"]
+    environment:
+      # enable services that are not started automatically
+      OC_ADD_RUN_SERVICES: ${START_ADDITIONAL_SERVICES}
+      OC_URL: https://${OC_DOMAIN:-cloud.opencloud.test}
+      OC_LOG_LEVEL: ${LOG_LEVEL:-info}
+      OC_LOG_COLOR: "${LOG_PRETTY:-false}"
+      OC_LOG_PRETTY: "${LOG_PRETTY:-false}"
+      # do not use SSL between the reverse proxy and OpenCloud
+      PROXY_TLS: "false"
+      # INSECURE: needed if OpenCloud / reverse proxy is using self generated certificates
+      OC_INSECURE: "${INSECURE:-false}"
+      # basic auth (not recommended, but needed for eg. WebDav clients that do not support OpenID Connect)
+      PROXY_ENABLE_BASIC_AUTH: "${PROXY_ENABLE_BASIC_AUTH:-false}"
+      # admin user password
+      IDM_ADMIN_PASSWORD: "${ADMIN_PASSWORD:-admin}" # this overrides the admin password from the configuration file
+      # demo users
+      IDM_CREATE_DEMO_USERS: "${DEMO_USERS:-false}"
+      # email server (if configured)
+      NOTIFICATIONS_SMTP_HOST: "${SMTP_HOST}"
+      NOTIFICATIONS_SMTP_PORT: "${SMTP_PORT}"
+      NOTIFICATIONS_SMTP_SENDER: "${SMTP_SENDER:-OpenCloud notifications <notifications@${OC_DOMAIN:-cloud.opencloud.test}>}"
+      NOTIFICATIONS_SMTP_USERNAME: "${SMTP_USERNAME}"
+      NOTIFICATIONS_SMTP_PASSWORD: "${SMTP_PASSWORD}"
+      NOTIFICATIONS_SMTP_INSECURE: "${SMTP_INSECURE}"
+      NOTIFICATIONS_SMTP_AUTHENTICATION: "${SMTP_AUTHENTICATION}"
+      NOTIFICATIONS_SMTP_ENCRYPTION: "${SMTP_TRANSPORT_ENCRYPTION:-none}"
+      FRONTEND_ARCHIVER_MAX_SIZE: "10000000000"
+      PROXY_CSP_CONFIG_FILE_LOCATION: /etc/opencloud/csp.yaml
+      # enable to allow using the banned passwords list
+      OC_PASSWORD_POLICY_BANNED_PASSWORDS_LIST: banned-password-list.txt
+    volumes:
+      - ./config/opencloud/csp.yaml:/etc/opencloud/csp.yaml
+      - ./config/opencloud/banned-password-list.txt:/etc/opencloud/banned-password-list.txt
+      # configure the .env file to use own paths instead of docker internal volumes
+      - ${OC_CONFIG_DIR:-opencloud-config}:/etc/opencloud
+      - ${OC_DATA_DIR:-opencloud-data}:/var/lib/opencloud
+    logging:
+      driver: ${LOG_DRIVER:-local}
+    restart: always
+
+volumes:
+  opencloud-config:
+  opencloud-data:
+
+networks:
+  opencloud-net:
