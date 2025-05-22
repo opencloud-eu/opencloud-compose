@@ -2,7 +2,7 @@
 services:
   opencloud:
     labels:
-      - caddy: `${OC_DOMAIN:-cloud.opencloud.test}}`
+      - "caddy=`${OC_DOMAIN:-cloud.opencloud.test}}`"
       - caddy.reverse_proxy: "{{upstreams 9200}}" 
     
   caddy:
@@ -19,25 +19,7 @@ services:
       caddy.acme_dns: "cloudflare ${CADDY_CF_APIKEY}"            
       # When set here, you don't need to set it for each service individually
       caddy.acme_dns.ca:  "${CADDY_ACME_CASERVER:-https://acme-v02.api.letsencrypt.org/directory}"
-   
-# TRAEFIK config stuff
-      # define entrypoints
-      #- "--entryPoints.http.address=:80"
-      #- "--entryPoints.http.http.redirections.entryPoint.to=https"
-      #- "--entryPoints.http.http.redirections.entryPoint.scheme=https"
-      #- "--entryPoints.https.address=:443"
-      # change default timeouts for long-running requests
-      # this is needed for webdav clients that do not support the TUS protocol
-      #- "--entryPoints.https.transport.respondingTimeouts.readTimeout=12h"
-      #- "--entryPoints.https.transport.respondingTimeouts.writeTimeout=12h"
-      #- "--entryPoints.https.transport.respondingTimeouts.idleTimeout=3m"
-      # docker provider (get configuration from container labels)
-      #- "--providers.docker.endpoint=unix:///var/run/docker.sock"
-      #- "--providers.docker.exposedByDefault=false"
-      # access log
-      #- "--accessLog=true"
-      #- "--accessLog.format=json"
-      #- "--accessLog.fields.headers.names.X-Request-Id=keep"
+
     cap_add:
       - NET_ADMIN
     container_name: caddy
@@ -50,10 +32,10 @@ services:
       - "443:443"
       - "443:443/udp"
     volumes:
-      - "${CADDY_DIR:-mnt/docker/caddy}"/Caddyfile:/etc/caddy/Caddyfile
-      - "${CADDY_DIR:-mnt/docker/caddy}"/site:/srv
-      - "${CADDY_DIR:-mnt/docker/caddy}"/data:/data
-      - "${CADDY_DIR:-mnt/docker/caddy}"/config:/config
+      - "${CADDY_DIR:-mnt/docker/caddy}/Caddyfile:/etc/caddy/Caddyfile"
+      - "${CADDY_DIR:-mnt/docker/caddy}/site:/srv"
+      - "${CADDY_DIR:-mnt/docker/caddy}/data:/data"
+      - "${CADDY_DIR:-mnt/docker/caddy}/config:/config"
       - "${DOCKER_SOCKET_PATH:-/var/run/docker.sock}:/var/run/docker.sock:ro"
 #      - /run/user/1000/docker.sock:/var/run/docker.sock
 #      - /var/run/docker.sock:/var/run/docker.sock
