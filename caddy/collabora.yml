@@ -9,8 +9,9 @@ services:
   collaboration:
     labels:
       - caddy: `${WOPISERVER_DOMAIN:-wopiserver.opencloud.test}`
-      - caddy.reverse_proxy: "{{upstreams 9300}}"        
+      - "caddy.reverse_proxy=('{{upstreams 9300}}')"
+            
   collabora:
     labels:
-      - caddy: `${COLLABORA_DOMAIN:-collabora.opencloud.test}`
-      - caddy.reverse_proxy: "{{upstreams 9980}}"    
+      - "caddy=(`${COLLABORA_DOMAIN:-collabora.opencloud.test}`)"
+      - "caddy.reverse_proxy=('{{upstreams 9980}}')"
