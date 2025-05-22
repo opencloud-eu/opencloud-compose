@@ -1,0 +1,16 @@
+---
+services:
+  caddy:
+    networks:
+      opencloud-net:
+        aliases:
+          - ${COLLABORA_DOMAIN:-collabora.opencloud.test}
+          - ${WOPISERVER_DOMAIN:-wopiserver.opencloud.test}
+  collaboration:
+    labels:
+      - caddy: `${WOPISERVER_DOMAIN:-wopiserver.opencloud.test}`
+      - caddy.reverse_proxy: "{{upstreams 9300}}"        
+  collabora:
+    labels:
+      - caddy: `${COLLABORA_DOMAIN:-collabora.opencloud.test}`
+      - caddy.reverse_proxy: "{{upstreams 9980}}"    
