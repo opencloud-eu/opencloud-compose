@@ -44,7 +44,7 @@ services:
       opencloud-net:
         aliases:
           - ${OC_DOMAIN:-cloud.opencloud.test}
-    restart: always
+
 
 volumes:
   ${CADDY_DIR:-mnt/docker/caddy}
