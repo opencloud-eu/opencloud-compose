@@ -7,3 +7,6 @@ services:
       ports:
         # expose the opencloud server
         - "9200:9200"
+      labels:
+        caddy: "${OC_DOMAIN:-cloud.opencloud.test}"
+        caddy.reverse_proxy: "{{upstreams 9200}}"
