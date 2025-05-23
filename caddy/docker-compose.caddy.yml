@@ -1,16 +1,6 @@
 services:
   caddy:
-    labels:                                              # Global options
-      caddy.log.level: "info"
-      caddy.log.format: "console"
-      caddy.log.include: "http.log.access"
-      caddy.servers.protocols: "h1"
-      # change email and apikey from cloudflare
-      caddy.email: EMAIL@here.de                     # needs for acme CERT registration account
-      caddy.acme_dns: "cloudflare API KEY"            # When set here, you don't need to set it for each service individually
-      caddy.acme_dns.ca:  "https://acme-v02.api.letsencrypt.org/directory"
-
-    image: ffuhrnew/caddylabel:2.9.1
+    image: ghcr.io/caddybuilds/caddy-cloudflare:latest
     cap_add:
       - NET_ADMIN
     container_name: caddy
@@ -28,13 +18,11 @@ services:
       - /mnt/docker/caddy/data:/data
       - /mnt/docker/caddy/config:/config
       - /var/run/docker.sock:/var/run/docker.sock
-
     networks:
       opencloud-net: null
 networks:
   opencloud-net:
     name: opencloud-compose_opencloud-net
-
 volumes:
   data:
   config:
