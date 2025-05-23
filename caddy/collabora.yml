@@ -1,0 +1,18 @@
+---
+services:
+  collaboration:
+    ports:
+      # expose the wopi server
+      - "9300:9300"
+    labels:
+      caddy: "${WOPISERVER_DOMAIN:-wopiserver.opencloud.test}"
+      caddy.reverse_proxy: "{{upstreams 9300}}"
+    volumes:  
+      - ${OC_DATA_DIR:-opencloud-data}:/var/lib/opencloud  
+  collabora:
+    ports:
+      # expose the collabora server
+      - "9980:9980"
+    labels:
+      caddy: "${COLLABORA_DOMAIN:-collabora.opencloud.test}"
+      caddy.reverse_proxy: "{{upstreams 9980}}"

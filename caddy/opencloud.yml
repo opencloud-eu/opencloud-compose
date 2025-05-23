@@ -1,0 +1,12 @@
+---
+services:
+  opencloud:
+      environment:
+        # bind to all interfaces
+        PROXY_HTTP_ADDR: "0.0.0.0:9200"
+      ports:
+        # expose the opencloud server
+        - "9200:9200"
+      labels:
+        caddy: "${OC_DOMAIN:-cloud.opencloud.test}"
+        caddy.reverse_proxy: "{{upstreams 9200}}"
