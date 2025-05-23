@@ -40,7 +40,7 @@ services:
       OC_URL: https://${OC_DOMAIN:-cloud.opencloud.test}
     volumes:
       # configure the .env file to use own paths instead of docker internal volumes
-      - ${OC_CONFIG_DIR:-opencloud-config}:/etc/opencloud
+      - ${OC_CONFIG_DIR:-opencloud-config}:/etc/opencloud      
     logging:
       driver: ${LOG_DRIVER:-local}
     restart: always
