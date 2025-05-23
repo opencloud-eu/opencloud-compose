@@ -1,9 +1,6 @@
 ---
 services:
   opencloud:
-    labels:
-      caddy: "${OC_DOMAIN:-cloud.opencloud.test}"
-      caddy.reverse_proxy: "{{upstreams 9200}}"
     image: ${OC_DOCKER_IMAGE:-opencloudeu/opencloud-rolling}:${OC_DOCKER_TAG:-latest}
     # changelog: https://github.com/opencloud-eu/opencloud/tree/main/changelog
     # release notes: https://docs.opencloud.eu/opencloud_release_notes.html
