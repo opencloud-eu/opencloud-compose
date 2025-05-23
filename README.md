@@ -120,6 +120,12 @@ This exposes the necessary ports:
 - Collabora: 9980
 - WOPI server: 9300
 
+
+**Please note:**  
+If you're using **Nginx Proxy Manager (NPM)**, you **should NOT** activate **"Block Common Exploits"** for the Proxy Host.  
+Otherwise, the desktop app authentication will return **error 403 Forbidden**.
+
+
 ## Configuration
 
 ### Environment Variables
