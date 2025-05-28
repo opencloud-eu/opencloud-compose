@@ -2,6 +2,7 @@
   "id": "openCloud",
   "realm": "openCloud",
   "displayName": "OpenCloud",
+  "loginTheme": "opencloud",
   "notBefore": 0,
   "defaultSignatureAlgorithm": "RS256",
   "revokeRefreshToken": false,

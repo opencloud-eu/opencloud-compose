@@ -35,7 +35,7 @@ dn: cn=apollos,ou=groups,dc=opencloud,dc=eu
 objectClass: groupOfNames
 objectClass: top
 cn: apollos
-description: Contributors to the Appollo mission
+description: Contributors to the Apollo mission
 member: uid=margaret,ou=users,dc=opencloud,dc=eu
 
 dn: cn=unix-lovers,ou=groups,dc=opencloud,dc=eu

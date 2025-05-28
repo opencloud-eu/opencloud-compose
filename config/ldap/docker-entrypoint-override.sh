@@ -1,5 +1,5 @@
 #!/bin/bash
-printenv
+echo "Running custom LDAP entrypoint script..."
 
 if [ ! -f /opt/bitnami/openldap/share/openldap.key ]
 then	

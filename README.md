@@ -164,22 +164,23 @@ The configuration is managed through environment variables in the `.env` file:
 
 Key variables:
 
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `COMPOSE_FILE` | Colon-separated list of compose files to use | (commented out) |
-| `OC_DOMAIN` | OpenCloud domain | cloud.opencloud.test |
-| `OC_DOCKER_TAG` | OpenCloud image tag | latest |
-| `ADMIN_PASSWORD` | Admin password | admin |
-| `OC_CONFIG_DIR` | Config directory path | (Docker volume) |
-| `OC_DATA_DIR` | Data directory path | (Docker volume) |
-| `INSECURE` | Skip certificate validation | true |
-| `COLLABORA_DOMAIN` | Collabora domain | collabora.opencloud.test |
-| `WOPISERVER_DOMAIN` | WOPI server domain | wopiserver.opencloud.test |
-| `KEYCLOAK_DOMAIN` | Keycloak domain | keycloak.opencloud.test |
-| `KEYCLOAK_ADMIN_USER` | Keycloak admin username | admin |
-| `KEYCLOAK_ADMIN_PASSWORD` | Keycloak admin password | admin |
-| `KEYCLOAK_REALM` | Keycloak realm name | openCloud |
-| `LDAP_ADMIN_PASSWORD` | LDAP admin password | admin |
+| Variable                  | Description                                  | Default                   |
+|---------------------------|----------------------------------------------|---------------------------|
+| `COMPOSE_FILE`            | Colon-separated list of compose files to use | (commented out)           |
+| `OC_DOMAIN`               | OpenCloud domain                             | cloud.opencloud.test      |
+| `OC_DOCKER_TAG`           | OpenCloud image tag                          | latest                    |
+| `ADMIN_PASSWORD`          | Admin password                               | admin                     |
+| `OC_CONFIG_DIR`           | Config directory path                        | (Docker volume)           |
+| `OC_DATA_DIR`             | Data directory path                          | (Docker volume)           |
+| `INSECURE`                | Skip certificate validation                  | true                      |
+| `COLLABORA_DOMAIN`        | Collabora domain                             | collabora.opencloud.test  |
+| `WOPISERVER_DOMAIN`       | WOPI server domain                           | wopiserver.opencloud.test |
+| `KEYCLOAK_DOMAIN`         | Keycloak domain                              | keycloak.opencloud.test   |
+| `KEYCLOAK_ADMIN`          | Keycloak admin username                      | kcadmin                   |
+| `KEYCLOAK_ADMIN_PASSWORD` | Keycloak admin password                      | admin                     |
+| `LDAP_BIND_PASSWORD`      | LDAP password for the bind user              | admin                     |
+| `KC_DB_USERNAME`          | Database user for keycloak                   | keycloak                  |
+| `KC_DB_PASSWORD`          | Database password for keycloak               | keycloak                  |
 
 See `.env.example` for all available options and their documentation.
 
