@@ -1,0 +1,114 @@
+---
+services:
+  opencloud:
+    environment:
+      # Ldap IDP specific configuration
+      OC_LDAP_URI: ldaps://ldap-server:1636
+      OC_LDAP_INSECURE: "true"
+      OC_LDAP_BIND_DN: "cn=admin,dc=opencloud,dc=eu"
+      OC_LDAP_BIND_PASSWORD: ${LDAP_ADMIN_PASSWORD:-admin}
+      OC_LDAP_GROUP_BASE_DN: "ou=groups,dc=opencloud,dc=eu"
+      OC_LDAP_GROUP_SCHEMA_ID: "entryUUID"
+      OC_LDAP_USER_BASE_DN: "ou=users,dc=opencloud,dc=eu"
+      OC_LDAP_USER_FILTER: "(objectclass=inetOrgPerson)"
+      OC_LDAP_USER_SCHEMA_ID: "entryUUID"
+      OC_LDAP_DISABLE_USER_MECHANISM: "none"
+      GRAPH_LDAP_SERVER_UUID: "true"
+      GRAPH_LDAP_GROUP_CREATE_BASE_DN: "ou=custom,ou=groups,dc=opencloud,dc=eu"
+      GRAPH_LDAP_REFINT_ENABLED: "true" # osixia has refint enabled.
+      FRONTEND_READONLY_USER_ATTRIBUTES: "user.onPremisesSamAccountName,user.displayName,user.mail,user.passwordProfile,user.accountEnabled,user.appRoleAssignments"
+      OC_LDAP_SERVER_WRITE_ENABLED: "false" # the ldap is managed by Keycloak, so it is not writable by OpenCloud
+      # OC_RUN_SERVICES specifies to start all services except idm and idp. These are replaced by external services
+      OC_EXCLUDE_RUN_SERVICES: idm,idp
+      # Keycloak IDP specific configuration
+      PROXY_AUTOPROVISION_ACCOUNTS: "false"
+      PROXY_ROLE_ASSIGNMENT_DRIVER: "oidc"
+      OC_OIDC_ISSUER: https://${KEYCLOAK_DOMAIN:-keycloak.opencloud.test}/realms/${KEYCLOAK_REALM:-openCloud}
+      PROXY_OIDC_REWRITE_WELLKNOWN: "true"
+      WEB_OIDC_CLIENT_ID: ${OC_OIDC_CLIENT_ID:-web}
+      PROXY_USER_OIDC_CLAIM: "uuid"
+      PROXY_USER_CS3_CLAIM: "userid"
+      WEB_OPTION_ACCOUNT_EDIT_LINK_HREF: "https://${KEYCLOAK_DOMAIN:-keycloak.opencloud.test}/realms/${KEYCLOAK_REALM:-openCloud}/account"
+      # admin and demo accounts must be created in Keycloak
+      OC_ADMIN_USER_ID: ""
+      SETTINGS_SETUP_DEFAULT_ASSIGNMENTS: "false"
+      GRAPH_ASSIGN_DEFAULT_USER_ROLE: "false"
+      GRAPH_USERNAME_MATCH: "none"
+      KEYCLOAK_DOMAIN: ${KEYCLOAK_DOMAIN:-keycloak.opencloud.test}
+
+  ldap-server:
+    image: bitnami/openldap:2.6
+    networks:
+      opencloud-net:
+    entrypoint: [ "/bin/sh", "/opt/bitnami/scripts/openldap/docker-entrypoint-override.sh", "/opt/bitnami/scripts/openldap/run.sh" ]
+    environment:
+      BITNAMI_DEBUG: true
+      LDAP_TLS_VERIFY_CLIENT: never
+      LDAP_ENABLE_TLS: "yes"
+      LDAP_TLS_CA_FILE: /opt/bitnami/openldap/share/openldap.crt
+      LDAP_TLS_CERT_FILE: /opt/bitnami/openldap/share/openldap.crt
+      LDAP_TLS_KEY_FILE: /opt/bitnami/openldap/share/openldap.key
+      LDAP_ROOT: "dc=opencloud,dc=eu"
+      LDAP_ADMIN_PASSWORD: ${LDAP_ADMIN_PASSWORD:-admin}
+    ports:
+      - "127.0.0.1:389:1389"
+      - "127.0.0.1:636:1636"
+    volumes:
+      - ./config/ldap/ldif:/ldifs
+      - ./config/ldap/docker-entrypoint-override.sh:/opt/bitnami/scripts/openldap/docker-entrypoint-override.sh
+      - ldap-certs:/opt/bitnami/openldap/share
+      - ldap-data:/bitnami/openldap
+    logging:
+      driver: ${LOG_DRIVER:-local}
+    restart: always
+
+  postgres:
+    image: postgres:alpine
+    networks:
+      opencloud-net:
+    volumes:
+      - keycloak_postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: keycloak
+    logging:
+      driver: ${LOG_DRIVER:-local}
+    restart: always
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:25.0.0
+    networks:
+      opencloud-net:
+    command: [ "start", "--proxy=edge", "--spi-connections-http-client-default-disable-trust-manager=${INSECURE:-false}", "--import-realm" ]
+    entrypoint: [ "/bin/sh", "/opt/keycloak/bin/docker-entrypoint-override.sh" ]
+    volumes:
+      - "./config/keycloak/docker-entrypoint-override.sh:/opt/keycloak/bin/docker-entrypoint-override.sh"
+      - "./config/keycloak/opencloud-realm.dist.json:/opt/keycloak/data/import-dist/opencloud-realm.json"
+    environment:
+      OC_DOMAIN: ${OC_DOMAIN:-cloud.opencloud.test}
+      KC_HOSTNAME: ${KEYCLOAK_DOMAIN:-keycloak.opencloud.test}
+      KC_DB: postgres
+      KC_DB_URL: "jdbc:postgresql://postgres:5432/keycloak"
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: keycloak
+      KC_FEATURES: impersonation
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN_USER:-admin}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-admin}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.keycloak.entrypoints=https"
+      - "traefik.http.routers.keycloak.rule=Host(`${KEYCLOAK_DOMAIN:-keycloak.opencloud.test}`)"
+      - "traefik.http.routers.keycloak.tls.certresolver=http"
+      - "traefik.http.routers.keycloak.service=keycloak"
+      - "traefik.http.services.keycloak.loadbalancer.server.port=8080"
+    depends_on:
+      - postgres
+    logging:
+      driver: ${LOG_DRIVER:-local}
+    restart: always
+
+volumes:
+  keycloak_postgres_data:
+  ldap-certs:
+  ldap-data:
