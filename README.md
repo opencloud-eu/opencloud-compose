@@ -9,6 +9,7 @@ OpenCloud Compose offers a modular approach to deploying OpenCloud with several 
 - **Standard deployment** with Traefik reverse proxy and Let's Encrypt certificates
 - **External proxy** support for environments with existing reverse proxies (like Nginx, Caddy, etc.)
 - **Collabora Online** integration for document editing
+- **Keycloak and LDAP** integration for centralized identity management
 
 ## Quick Start Guide
 
@@ -54,6 +55,7 @@ OpenCloud Compose offers a modular approach to deploying OpenCloud with several 
    ```
    127.0.0.1 cloud.opencloud.test
    127.0.0.1 traefik.opencloud.test
+   127.0.0.1 keycloak.opencloud.test
    ```
 
 5. **Access OpenCloud**:
@@ -80,6 +82,30 @@ OpenCloud Compose offers a modular approach to deploying OpenCloud with several 
    ```
 
 ## Deployment Options
+
+### With Keycloak and LDAP using a Shared User Directory
+
+OpenCloud can be deployed with Keycloak for identity management and LDAP for the shared user directory:
+
+Using `-f` flags:
+```bash
+docker compose -f docker-compose.yml -f idm/ldap-keycloak.yml -f traefik/opencloud.yml -f traefik/ldap-keycloak.yml up -d
+```
+
+Or by setting in `.env`:
+```
+COMPOSE_FILE=docker-compose.yml:idm/ldap-keycloak.yml:traefik/opencloud.yml:traefik/ldap-keycloak.yml
+```
+
+Add to `/etc/hosts` for local development:
+```
+127.0.0.1 keycloak.opencloud.test
+```
+
+This setup includes:
+- Keycloak for authentication and identity management
+- Shared LDAP server as a user directory with demo users and groups
+- Integration with Keycloak using OpenCloud clients (`web`, `OpenCloudDesktop`, `OpenCloudAndroid`, `OpenCloudIOS`)
 
 ### With Collabora Online
 
@@ -149,6 +175,11 @@ Key variables:
 | `INSECURE` | Skip certificate validation | true |
 | `COLLABORA_DOMAIN` | Collabora domain | collabora.opencloud.test |
 | `WOPISERVER_DOMAIN` | WOPI server domain | wopiserver.opencloud.test |
+| `KEYCLOAK_DOMAIN` | Keycloak domain | keycloak.opencloud.test |
+| `KEYCLOAK_ADMIN_USER` | Keycloak admin username | admin |
+| `KEYCLOAK_ADMIN_PASSWORD` | Keycloak admin password | admin |
+| `KEYCLOAK_REALM` | Keycloak realm name | openCloud |
+| `LDAP_ADMIN_PASSWORD` | LDAP admin password | admin |
 
 See `.env.example` for all available options and their documentation.
 
@@ -173,9 +204,10 @@ This repository uses a modular approach with multiple compose files:
 
 - `docker-compose.yml` - Core OpenCloud service
 - `docker-compose.collabora.yml` - Collabora Online integration
+- `idm/` - Identity management configurations (Keycloak & LDAP)
 - `traefik/` - Traefik reverse proxy configurations
 - `external-proxy/` - Configuration for external reverse proxies
-- `config/` - Configuration files for OpenCloud
+- `config/` - Configuration files for OpenCloud, Keycloak, and LDAP
 
 ## Advanced Usage
 
@@ -188,9 +220,21 @@ The `COMPOSE_FILE` environment variable is a powerful way to manage complex Dock
 - It allows you to run just `docker compose up -d` without specifying `-f` flags
 - Perfect for automation, CI/CD pipelines, and consistent deployments
 
-Example configuration for production with Collabora:
+Example configurations:
+
+Production with Collabora:
 ```
 COMPOSE_FILE=docker-compose.yml:docker-compose.collabora.yml:traefik/opencloud.yml:traefik/collabora.yml
+```
+
+Production with Keycloak and LDAP:
+```
+COMPOSE_FILE=docker-compose.yml:idm/ldap-keycloak.yml:traefik/opencloud.yml:traefik/ldap-keycloak.yml
+```
+
+Production with both Collabora and Keycloak/LDAP:
+```
+COMPOSE_FILE=docker-compose.yml:docker-compose.collabora.yml:idm/ldap-keycloak.yml:traefik/opencloud.yml:traefik/collabora.yml:traefik/ldap-keycloak.yml
 ```
 
 ### Automation and GitOps
