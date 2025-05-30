@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const link = document.createElement("a");
         link.href = url;
+        link.target = "_blank";
 
         const parent = logoTextSelector.parentNode;
         parent.insertBefore(link, logoTextSelector);
