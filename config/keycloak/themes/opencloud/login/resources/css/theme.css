@@ -1,9 +1,8 @@
 :root {
     --pf-global--primary-color--100: #e2baff;
     --pf-global--primary-color--200: #e2baff;
-    --pf-global--Color--light-100: #20434f;
     --pf-global--primary-color--dark-100: #e2baff;
-    --pf-global--danger-color--100: #e2baff;
+    --pf-global--Color--light-100: #20434f;
 }
 
 @font-face {
