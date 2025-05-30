@@ -73,7 +73,7 @@ OpenCloud Compose offers a modular approach to deploying OpenCloud with several 
 
 2. **Configure deployment options** in `.env`:
    ```
-   COMPOSE_FILE=docker-compose.yml:docker-compose.collabora.yml:traefik/opencloud.yml:traefik/collabora.yml
+   COMPOSE_FILE=docker-compose.yml:weboffice/collabora.yml:traefik/opencloud.yml:traefik/collabora.yml
    ```
 
 3. **Start OpenCloud**:
@@ -113,12 +113,12 @@ Include Collabora for document editing using either method:
 
 Using `-f` flags:
 ```bash
-docker compose -f docker-compose.yml -f docker-compose.collabora.yml -f traefik/opencloud.yml -f traefik/collabora.yml up -d
+docker compose -f docker-compose.yml -f weboffice/collabora.yml -f traefik/opencloud.yml -f traefik/collabora.yml up -d
 ```
 
 Or by setting in `.env`:
 ```
-COMPOSE_FILE=docker-compose.yml:docker-compose.collabora.yml:traefik/opencloud.yml:traefik/collabora.yml
+COMPOSE_FILE=docker-compose.yml:weboffice/collabora.yml:traefik/opencloud.yml:traefik/collabora.yml
 ```
 
 Add to `/etc/hosts` for local development:
@@ -133,12 +133,12 @@ If you already have a reverse proxy (Nginx, Caddy, etc.), use either method:
 
 Using `-f` flags:
 ```bash
-docker compose -f docker-compose.yml -f docker-compose.collabora.yml -f external-proxy/opencloud.yml -f external-proxy/collabora.yml up -d
+docker compose -f docker-compose.yml -f weboffice/collabora.yml -f external-proxy/opencloud.yml -f external-proxy/collabora.yml up -d
 ```
 
 Or by setting in `.env`:
 ```
-COMPOSE_FILE=docker-compose.yml:docker-compose.collabora.yml:external-proxy/opencloud.yml:external-proxy/collabora.yml
+COMPOSE_FILE=docker-compose.yml:weboffice/collabora.yml:external-proxy/opencloud.yml:external-proxy/collabora.yml
 ```
 
 This exposes the necessary ports:
@@ -204,7 +204,8 @@ chown -R 1000:1000 /path/to/opencloud
 This repository uses a modular approach with multiple compose files:
 
 - `docker-compose.yml` - Core OpenCloud service
-- `docker-compose.collabora.yml` - Collabora Online integration
+- `weboffice/` - Web office integrations (Collabora Online)
+- `storage/` - Storage backend configurations (decomposeds3)
 - `idm/` - Identity management configurations (Keycloak & LDAP)
 - `traefik/` - Traefik reverse proxy configurations
 - `external-proxy/` - Configuration for external reverse proxies
@@ -225,7 +226,7 @@ Example configurations:
 
 Production with Collabora:
 ```
-COMPOSE_FILE=docker-compose.yml:docker-compose.collabora.yml:traefik/opencloud.yml:traefik/collabora.yml
+COMPOSE_FILE=docker-compose.yml:weboffice/collabora.yml:traefik/opencloud.yml:traefik/collabora.yml
 ```
 
 Production with Keycloak and LDAP:
@@ -235,7 +236,7 @@ COMPOSE_FILE=docker-compose.yml:idm/ldap-keycloak.yml:traefik/opencloud.yml:trae
 
 Production with both Collabora and Keycloak/LDAP:
 ```
-COMPOSE_FILE=docker-compose.yml:docker-compose.collabora.yml:idm/ldap-keycloak.yml:traefik/opencloud.yml:traefik/collabora.yml:traefik/ldap-keycloak.yml
+COMPOSE_FILE=docker-compose.yml:weboffice/collabora.yml:idm/ldap-keycloak.yml:traefik/opencloud.yml:traefik/collabora.yml:traefik/ldap-keycloak.yml
 ```
 
 ### Automation and GitOps
@@ -243,7 +244,7 @@ COMPOSE_FILE=docker-compose.yml:docker-compose.collabora.yml:idm/ldap-keycloak.y
 For automated deployments, using the `COMPOSE_FILE` variable in `.env` is recommended:
 
 ```
-COMPOSE_FILE=docker-compose.yml:docker-compose.collabora.yml:traefik/opencloud.yml:traefik/collabora.yml
+COMPOSE_FILE=docker-compose.yml:weboffice/collabora.yml:traefik/opencloud.yml:traefik/collabora.yml
 ```
 
 This allows tools like Ansible or CI/CD pipelines to deploy the stack without modifying the compose files.
