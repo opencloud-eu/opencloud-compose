@@ -10,6 +10,7 @@ OpenCloud Compose offers a modular approach to deploying OpenCloud with several 
 - **External proxy** support for environments with existing reverse proxies (like Nginx, Caddy, etc.)
 - **Collabora Online** integration for document editing
 - **Keycloak and LDAP** integration for centralized identity management
+- **Full text search** with Apache Tika for content extraction and metadata analysis
 
 ## Quick Start Guide
 
@@ -127,6 +128,25 @@ Add to `/etc/hosts` for local development:
 127.0.0.1 wopiserver.opencloud.test
 ```
 
+### With Full Text Search
+
+Enable full text search capabilities with Apache Tika using either method:
+
+Using `-f` flags:
+```bash
+docker compose -f docker-compose.yml -f search/tika.yml -f traefik/opencloud.yml up -d
+```
+
+Or by setting in `.env`:
+```
+COMPOSE_FILE=docker-compose.yml:search/tika.yml:traefik/opencloud.yml
+```
+
+This setup includes:
+- Apache Tika for text extraction and metadata analysis from various file formats
+- Full text search functionality in the OpenCloud interface
+- Support for documents, PDFs, images, and other file types
+
 ### Behind External Proxy
 
 If you already have a reverse proxy (Nginx, Caddy, etc.), use either method:
@@ -175,6 +195,7 @@ Key variables:
 | `INSECURE`                | Skip certificate validation                  | true                      |
 | `COLLABORA_DOMAIN`        | Collabora domain                             | collabora.opencloud.test  |
 | `WOPISERVER_DOMAIN`       | WOPI server domain                           | wopiserver.opencloud.test |
+| `TIKA_IMAGE`              | Apache Tika image tag                        | apache/tika:latest-full   |
 | `KEYCLOAK_DOMAIN`         | Keycloak domain                              | keycloak.opencloud.test   |
 | `KEYCLOAK_ADMIN`          | Keycloak admin username                      | kcadmin                   |
 | `KEYCLOAK_ADMIN_PASSWORD` | Keycloak admin password                      | admin                     |
@@ -206,6 +227,7 @@ This repository uses a modular approach with multiple compose files:
 - `docker-compose.yml` - Core OpenCloud service
 - `weboffice/` - Web office integrations (Collabora Online)
 - `storage/` - Storage backend configurations (decomposeds3)
+- `search/` - Search and content analysis services (Apache Tika)
 - `idm/` - Identity management configurations (Keycloak & LDAP)
 - `traefik/` - Traefik reverse proxy configurations
 - `external-proxy/` - Configuration for external reverse proxies
