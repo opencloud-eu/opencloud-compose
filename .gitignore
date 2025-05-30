@@ -1,3 +1,4 @@
+.idea
 # exclude the .env file which will be created from env.example
 .env
 # exclude custom compose files
