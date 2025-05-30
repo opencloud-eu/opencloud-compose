@@ -1,0 +1,70 @@
+# Start dn with uid (user identifier / login), not cn (Firstname + Surname)
+dn: uid=alan,ou=users,dc=opencloud,dc=eu
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+uid: alan
+givenName: Alan
+sn: Turing
+cn: alan
+displayName: Alan Turing
+description:  An English mathematician, computer scientist, logician, cryptanalyst, philosopher and theoretical biologist. He was highly influential in the development of theoretical computer science, providing a formalisation of the concepts of algorithm and computation with the Turing machine.
+mail: alan@example.org
+userPassword:: e1NTSEF9Y2ZMdVlqMTBDUFpLWE44VC9mQ0FzYnFHQmtyZExJeGg=
+
+dn: uid=lynn,ou=users,dc=opencloud,dc=eu
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+uid: lynn
+givenName: Lynn
+sn: Conway
+cn: lynn
+displayName: Lynn Conway
+description:  An American computer scientist, electrical engineer, and transgender activist.
+mail: lynn@example.org
+userPassword:: e1NTSEF9Y2ZMdVlqMTBDUFpLWE44VC9mQ0FzYnFHQmtyZExJeGg=
+
+dn: uid=mary,ou=users,dc=opencloud,dc=eu
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+uid: mary
+givenName: Mary
+sn: Kenneth Keller
+cn: mary
+displayName: Mary Kenneth Keller
+description: Mary Kenneth Keller of the Sisters of Charity of the Blessed Virgin Mary was a pioneer in computer science.
+mail: mary@example.org
+userPassword:: e1NTSEF9Y2ZMdVlqMTBDUFpLWE44VC9mQ0FzYnFHQmtyZExJeGg=
+
+dn: uid=margaret,ou=users,dc=opencloud,dc=eu
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+uid: margaret
+givenName: Margaret
+sn: Hamilton
+cn: margaret
+displayName: Margaret Hamilton
+description: A director of the Software Engineering Division of the MIT Instrumentation Laboratory, which developed on-board flight software for NASA's Apollo program.
+mail: margaret@example.org
+userPassword:: e1NTSEF9Y2ZMdVlqMTBDUFpLWE44VC9mQ0FzYnFHQmtyZExJeGg=
+
+dn: uid=dennis,ou=users,dc=opencloud,dc=eu
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+uid: dennis
+givenName: Dennis
+sn: Ritchie
+cn: dennis
+displayName: Dennis Ritchie
+description: American computer scientist. He created the C programming language and the Unix operating system and B language with long-time colleague Ken Thompson.
+mail: dennis@example.org
+userPassword:: e1NTSEF9Y2ZMdVlqMTBDUFpLWE44VC9mQ0FzYnFHQmtyZExJeGg=
