@@ -2,6 +2,7 @@
   "id": "openCloud",
   "realm": "openCloud",
   "displayName": "OpenCloud",
+  "displayNameHtml": "<div class=\"kc-logo-text\"><span>OpenCloud</span></div>",
   "loginTheme": "opencloud",
   "notBefore": 0,
   "defaultSignatureAlgorithm": "RS256",
