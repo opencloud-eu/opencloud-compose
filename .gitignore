@@ -1,5 +1,9 @@
 .idea
 # exclude the .env file which will be created from env.example
 .env
+
+# exclude the apps folder
+/config/opencloud/apps
+
 # exclude custom compose files
 /custom
