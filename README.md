@@ -11,6 +11,7 @@ OpenCloud Compose offers a modular approach to deploying OpenCloud with several 
 - **Collabora Online** integration for document editing
 - **Keycloak and LDAP** integration for centralized identity management
 - **Full text search** with Apache Tika for content extraction and metadata analysis
+- **Monitoring** with metrics endpoints for observability and performance monitoring
 
 ## Quick Start Guide
 
@@ -147,6 +148,35 @@ This setup includes:
 - Full text search functionality in the OpenCloud interface
 - Support for documents, PDFs, images, and other file types
 
+### With Monitoring
+
+Enable monitoring capabilities with metrics endpoints using either method:
+
+Using `-f` flags:
+```bash
+docker compose -f docker-compose.yml -f monitoring/monitoring.yml -f traefik/opencloud.yml up -d
+```
+
+Or by setting in `.env`:
+```
+COMPOSE_FILE=docker-compose.yml:monitoring/monitoring.yml:traefik/opencloud.yml
+```
+
+This setup includes:
+- Metrics endpoints for OpenCloud proxy service (port 9205)
+- Metrics endpoints for collaboration service (port 9304)
+- Performance monitoring and observability data
+- Prometheus-compatible metrics format
+
+Access metrics endpoints:
+- OpenCloud metrics: `http://localhost:9205/metrics`
+- Collaboration metrics: `http://localhost:9304/metrics`
+
+> **Note**: The monitoring configuration uses an external network `opencloud-net`. You need to create this network manually before starting the services:
+> ```bash
+> docker network create opencloud-net
+> ```
+
 ### Behind External Proxy
 
 If you already have a reverse proxy (Nginx, Caddy, etc.), use either method:
@@ -228,6 +258,7 @@ This repository uses a modular approach with multiple compose files:
 - `weboffice/` - Web office integrations (Collabora Online)
 - `storage/` - Storage backend configurations (decomposeds3)
 - `search/` - Search and content analysis services (Apache Tika)
+- `monitoring/` - Monitoring and metrics configurations
 - `idm/` - Identity management configurations (Keycloak & LDAP)
 - `traefik/` - Traefik reverse proxy configurations
 - `external-proxy/` - Configuration for external reverse proxies
@@ -259,6 +290,11 @@ COMPOSE_FILE=docker-compose.yml:idm/ldap-keycloak.yml:traefik/opencloud.yml:trae
 Production with both Collabora and Keycloak/LDAP:
 ```
 COMPOSE_FILE=docker-compose.yml:weboffice/collabora.yml:idm/ldap-keycloak.yml:traefik/opencloud.yml:traefik/collabora.yml:traefik/ldap-keycloak.yml
+```
+
+Production with monitoring:
+```
+COMPOSE_FILE=docker-compose.yml:monitoring/monitoring.yml:traefik/opencloud.yml
 ```
 
 ### Automation and GitOps
