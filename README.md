@@ -219,7 +219,6 @@ Key variables:
 | `COMPOSE_FILE`            | Colon-separated list of compose files to use | (commented out)           |
 | `OC_DOMAIN`               | OpenCloud domain                             | cloud.opencloud.test      |
 | `OC_DOCKER_TAG`           | OpenCloud image tag                          | latest                    |
-| `ADMIN_PASSWORD`          | Admin password                               | admin                     |
 | `OC_CONFIG_DIR`           | Config directory path                        | (Docker volume)           |
 | `OC_DATA_DIR`             | Data directory path                          | (Docker volume)           |
 | `INSECURE`                | Skip certificate validation                  | true                      |
