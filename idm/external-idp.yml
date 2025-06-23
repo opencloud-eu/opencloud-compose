@@ -17,17 +17,17 @@ services:
       PROXY_OIDC_REWRITE_WELLKNOWN: "true"
       WEB_OIDC_CLIENT_ID: ${OC_OIDC_CLIENT_ID:-web}
       PROXY_ROLE_ASSIGNMENT_DRIVER: "oidc"
-      OC_OIDC_ISSUER: https://${KEYCLOAK_DOMAIN:-keycloak.opencloud.test}/realms/openCloud
+      OC_OIDC_ISSUER: ${IDP_ISSUER_URL:-https://keycloak.opencloud.test/realms/openCloud}
       # This specifies to start all services except idm and idp. These are replaced by external services.
       OC_EXCLUDE_RUN_SERVICES: idm,idp
-      # Keycloak IDP specific configuration for auto-provisioning
+      # IdP specific configuration for auto-provisioning
       OC_LDAP_SERVER_WRITE_ENABLED: "true"
       PROXY_AUTOPROVISION_ACCOUNTS: "true"
-      # Use the `sub` claim from keycloak for the user ID
-      # Keycloak uses the keycloak user ID as the `sub` claim
+      # Use the `sub` claim from the IdP for the user ID
+      # Most IdPs use the internal user ID as the `sub` claim
       PROXY_USER_OIDC_CLAIM: "sub"
       # Use the `sub` claim as identifier during autoprovisioning
-      # That mitigates problems when a user is renamed in keycloak
+      # That mitigates problems when a user is renamed in the IdP
       PROXY_AUTOPROVISION_CLAIM_USERNAME: "sub"
       PROXY_USER_CS3_CLAIM: "username"
       # This is the default value, we need to set it here because we overwrite the values
@@ -40,7 +40,10 @@ services:
       SETTINGS_SETUP_DEFAULT_ASSIGNMENTS: "false"
       GRAPH_ASSIGN_DEFAULT_USER_ROLE: "false"
       GRAPH_USERNAME_MATCH: "none"
-      IDP_DOMAIN: ${KEYCLOAK_DOMAIN:-keycloak.opencloud.test}
+      # We need to set the IDP_DOMAIN to allow the CSP rules to be set correctly
+      IDP_DOMAIN: ${IDP_DOMAIN:-keycloak.opencloud.test}
+      # The openCloud users need to be able to edit their account in the externa IdP
+      WEB_OPTION_ACCOUNT_EDIT_LINK_HREF: ${IDP_ACCOUNT_URL}
   ldap-server:
     image: bitnami/openldap:2.6
     networks:
