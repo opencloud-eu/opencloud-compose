@@ -1596,6 +1596,10 @@
     "strictTransportSecurity" : "max-age=31536000; includeSubDomains"
   },
   "smtpServer" : { },
+  "loginTheme": "opencloud",
+  "accountTheme": "",
+  "adminTheme": "",
+  "emailTheme": "",
   "eventsEnabled" : false,
   "eventsListeners" : [ "jboss-logging" ],
   "enabledEventTypes" : [ ],
@@ -1663,7 +1667,23 @@
       "subType" : "anonymous",
       "subComponents" : { },
       "config" : { }
-    } ],
+    },
+    {
+      "id": "c016f2b3-cf74-410e-a852-f6c7b49e0f5a",
+      "name": "Block Client Registration",
+      "providerId": "trusted-hosts",
+      "subType": "anonymous",
+      "subComponents": {},
+      "config": {
+        "host-sending-registration-request-must-match": [
+          "true"
+        ],
+        "client-uris-must-match": [
+          "true"
+        ]
+      }
+    }
+    ],
     "org.keycloak.userprofile.UserProfileProvider" : [ {
       "id" : "28d6b4ce-33d4-40c0-adef-b27e35b7e122",
       "providerId" : "declarative-user-profile",
