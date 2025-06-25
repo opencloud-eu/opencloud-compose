@@ -22,7 +22,7 @@ OpenCloud Compose offers a modular approach to deploying OpenCloud with several 
 - Basic understanding of Docker Compose concepts
 
 > [!IMPORTANT]
-> The docker-compose package in Debian 12 "Bookworm" and most likely other distros based on Debian 12 is v1 instead of the required v2. Using this package will lead to a broken docker deployment.
+> Please use the docker installation guide from the [Official Documentation](https://docs.docker.com/engine/install/) to ensure using docker compose v2. Official linux distro package repositories might still contain docker compose v1, e.g. Debian 12 "Bookworm". Using docker compose v1 will lead to a broken docker deployment.
 
 ### Local Development
 
