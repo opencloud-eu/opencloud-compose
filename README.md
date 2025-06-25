@@ -17,9 +17,12 @@ OpenCloud Compose offers a modular approach to deploying OpenCloud with several 
 
 ### Prerequisites
 
-- Docker and Docker Compose installed
+- Docker and Docker Compose v2 installed. 
 - Domain names pointing to your server (for production deployment)
 - Basic understanding of Docker Compose concepts
+
+> [!IMPORTANT]
+> The docker-compose package in Debian 12 "Bookworm" and most likely other distros based on Debian 12 is v1 instead of the required v2. Using this package will lead to a broken docker deployment.
 
 ### Local Development
 
