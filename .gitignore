@@ -5,8 +5,5 @@
 # exclude the apps folder
 /config/opencloud/apps
 
-# exclude the keycloak theme custom javascript file
-/config/keycloak/themes/opencloud/login/resources/js/custom.js
-
 # exclude custom compose files
 /custom
