@@ -12,12 +12,13 @@ OpenCloud Compose offers a modular approach to deploying OpenCloud with several 
 - **Keycloak and LDAP** integration for centralized identity management
 - **Full text search** with Apache Tika for content extraction and metadata analysis
 - **Monitoring** with metrics endpoints for observability and performance monitoring
+- **Radicale** integration for Calendar and Contacts
 
 ## Quick Start Guide
 
 ### Prerequisites
 
-- Docker and Docker Compose v2 installed. 
+- Docker and Docker Compose v2 installed.
 - Domain names pointing to your server (for production deployment)
 - Basic understanding of Docker Compose concepts
 
@@ -36,21 +37,21 @@ OpenCloud Compose offers a modular approach to deploying OpenCloud with several 
    ```bash
    cp .env.example .env
    ```
-   
+
    > **Note**: The repository includes `.env.example` as a template with default settings and documentation. Your actual `.env` file is excluded from version control (via `.gitignore`) to prevent accidentally committing sensitive information like passwords and domain-specific settings.
 
 3. **Configure deployment options**:
-   
+
    You can deploy using explicit `-f` flags:
    ```bash
    docker compose -f docker-compose.yml -f traefik/opencloud.yml up -d
    ```
-   
+
    Or by adding the `COMPOSE_FILE` variable in `.env`:
    ```
    COMPOSE_FILE=docker-compose.yml:traefik/opencloud.yml
    ```
-   
+
    Then simply run:
    ```bash
    docker compose up -d
@@ -202,8 +203,8 @@ This exposes the necessary ports:
 - WOPI server: 9300
 
 
-**Please note:**  
-If you're using **Nginx Proxy Manager (NPM)**, you **should NOT** activate **"Block Common Exploits"** for the Proxy Host.  
+**Please note:**
+If you're using **Nginx Proxy Manager (NPM)**, you **should NOT** activate **"Block Common Exploits"** for the Proxy Host.
 Otherwise, the desktop app authentication will return **error 403 Forbidden**.
 
 
@@ -266,6 +267,7 @@ This repository uses a modular approach with multiple compose files:
 - `idm/` - Identity management configurations (Keycloak & LDAP)
 - `traefik/` - Traefik reverse proxy configurations
 - `external-proxy/` - Configuration for external reverse proxies
+- `radicale/` - Radicale configuration
 - `config/` - Configuration files for OpenCloud, Keycloak, and LDAP
 
 ## Advanced Usage
