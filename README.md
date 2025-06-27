@@ -46,7 +46,7 @@ OpenCloud Compose offers a modular approach to deploying OpenCloud with several 
    docker compose -f docker-compose.yml -f traefik/opencloud.yml up -d
    ```
    
-   Or by uncommenting the `COMPOSE_FILE` variable in `.env`:
+   Or by adding the `COMPOSE_FILE` variable in `.env`:
    ```
    COMPOSE_FILE=docker-compose.yml:traefik/opencloud.yml
    ```
@@ -66,7 +66,9 @@ OpenCloud Compose offers a modular approach to deploying OpenCloud with several 
 5. **Access OpenCloud**:
    - URL: https://cloud.opencloud.test
    - Username: `admin`
-   - Password: `admin` (or as configured in `.env`)
+   - Password: is randomly generated on the first start of OpenCloud.
+     It will be printed to the console. You can access it by running the following command:
+     `docker compose logs opencloud | grep -B 1 -A 4 "generated OpenCloud Config"`
 
 ### Production Deployment
 
