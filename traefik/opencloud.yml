@@ -25,10 +25,10 @@ services:
       # enable dashboard
       - "--api.dashboard=true"
       # define entrypoints
-      - "--entryPoints.http.address=:80"
+      - "--entryPoints.http.address=:${OC_PORT_HTTP:-80}"
       - "--entryPoints.http.http.redirections.entryPoint.to=https"
       - "--entryPoints.http.http.redirections.entryPoint.scheme=https"
-      - "--entryPoints.https.address=:443"
+      - "--entryPoints.https.address=:${OC_PORT_HTTPS:-443}"
       # change default timeouts for long-running requests
       # this is needed for webdav clients that do not support the TUS protocol
       - "--entryPoints.https.transport.respondingTimeouts.readTimeout=12h"
@@ -42,8 +42,8 @@ services:
       - "--accessLog.format=json"
       - "--accessLog.fields.headers.names.X-Request-Id=keep"
     ports:
-      - "80:80"
-      - "443:443"
+      - "${OC_PORT_HTTP:-80}:${OC_PORT_HTTP:-80}"
+      - "${OC_PORT_HTTPS:-443}:${OC_PORT_HTTPS:-443}"
     volumes:
       - "${DOCKER_SOCKET_PATH:-/var/run/docker.sock}:/var/run/docker.sock:ro"
       - "certs:/certs"
