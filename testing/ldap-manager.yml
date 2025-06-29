@@ -16,7 +16,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.ldap-manager.entrypoints=https"
       - "traefik.http.routers.ldap-manager.rule=Host(`${LDAP_MANAGER_DOMAIN:-ldap.opencloud.test}`)"
-      - "traefik.http.routers.ldap-manager.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.ldap-manager.${TRAEFIK_SERVICES_TLS_CONFIG}"
       - "traefik.http.routers.ldap-manager.service=ldap-manager"
       - "traefik.http.services.ldap-manager.loadbalancer.server.port=8080"
     logging:
