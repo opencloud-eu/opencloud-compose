@@ -3,7 +3,16 @@
 .env
 
 # exclude the apps folder
-/config/opencloud/apps
+/config/opencloud/apps/*
+!/config/opencloud/apps/.gitkeep
 
 # exclude custom compose files
 /custom
+
+# exclude certificates
+/certs/*
+!/certs/.gitkeep
+
+# exclude the certificates config folder
+/config/traefik/dynamic/*
+!/config/traefik/dynamic/.gitkeep

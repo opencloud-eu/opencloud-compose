@@ -10,6 +10,6 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.keycloak.entrypoints=https"
       - "traefik.http.routers.keycloak.rule=Host(`${KEYCLOAK_DOMAIN:-keycloak.opencloud.test}`)"
-      - "traefik.http.routers.keycloak.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.keycloak.${TRAEFIK_SERVICES_TLS_CONFIG}"
       - "traefik.http.routers.keycloak.service=keycloak"
       - "traefik.http.services.keycloak.loadbalancer.server.port=8080"
