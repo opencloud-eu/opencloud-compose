@@ -435,6 +435,7 @@ services:
 - **SSL Certificate Errors**: For local development, accept self-signed certificates by visiting each domain directly in your browser.
 - **Port Conflicts**: If you have services already using ports 80/443, use the external proxy configuration.
 - **Permission Issues**: Ensure data and config directories have proper permissions (owned by user/group 1000).
+- **Rootless Docker**: You can use a rootless docker setup, carefully read and configure your ```.env``` according to the rootless docker section included in ```.env.example```.<br/>However, this is not guaranteed to work properly with all components and configuration options. It is only tested with Traefik and without external proxy and IDP.
 
 ### Logs
 

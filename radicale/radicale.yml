@@ -6,6 +6,7 @@ services:
       - ./config/opencloud/proxy.yaml:/etc/opencloud/proxy.yaml
   radicale:
     image: ${RADICALE_DOCKER_IMAGE:-opencloudeu/radicale}:${RADICALE_DOCKER_TAG:-latest}
+    user: ${DOCKER_CONTAINER_UID_GID:-1000:1000}
     networks:
       opencloud-net:
     logging:

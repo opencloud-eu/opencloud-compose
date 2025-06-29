@@ -11,6 +11,7 @@ services:
   traefik:
     image: traefik:v3.3.1
     # release notes: https://github.com/traefik/traefik/releases
+    user: ${DOCKER_CONTAINER_UID_GID:-1000:1000}
     networks:
       opencloud-net:
         aliases:
@@ -20,9 +21,11 @@ services:
       - "TRAEFIK_SERVICES_TLS_CONFIG=${TRAEFIK_SERVICES_TLS_CONFIG:-tls.certresolver=letsencrypt}"
       - "TRAEFIK_ACME_EMAIL=${TRAEFIK_ACME_MAIL:-example@example.org}"
       - "TRAEFIK_ACME_CASERVER=${TRAEFIK_ACME_CASERVER:-https://acme-v02.api.letsencrypt.org/directory}"
+      - "TRAEFIK_HTTP_PORT=${OC_PORT_HTTP:-80}"
+      - "TRAEFIK_HTTPS_PORT=${OC_PORT_HTTPS:-443}"
     ports:
-      - "80:80"
-      - "443:443"
+      - "${OC_PORT_HTTP:-80}:${OC_PORT_HTTP:-80}"
+      - "${OC_PORT_HTTPS:-443}:${OC_PORT_HTTPS:-443}"
     volumes:
       - "${DOCKER_SOCKET_PATH:-/var/run/docker.sock}:/var/run/docker.sock:ro"
       - "./config/traefik/docker-entrypoint-override.sh:/opt/traefik/bin/docker-entrypoint-override.sh"
