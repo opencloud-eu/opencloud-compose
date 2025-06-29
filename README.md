@@ -154,6 +154,24 @@ This setup includes:
 - Full text search functionality in the OpenCloud interface
 - Support for documents, PDFs, images, and other file types
 
+### With Radicale
+
+Enable CalDAV (calendars, to-do lists) and CardDAV (contacts) server.
+
+Using `-f` flags:
+```bash
+docker compose -f docker-compose.yml -f radicale/radicale.yml -f traefik/opencloud.yml up -d
+```
+
+Or by setting in `.env`:
+```
+COMPOSE_FILE=docker-compose.yml:radicale/radicale.yml:traefik/opencloud.yml
+```
+
+This setup includes:
+- Radicale as a CalDAV (calendars, to-do lists) and CardDAV (contacts) server
+- Users access to a Personal Calendar and Addressbook
+
 ### With Monitoring
 
 Enable monitoring capabilities with metrics endpoints using either method:
