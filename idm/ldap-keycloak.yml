@@ -79,15 +79,14 @@ services:
     restart: always
 
   keycloak:
-    image: quay.io/keycloak/keycloak:25.0.0
+    image: quay.io/keycloak/keycloak:26.2.5
     networks:
       opencloud-net:
-    command: [ "start", "--proxy=edge", "--spi-connections-http-client-default-disable-trust-manager=${INSECURE:-false}", "--import-realm" ]
-    entrypoint: [ "/bin/sh", "/opt/keycloak/bin/docker-entrypoint-override.sh" ]
+    command: [ "start", "http-enable=true", "--proxy-headers=xforwarded", "--spi-connections-http-client-default-disable-trust-manager=${INSECURE:-false}" ]
     volumes:
       - "./config/keycloak/docker-entrypoint-override.sh:/opt/keycloak/bin/docker-entrypoint-override.sh"
       - "./config/keycloak/opencloud-realm.dist.json:/opt/keycloak/data/import-dist/opencloud-realm.json"
-      - "./config/keycloak/themes/opencloud:/opt/keycloak/themes/opencloud"
+      - "./config/keycloak/themes:/opt/keycloak/themes"
     environment:
       OC_DOMAIN: ${OC_DOMAIN:-cloud.opencloud.test}
       KC_HOSTNAME: ${KEYCLOAK_DOMAIN:-keycloak.opencloud.test}
