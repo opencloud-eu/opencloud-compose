@@ -18,7 +18,7 @@ services:
     entrypoint: [ "/bin/sh", "/opt/traefik/bin/docker-entrypoint-override.sh"]
     environment:
       - "TRAEFIK_SERVICES_TLS_CONFIG=${TRAEFIK_SERVICES_TLS_CONFIG:-tls.certresolver=letsencrypt}"
-      - "TRAEFIK_ACME_EMAIL=${TRAEFIK_ACME_MAIL:-example@example.org}"
+      - "TRAEFIK_ACME_MAIL=${TRAEFIK_ACME_MAIL:-example@example.org}"
       - "TRAEFIK_ACME_CASERVER=${TRAEFIK_ACME_CASERVER:-https://acme-v02.api.letsencrypt.org/directory}"
     ports:
       - "80:80"
