@@ -6,7 +6,7 @@ This repository provides Docker Compose configurations for deploying OpenCloud i
 
 OpenCloud Compose offers a modular approach to deploying OpenCloud with several configuration options:
 
-- **Standard deployment** with Traefik reverse proxy and Let's Encrypt certificates
+- **Standard deployment** with Traefik reverse proxy and Let's Encrypt certificates or certificates from files
 - **External proxy** support for environments with existing reverse proxies (like Nginx, Caddy, etc.)
 - **Collabora Online** integration for document editing
 - **Keycloak and LDAP** integration for centralized identity management
@@ -226,6 +226,77 @@ If you're using **Nginx Proxy Manager (NPM)**, you **should NOT** activate **"Bl
 Otherwise, the desktop app authentication will return **error 403 Forbidden**.
 
 
+## SSL Certificate Support
+
+OpenCloud Compose supports adding SSL certificates for public domains and development environments. This feature enables you to use the "Let's Encrypt ACME challenge" to generate certificates for your public domains as well as using your own certificates.
+
+### Use Let's Encrypt with ACME Challenge
+
+1. **Enable Let's Encrypt**:
+   - Set `TRAEFIK_LETSENCRYPT_EMAIL` to your email address for the ACME challenge
+   - Set `TRAEFIK_SERVICES_TLS_CONFIG="tls.certresolver=letsencrypt"` to use Let's Encrypt (default value)
+
+   ```bash
+   # In your .env file
+   TRAEFIK_LETSENCRYPT_EMAIL=devops@your-domain.tld
+   TRAEFIK_SERVICES_TLS_CONFIG="tls.certresolver=letsencrypt"
+   ```
+
+### Use Certificates from the `certs/` directory
+
+1. **Place your certificates**:
+   - Copy your certificate files (`.crt`, `.pem`, `.key`) to the `certs/` directory
+   - The directory structure is flexible - organize as needed for your setup
+
+2. **Configure Traefik dynamic configuration**:
+   - Place Traefik dynamic configuration files in `config/traefik/dynamic/`
+
+   Example `config/traefik/dynamic/certs.yml`:
+   ```yaml
+   tls:
+     certificates:
+       - certFile: /certs/opencloud.test.crt
+         keyFile: /certs/opencloud.test.key
+         stores:
+           - default
+       - certFile: /certs/wildcard.example.com.crt
+         keyFile: /certs/wildcard.example.com.key
+         stores:
+           - default
+   ```
+
+3. **Configure environment variables**:
+   - Set `TRAEFIK_SERVICES_TLS_CONFIG="tls=true"` to use your local certificates
+   
+     ```bash
+     # In your .env file
+     TRAEFIK_SERVICES_TLS_CONFIG="tls=true"
+     ```
+
+The certificate directory and configuration directories are now available and automatically mounted in the containers:
+- `certs/` → `/certs/` (inside the Traefik container)
+- `config/traefik/dynamic/` → dynamic configuration loading
+
+> [!TIP]
+>
+> **Local development or testing with mkcert**
+> For local development, you can use `mkcert` to generate self-signed certificates for your local domains. This allows you to test SSL/TLS configurations without needing a public domain or Let's Encrypt. It also brings the advantage that you don't have to accept self-signed certificates in your browser all the time.
+> ```bash
+> # Install mkcert (if not already installed)
+> # macOS: brew install mkcert
+> # Linux: apt install mkcert or similar
+> # Windows: choco install mkcert or download from GitHub
+>   
+> # Install the local CA
+> mkcert -install
+>   
+> # Generate certificates for your local domains
+> mkcert -cert-file certs/opencloud.test.crt -key-file certs/opencloud.test.key "*.opencloud.test" opencloud.test
+> ```
+
+> [!IMPORTANT]
+> The contents of the `certs/` directory and configuration directories are ignored by git to prevent accidentally committing sensitive certificate files.
+
 ## Configuration
 
 ### Environment Variables
@@ -238,23 +309,26 @@ The configuration is managed through environment variables in the `.env` file:
 
 Key variables:
 
-| Variable                  | Description                                  | Default                   |
-|---------------------------|----------------------------------------------|---------------------------|
-| `COMPOSE_FILE`            | Colon-separated list of compose files to use | (commented out)           |
-| `OC_DOMAIN`               | OpenCloud domain                             | cloud.opencloud.test      |
-| `OC_DOCKER_TAG`           | OpenCloud image tag                          | latest                    |
-| `OC_CONFIG_DIR`           | Config directory path                        | (Docker volume)           |
-| `OC_DATA_DIR`             | Data directory path                          | (Docker volume)           |
-| `INSECURE`                | Skip certificate validation                  | true                      |
-| `COLLABORA_DOMAIN`        | Collabora domain                             | collabora.opencloud.test  |
-| `WOPISERVER_DOMAIN`       | WOPI server domain                           | wopiserver.opencloud.test |
-| `TIKA_IMAGE`              | Apache Tika image tag                        | apache/tika:latest-full   |
-| `KEYCLOAK_DOMAIN`         | Keycloak domain                              | keycloak.opencloud.test   |
-| `KEYCLOAK_ADMIN`          | Keycloak admin username                      | kcadmin                   |
-| `KEYCLOAK_ADMIN_PASSWORD` | Keycloak admin password                      | admin                     |
-| `LDAP_BIND_PASSWORD`      | LDAP password for the bind user              | admin                     |
-| `KC_DB_USERNAME`          | Database user for keycloak                   | keycloak                  |
-| `KC_DB_PASSWORD`          | Database password for keycloak               | keycloak                  |
+| Variable                           | Description                                           | Default                      |
+|------------------------------------|-------------------------------------------------------|------------------------------|
+| `COMPOSE_FILE`                     | Colon-separated list of compose files to use          | (commented out)              |
+| `OC_DOMAIN`                        | OpenCloud domain                                      | cloud.opencloud.test         |
+| `OC_DOCKER_TAG`                    | OpenCloud image tag                                   | latest                       |
+| `OC_CONFIG_DIR`                    | Config directory path                                 | (Docker volume)              |
+| `OC_DATA_DIR`                      | Data directory path                                   | (Docker volume)              |
+| `INSECURE`                         | Skip certificate validation                           | true                         |
+| `COLLABORA_DOMAIN`                 | Collabora domain                                      | collabora.opencloud.test     |
+| `WOPISERVER_DOMAIN`                | WOPI server domain                                    | wopiserver.opencloud.test    |
+| `TIKA_IMAGE`                       | Apache Tika image tag                                 | apache/tika:latest-full      |
+| `KEYCLOAK_DOMAIN`                  | Keycloak domain                                       | keycloak.opencloud.test      |
+| `KEYCLOAK_ADMIN`                   | Keycloak admin username                               | kcadmin                      |
+| `KEYCLOAK_ADMIN_PASSWORD`          | Keycloak admin password                               | admin                        |
+| `LDAP_BIND_PASSWORD`               | LDAP password for the bind user                       | admin                        |
+| `KC_DB_USERNAME`                   | Database user for keycloak                            | keycloak                     |
+| `KC_DB_PASSWORD`                   | Database password for keycloak                        | keycloak                     |
+| `TRAEFIK_LETSENCRYPT_EMAIL`        | Email Address for the Let's Encrypt ACME challenge    | example@example.org          |
+| `TRAEFIK_SERVICES_TLS_CONFIG`      | Tell traefik and the services which TLS config to use | tls.certresolver=letsencrypt |
+| `TRAEFIK_CERTS_DIR`                | Directory for custom certificates.                    | ./certs                      |
 
 See `.env.example` for all available options and their documentation.
 
