@@ -67,9 +67,7 @@ OpenCloud Compose offers a modular approach to deploying OpenCloud with several 
 5. **Access OpenCloud**:
    - URL: https://cloud.opencloud.test
    - Username: `admin`
-   - Password: is randomly generated on the first start of OpenCloud.
-     It will be printed to the console. You can access it by running the following command:
-     `docker compose logs opencloud | grep -B 1 -A 4 "generated OpenCloud Config"`
+   - Password: Set via `INITIAL_ADMIN_PASSWORD` environment variable in your `.env` file
 
 ### Production Deployment
 
@@ -309,28 +307,49 @@ The configuration is managed through environment variables in the `.env` file:
 
 Key variables:
 
-| Variable                           | Description                                           | Default                      |
-|------------------------------------|-------------------------------------------------------|------------------------------|
-| `COMPOSE_FILE`                     | Colon-separated list of compose files to use          | (commented out)              |
-| `OC_DOMAIN`                        | OpenCloud domain                                      | cloud.opencloud.test         |
-| `OC_DOCKER_TAG`                    | OpenCloud image tag                                   | latest                       |
-| `OC_CONFIG_DIR`                    | Config directory path                                 | (Docker volume)              |
-| `OC_DATA_DIR`                      | Data directory path                                   | (Docker volume)              |
-| `INSECURE`                         | Skip certificate validation                           | true                         |
-| `COLLABORA_DOMAIN`                 | Collabora domain                                      | collabora.opencloud.test     |
-| `WOPISERVER_DOMAIN`                | WOPI server domain                                    | wopiserver.opencloud.test    |
-| `TIKA_IMAGE`                       | Apache Tika image tag                                 | apache/tika:latest-full      |
-| `KEYCLOAK_DOMAIN`                  | Keycloak domain                                       | keycloak.opencloud.test      |
-| `KEYCLOAK_ADMIN`                   | Keycloak admin username                               | kcadmin                      |
-| `KEYCLOAK_ADMIN_PASSWORD`          | Keycloak admin password                               | admin                        |
-| `LDAP_BIND_PASSWORD`               | LDAP password for the bind user                       | admin                        |
-| `KC_DB_USERNAME`                   | Database user for keycloak                            | keycloak                     |
-| `KC_DB_PASSWORD`                   | Database password for keycloak                        | keycloak                     |
-| `TRAEFIK_LETSENCRYPT_EMAIL`        | Email Address for the Let's Encrypt ACME challenge    | example@example.org          |
-| `TRAEFIK_SERVICES_TLS_CONFIG`      | Tell traefik and the services which TLS config to use | tls.certresolver=letsencrypt |
-| `TRAEFIK_CERTS_DIR`                | Directory for custom certificates.                    | ./certs                      |
+| Variable                      | Description                                           | Default                      |
+|-------------------------------|-------------------------------------------------------|------------------------------|
+| `COMPOSE_FILE`                | Colon-separated list of compose files to use          | (commented out)              |
+| `OC_DOMAIN`                   | OpenCloud domain                                      | cloud.opencloud.test         |
+| `INITIAL_ADMIN_PASSWORD `     | OpenCloud password for the admin user                 | (no value)                   |
+| `OC_DOCKER_TAG`               | OpenCloud image tag                                   | latest                       |
+| `OC_CONFIG_DIR`               | Config directory path                                 | (Docker volume)              |
+| `OC_DATA_DIR`                 | Data directory path                                   | (Docker volume)              |
+| `INSECURE`                    | Skip certificate validation                           | true                         |
+| `COLLABORA_DOMAIN`            | Collabora domain                                      | collabora.opencloud.test     |
+| `WOPISERVER_DOMAIN`           | WOPI server domain                                    | wopiserver.opencloud.test    |
+| `TIKA_IMAGE`                  | Apache Tika image tag                                 | apache/tika:latest-full      |
+| `KEYCLOAK_DOMAIN`             | Keycloak domain                                       | keycloak.opencloud.test      |
+| `KEYCLOAK_ADMIN`              | Keycloak admin username                               | kcadmin                      |
+| `KEYCLOAK_ADMIN_PASSWORD`     | Keycloak admin password                               | admin                        |
+| `LDAP_BIND_PASSWORD`          | LDAP password for the bind user                       | admin                        |
+| `KC_DB_USERNAME`              | Database user for keycloak                            | keycloak                     |
+| `KC_DB_PASSWORD`              | Database password for keycloak                        | keycloak                     |
+| `TRAEFIK_LETSENCRYPT_EMAIL`   | Email Address for the Let's Encrypt ACME challenge    | example@example.org          |
+| `TRAEFIK_SERVICES_TLS_CONFIG` | Tell traefik and the services which TLS config to use | tls.certresolver=letsencrypt |
+| `TRAEFIK_CERTS_DIR`           | Directory for custom certificates.                    | ./certs                      |
 
 See `.env.example` for all available options and their documentation.
+
+### Admin Password Configuration
+
+The `INITIAL_ADMIN_PASSWORD` environment variable is **required** for OpenCloud to work properly:
+
+- **Only needed when using the built-in LDAP server (idm)**
+- **Must be set before the first start of OpenCloud. Changes in the ENV variable after the first startup will be ignored.**
+- If not set, OpenCloud will not work properly and the container will keep restarting
+- After first initialization, the admin password can only be changed via:
+  - OpenCloud User Settings UI
+  - OpenCloud CLI
+
+For external LDAP servers, the admin password is managed by the LDAP server itself.
+
+**Important**: Set this variable in your `.env` file before starting OpenCloud for the first time:
+```
+INITIAL_ADMIN_PASSWORD=your-secure-password-here
+```
+
+For more details, see the [OpenCloud documentation](https://docs.opencloud.eu/docs/admin/resources/common-issues#-change-admin-password-set-in-env).
 
 ### Persistent Storage
 
