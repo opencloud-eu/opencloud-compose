@@ -27,7 +27,7 @@ add_arg "--entryPoints.https.transport.respondingTimeouts.idleTimeout=3m"
 add_arg "--providers.docker.endpoint=unix:///var/run/docker.sock"
 add_arg "--providers.docker.exposedByDefault=false"
 # access log
-add_arg "--accessLog=true"
+add_arg "--accessLog=${TRAEFIK_ACCESS_LOG:-false}"
 add_arg "--accessLog.format=json"
 add_arg "--accessLog.fields.headers.names.X-Request-Id=keep"
 
