@@ -4,6 +4,7 @@ services:
     image: ${OC_DOCKER_IMAGE:-opencloudeu/opencloud-rolling}:${OC_DOCKER_TAG:-latest}
     # changelog: https://github.com/opencloud-eu/opencloud/tree/main/changelog
     # release notes: https://docs.opencloud.eu/opencloud_release_notes.html
+    user: ${DOCKER_CONTAINER_UID_GID:-1000:1000}
     networks:
       opencloud-net:
     entrypoint:
@@ -15,7 +16,7 @@ services:
     environment:
       # enable services that are not started automatically
       OC_ADD_RUN_SERVICES: ${START_ADDITIONAL_SERVICES}
-      OC_URL: https://${OC_DOMAIN:-cloud.opencloud.test}
+      OC_URL: https://${OC_DOMAIN:-cloud.opencloud.test}:${OC_PORT_HTTPS:-443}
       OC_LOG_LEVEL: ${LOG_LEVEL:-info}
       OC_LOG_COLOR: "${LOG_PRETTY:-false}"
       OC_LOG_PRETTY: "${LOG_PRETTY:-false}"
