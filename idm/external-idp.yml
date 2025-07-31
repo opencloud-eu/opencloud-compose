@@ -68,10 +68,6 @@ services:
       - ./config/ldap/docker-entrypoint-override.sh:/opt/bitnami/scripts/openldap/docker-entrypoint-override.sh
       - ${LDAP_CERTS_DIR:-ldap-certs}:/opt/bitnami/openldap/share
       - ${LDAP_DATA_DIR:-ldap-data}:/bitnami/openldap
-  keycloak:
-    volumes:
-      - "./config/keycloak/docker-entrypoint-override.sh:/opt/keycloak/bin/docker-entrypoint-override.sh"
-      - "./config/keycloak/opencloud-realm-autoprovisioning.dist.json:/opt/keycloak/data/import-dist/opencloud-realm.json"
 
 volumes:
   ldap-certs:
