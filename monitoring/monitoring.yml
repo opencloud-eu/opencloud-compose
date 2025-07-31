@@ -8,11 +8,6 @@ services:
       # will expose the same metrics, so it's sufficient to query one endpoint
       PROXY_DEBUG_ADDR: 0.0.0.0:9205
 
-  collaboration:
-    environment:
-      # metrics
-      COLLABORATION_DEBUG_ADDR: 0.0.0.0:9304
-
 networks:
   opencloud-net:
     external: true
