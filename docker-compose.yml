@@ -55,9 +55,9 @@ services:
       - /var/data/komodo-core/github.com/dkarv-komodo-opencloud/custom/latest/config/opencloud/csp.yaml:/etc/opencloud/csp.yaml:Z
       - /var/data/komodo-core/github.com/dkarv-komodo-opencloud/custom/latest/config/opencloud/banned-password-list.txt:/etc/opencloud/banned-password-list.txt:Z
       # configure the .env file to use own paths instead of docker internal volumes
-      - ${OC_CONFIG_DIR:-opencloud-config}:/etc/opencloud:z
-      - ${OC_DATA_DIR:-opencloud-data}:/var/lib/opencloud:z
-      - ${OC_APPS_DIR:-/var/data/komodo-core/github.com/dkarv-komodo-opencloud/custom/latest/config/opencloud/apps}:/var/lib/opencloud/web/assets/apps:z
+      - ${OC_CONFIG_DIR:-opencloud-config}:/etc/opencloud:Z
+      - ${OC_DATA_DIR:-opencloud-data}:/var/lib/opencloud:Z
+      - ${OC_APPS_DIR:-/var/data/komodo-core/github.com/dkarv-komodo-opencloud/custom/latest/config/opencloud/apps}:/var/lib/opencloud/web/assets/apps:Z
     logging:
       driver: ${LOG_DRIVER:-local}
     restart: always
