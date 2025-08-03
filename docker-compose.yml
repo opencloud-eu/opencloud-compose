@@ -12,6 +12,7 @@ services:
     # it will fail on subsequent runs, because the config file already exists
     # therefore we ignore the error and then start the opencloud server
     command: ["-c", "opencloud init || true; opencloud server"]
+    user: 0:0
     environment:
       # enable services that are not started automatically
       OC_ADD_RUN_SERVICES: ${START_ADDITIONAL_SERVICES}
@@ -52,12 +53,12 @@ services:
       OC_PASSWORD_POLICY_MIN_DIGITS: "${OC_PASSWORD_POLICY_MIN_DIGITS:-1}"
       OC_PASSWORD_POLICY_MIN_SPECIAL_CHARACTERS: "${OC_PASSWORD_POLICY_MIN_SPECIAL_CHARACTERS:-1}"
     volumes:
+      - /var/data/komodo-core/github.com/dkarv-komodo-opencloud/custom/latest/config/opencloud/csp.yaml:/etc/opencloud/csp.yaml:Z
+      - /var/data/komodo-core/github.com/dkarv-komodo-opencloud/custom/latest/config/opencloud/banned-password-list.txt:/etc/opencloud/banned-password-list.txt:Z
       # configure the .env file to use own paths instead of docker internal volumes
       - ${OC_CONFIG_DIR:-opencloud-config}:/etc/opencloud:Z
       - ${OC_DATA_DIR:-opencloud-data}:/var/lib/opencloud:z
       - ${OC_APPS_DIR:-/var/data/komodo-core/github.com/dkarv-komodo-opencloud/custom/latest/config/opencloud/apps}:/var/lib/opencloud/web/assets/apps:Z
-      #- /var/data/komodo-core/github.com/dkarv-komodo-opencloud/custom/latest/config/opencloud/csp.yaml:/etc/opencloud/csp.yaml:Z
-      #- /var/data/komodo-core/github.com/dkarv-komodo-opencloud/custom/latest/config/opencloud/banned-password-list.txt:/etc/opencloud/banned-password-list.txt:Z
     logging:
       driver: ${LOG_DRIVER:-local}
     security_opt:
