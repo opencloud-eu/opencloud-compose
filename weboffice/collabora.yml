@@ -46,7 +46,7 @@ services:
     restart: always
 
   collabora:
-    image: collabora/code:25.04.1.1.1
+    image: mirror.gcr.io/collabora/code:25.04.1.1.1
     # release notes: https://www.collaboraonline.com/release-notes/
     networks:
       opencloud-net:
