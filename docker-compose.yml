@@ -60,6 +60,8 @@ services:
       #- /var/data/komodo-core/github.com/dkarv-komodo-opencloud/custom/latest/config/opencloud/banned-password-list.txt:/etc/opencloud/banned-password-list.txt:Z
     logging:
       driver: ${LOG_DRIVER:-local}
+    security_opt:
+      - label=disable 
     restart: always
 
 volumes:
