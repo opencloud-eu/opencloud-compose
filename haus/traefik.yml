@@ -31,3 +31,7 @@ services:
     networks:
       opencloud-net:
       traefik:
+
+networks:
+  traefik:
+    external: true
