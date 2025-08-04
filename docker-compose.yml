@@ -6,7 +6,6 @@ services:
     # release notes: https://docs.opencloud.eu/opencloud_release_notes.html
     networks:
       opencloud-net:
-      traefik:
     entrypoint:
       - /bin/sh
     # run opencloud init to initialize a configuration file with random secrets
