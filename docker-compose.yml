@@ -6,13 +6,13 @@ services:
     # release notes: https://docs.opencloud.eu/opencloud_release_notes.html
     networks:
       opencloud-net:
+      traefik:
     entrypoint:
       - /bin/sh
     # run opencloud init to initialize a configuration file with random secrets
     # it will fail on subsequent runs, because the config file already exists
     # therefore we ignore the error and then start the opencloud server
     command: ["-c", "opencloud init || true; opencloud server"]
-    user: 0:0
     environment:
       # enable services that are not started automatically
       OC_ADD_RUN_SERVICES: ${START_ADDITIONAL_SERVICES}
@@ -62,10 +62,6 @@ services:
     logging:
       driver: ${LOG_DRIVER:-local}
     restart: always
-
-volumes:
-  opencloud-config:
-  opencloud-data:
 
 networks:
   opencloud-net:
