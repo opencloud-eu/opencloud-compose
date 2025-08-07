@@ -1953,6 +1953,21 @@
         }
       },
       {
+        "id": "c016f2b3-cf74-410e-a852-f6c7b49e0f5a",
+        "name": "Block Client Registration",
+        "providerId": "trusted-hosts",
+        "subType": "anonymous",
+        "subComponents": {},
+        "config": {
+          "host-sending-registration-request-must-match": [
+            "true"
+          ],
+          "client-uris-must-match": [
+            "true"
+          ]
+        }
+      },
+      {
         "id": "5a9aef85-98a6-4e90-b30f-8aa715e1f5e6",
         "name": "Allowed Protocol Mapper Types",
         "providerId": "allowed-protocol-mappers",
