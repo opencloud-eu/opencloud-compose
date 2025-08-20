@@ -89,6 +89,7 @@ services:
       - "./config/keycloak/opencloud-realm.dist.json:/opt/keycloak/data/import-dist/opencloud-realm.json"
       - "./config/keycloak/themes/opencloud:/opt/keycloak/themes/opencloud"
     environment:
+      LDAP_ADMIN_PASSWORD: ${LDAP_BIND_PASSWORD:-admin}
       OC_DOMAIN: ${OC_DOMAIN:-cloud.opencloud.test}
       KC_HOSTNAME: ${KEYCLOAK_DOMAIN:-keycloak.opencloud.test}
       KC_DB: postgres
