@@ -79,14 +79,14 @@ services:
     restart: always
 
   keycloak:
-    image: quay.io/keycloak/keycloak:25.0.0
+    image: quay.io/keycloak/keycloak:26.3.3
     networks:
       opencloud-net:
-    command: [ "start", "--proxy=edge", "--spi-connections-http-client-default-disable-trust-manager=${INSECURE:-false}", "--import-realm" ]
+    command: [ "start", "--spi-connections-http-client-default-disable-trust-manager=${INSECURE:-false}", "--import-realm" ]
     entrypoint: [ "/bin/sh", "/opt/keycloak/bin/docker-entrypoint-override.sh" ]
     volumes:
       - "./config/keycloak/docker-entrypoint-override.sh:/opt/keycloak/bin/docker-entrypoint-override.sh"
-      - "./config/keycloak/opencloud-realm.dist.json:/opt/keycloak/data/import-dist/opencloud-realm.json"
+      - "./config/keycloak/opencloud-realm.dist.json:/opt/keycloak/data/import-dist/openCloud-realm.json"
       - "./config/keycloak/themes/opencloud:/opt/keycloak/themes/opencloud"
     environment:
       LDAP_ADMIN_PASSWORD: ${LDAP_BIND_PASSWORD:-admin}
@@ -97,6 +97,8 @@ services:
       KC_DB_USERNAME: ${KC_DB_USERNAME:-keycloak}
       KC_DB_PASSWORD: ${KC_DB_PASSWORD:-keycloak}
       KC_FEATURES: impersonation
+      KC_PROXY_HEADERS: xforwarded
+      KC_HTTP_ENABLED: true
       KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN:-kcadmin}
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-admin}
     depends_on:
