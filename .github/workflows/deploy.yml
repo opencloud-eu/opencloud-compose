@@ -1,0 +1,147 @@
+name: Deploy - vanilla-with-config
+
+on:
+  push:
+    branches: [ vanilla-with-config ]
+  pull_request:
+    branches: [ vanilla-with-config ]
+  workflow_dispatch:
+
+jobs:
+  server_prep:
+    name: Prepare infra on server
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Stop and delete all containers
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USER }}
+        password: ${{ secrets.SSH_PASSWORD }}
+        script: |
+          set +e
+          docker ps -aq | xargs -r docker stop
+          docker ps -aq | xargs -r docker rm
+          sudo systemctl stop nginx
+          set -e
+
+    - name: Create projects directories
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USER }}
+        password: ${{ secrets.SSH_PASSWORD }}
+        script: |
+          set -e
+          sudo rm -rf opencloud-compose || true
+          sudo mkdir -p opencloud-compose
+          sudo chown -R ${{ secrets.USER }}:${{ secrets.USER }} opencloud-compose
+          sudo chmod -R 755 opencloud-compose
+          sudo mkdir -p opencloud-compose/{config,data}
+          sudo chown -R 1000:1000 opencloud-compose
+
+    - name: Copy project files
+      shell: bash
+      run: |
+        set -e
+        sshpass -p "${{ secrets.SSH_PASSWORD }}" scp -v -o StrictHostKeyChecking=no \
+            -r . \
+            ${{ secrets.USER }}@${{ secrets.HOST }}:/${{ secrets.USER }}/opencloud-compose
+
+    - name: Copy web-ui-config.json from tmp directory
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USER }}
+        password: ${{ secrets.SSH_PASSWORD }}
+        script: |
+          set -e
+          # Копируем конфиг из временной директории
+          cp ~/tmp/web-ui-config.json opencloud-compose/config/web-ui-config.json
+          # Устанавливаем правильные права
+          chown 1000:1000 opencloud-compose/config/web-ui-config.json
+          chmod 644 opencloud-compose/config/web-ui-config.json
+          echo "Web UI config copied successfully"
+          # Проверяем, что файл скопировался
+          ls -la opencloud-compose/config/
+          echo "File content preview:"
+          head -n 5 opencloud-compose/config/web-ui-config.json
+
+    - name: Create environment file
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USER }}
+        password: ${{ secrets.SSH_PASSWORD }}
+        script: |
+          set -e
+          cd opencloud-compose
+          if [ -f .env.example ]; then
+            cp .env.example .env
+            echo "OC_DOMAIN=cloud.${{ secrets.HOST }}" >> .env
+            echo "TRAEFIK_DOMAIN=traefik.${{ secrets.HOST }}" >> .env
+            echo "COLLABORA_DOMAIN=collabora.${{ secrets.HOST }}" >> .env
+            echo "WOPISERVER_DOMAIN=wopiserver.${{ secrets.HOST }}" >> .env
+            echo "ADMIN_PASSWORD=${{ secrets.ADMIN_PASSWORD }}" >> .env
+            echo "INITIAL_ADMIN_PASSWORD=${{ secrets.ADMIN_PASSWORD }}" >> .env
+            echo "TRAEFIK_ACME_MAIL=${{ secrets.TRAEFIK_ACME_MAIL }}" >> .env
+
+            echo "Environment file created and configured"
+          else
+            echo ".env.example not found, skipping .env creation"
+            exit 1
+          fi
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs:
+      - server_prep
+    outputs:
+      container_status: ${{ steps.get_status.outputs.status }}
+    steps:
+    - name: Deploy containers
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USER }}
+        password: ${{ secrets.SSH_PASSWORD }}
+        script: |
+          set -e
+          cd opencloud-compose
+          docker compose up -d
+
+    - name: Get container status
+      id: get_status
+      run: |
+        sleep 15
+        status=$(sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no \
+          ${{ secrets.USER }}@${{ secrets.HOST }} \
+          "docker ps -a --format 'table {{.Names}}\t{{.Status}}'")
+        echo "status<<EOF" >> $GITHUB_OUTPUT
+        echo "$status" >> $GITHUB_OUTPUT
+        echo "EOF" >> $GITHUB_OUTPUT
+
+  send_message:
+    runs-on: ubuntu-latest
+    needs: deploy
+    if: always()
+    steps:
+    - name: send message
+      uses: appleboy/telegram-action@master
+      with:
+        to: ${{ secrets.TELEGRAM_TO }}
+        token: ${{ secrets.TELEGRAM_TOKEN }}
+        format: markdown
+        message: |
+          *${{ github.workflow }}*
+          Репозиторий: \`${{ github.repository }}\`
+          ```
+          ${{ needs.deploy.outputs.container_status || 'Не удалось получить статус' }}
+          ```
+          
+          🔗 https://cloud.${{ secrets.HOST }}
