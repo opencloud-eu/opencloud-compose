@@ -1,7 +1,6 @@
 # OpenCloud Compose
 
 This repository provides Docker Compose configurations for deploying OpenCloud in various environments.
-
 ## Overview
 
 OpenCloud Compose offers a modular approach to deploying OpenCloud with several configuration options:
