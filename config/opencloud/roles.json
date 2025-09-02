@@ -1,0 +1,79 @@
+[
+    {
+        "id": "user-rshb",
+        "name": "user-rshb",
+        "type": "TYPE_ROLE",
+        "extension": "opencloud-roles",
+        "displayName": "RSHB User",
+        "settings": [
+            {
+                "id": "4e41363c-a058-40a5-aec8-958897511209",
+                "name": "AutoAcceptShares.ReadWriteDisabled",
+                "displayName": "enable/disable auto accept shares",
+                "permissionValue": {
+                    "operation": "OPERATION_READWRITE",
+                    "constraint": "CONSTRAINT_OWN"
+                },
+                "resource": {
+                    "type": "TYPE_SETTING",
+                    "id": "ec3ed4a3-3946-4efc-8f9f-76d38b12d3a9"
+                }
+            },
+            {
+                "id": "069c08b1-e31f-4799-9ed6-194b310e7244",
+                "name": "Shares.Write",
+                "displayName": "Write share",
+                "description": "This permission allows creating shares.",
+                "permissionValue": {
+                    "operation": "OPERATION_WRITE",
+                    "constraint": "CONSTRAINT_ALL"
+                },
+                "resource": {
+                    "type": "TYPE_SHARE"
+                }
+            },
+            {
+                "id": "7d81f103-0488-4853-bce5-98dcce36d649",
+                "name": "Language.ReadWrite",
+                "displayName": "Permission to read and set the language",
+                "permissionValue": {
+                    "operation": "OPERATION_READWRITE",
+                    "constraint": "CONSTRAINT_ALL"
+                },
+                "resource": {
+                    "type": "TYPE_SETTING",
+                    "id": "aa8cfbe5-95d4-4f7e-a032-c3c01f5f062f"
+                }
+            },
+            {
+                "id": "4ebaa725-bfaa-43c5-9817-78bc9994bde4",
+                "name": "Favorites.List",
+                "displayName": "List Favorites",
+                "description": "This permission allows listing favorites.",
+                "permissionValue": {
+                    "operation": "OPERATION_READ",
+                    "constraint": "CONSTRAINT_OWN"
+                },
+                "resource": {
+                    "type": "TYPE_SYSTEM"
+                }
+            },
+            {
+                "id": "a54778fd-1c45-47f0-892d-655caf5236f2",
+                "name": "Favorites.Write",
+                "displayName": "Write Favorites",
+                "description": "This permission allows marking files as favorites.",
+                "permissionValue": {
+                    "operation": "OPERATION_WRITE",
+                    "constraint": "CONSTRAINT_OWN"
+                },
+                "resource": {
+                    "type": "TYPE_FILE"
+                }
+            }
+        ],
+        "resource": {
+            "type": "TYPE_SYSTEM"
+        }
+    }
+]
