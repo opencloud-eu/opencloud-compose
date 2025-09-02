@@ -64,8 +64,8 @@ jobs:
           # Копируем конфиг из временной директории
           cp ~/tmp/web-ui-config.json opencloud-compose/config/opencloud/web-ui-config.json
           # Устанавливаем правильные права
-          chown 1000:1000 opencloud-compose/config/opencloud/web-ui-config.json
-          chmod 644 opencloud-compose/config/opencloud/web-ui-config.json
+          chown 1000:1000 opencloud-compose/config/opencloud
+          chmod 644 opencloud-compose/config/opencloud
           echo "Web UI config copied successfully"
           # Проверяем, что файл скопировался
           ls -la opencloud-compose/config/opencloud/
