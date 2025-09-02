@@ -52,7 +52,7 @@ services:
       OC_PASSWORD_POLICY_MIN_DIGITS: "${OC_PASSWORD_POLICY_MIN_DIGITS:-1}"
       OC_PASSWORD_POLICY_MIN_SPECIAL_CHARACTERS: "${OC_PASSWORD_POLICY_MIN_SPECIAL_CHARACTERS:-1}"
       # non vanilla configs
-      WEB_UI_CONFIG_FILE: ${WEB_UI_CONFIG_FILE:-./config/opencloud/web-ui-config.json}
+      WEB_UI_CONFIG_FILE: /etc/opencloud/web-ui-config.json
     volumes:
       - ./config/opencloud/csp.yaml:/etc/opencloud/csp.yaml
       - ./config/opencloud/banned-password-list.txt:/etc/opencloud/banned-password-list.txt

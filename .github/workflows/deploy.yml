@@ -62,15 +62,15 @@ jobs:
         script: |
           set -e
           # Копируем конфиг из временной директории
-          cp ~/tmp/web-ui-config.json opencloud-compose/config/web-ui-config.json
+          cp ~/tmp/web-ui-config.json opencloud-compose/config/opencloud/web-ui-config.json
           # Устанавливаем правильные права
-          chown 1000:1000 opencloud-compose/config/web-ui-config.json
-          chmod 644 opencloud-compose/config/web-ui-config.json
+          chown 1000:1000 opencloud-compose/config/opencloud/web-ui-config.json
+          chmod 644 opencloud-compose/config/opencloud/web-ui-config.json
           echo "Web UI config copied successfully"
           # Проверяем, что файл скопировался
-          ls -la opencloud-compose/config/
+          ls -la opencloud-compose/config/opencloud/
           echo "File content preview:"
-          head -n 5 opencloud-compose/config/web-ui-config.json
+          head -n 5 opencloud-compose/config/opencloud/web-ui-config.json
 
     - name: Create environment file
       uses: appleboy/ssh-action@master
