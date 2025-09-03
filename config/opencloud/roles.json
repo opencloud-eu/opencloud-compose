@@ -1,10 +1,10 @@
 [
     {
-        "id": "user-rshb",
+        "id": "7525e45e-e2f2-473f-bc08-324936bb67d3",
         "name": "user-rshb",
         "type": "TYPE_ROLE",
         "extension": "opencloud-roles",
-        "displayName": "RSHB User",
+        "displayName": "РСХБянин",
         "settings": [
             {
                 "id": "4e41363c-a058-40a5-aec8-958897511209",
