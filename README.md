@@ -67,7 +67,7 @@ OpenCloud Compose offers a modular approach to deploying OpenCloud with several 
 5. **Access OpenCloud**:
    - URL: https://cloud.opencloud.test
    - Username: `admin`
-   - Password: Set via `INITIAL_ADMIN_PASSWORD` environment variable in your `.env` file
+   - Password: `admin` (by default). Set via `INITIAL_ADMIN_PASSWORD` environment variable in your `.env` file
 
 ### Production Deployment
 
