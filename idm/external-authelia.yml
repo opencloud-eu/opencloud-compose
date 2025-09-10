@@ -1,0 +1,36 @@
+---
+services:
+  opencloud:
+    environment:
+      # enable opaque access tokens
+      PROXY_OIDC_ACCESS_TOKEN_VERIFY_METHOD: "none"
+      PROXY_OIDC_SKIP_VERIFICATION: "false"
+
+      # Enable authelia usernames as username in OpenCloud (instead of an id)
+      # PROXY_USER_OIDC_CLAIM: "preferred_username"
+      # PROXY_AUTOPROVISION_CLAIM_USERNAME: "preferred_username"
+
+      PROXY_ROLE_ASSIGNMENT_OIDC_CLAIM: "groups"
+      WEB_OIDC_SCOPE: "openid profile email groups"
+
+      # The desktop client currently doesn't work when oidc assignment driver is used : https://github.com/opencloud-eu/desktop/issues/217
+      # That's why you only can use it to bootstrap your admin user currently (if you want to use the desktop client).
+      #
+      # 1. *Before* first startup: Switch to `PROXY_ROLE_ASSIGNMENT_DRIVER: "oidc"`
+      # 2. Start opencloud container to generate initial config: `docker compose up -d`
+      # 3. Map the `opencloud-admin` group from authelia to the `admin` role from OpenCloud in opencloud-config/opencloud.yaml :
+      #
+      # proxy:
+      #   role_assignment:
+      #    oidc_role_mapper:
+      #        role_claim: groups
+      #        role_mapping:
+      #          - role_name: admin
+      #            claim_value: opencloud-admin
+      #
+      # 4. Restart opencloud container: `docker compose restart opencloud`
+      # 5. Login with your admin user (the one with the `opencloud-admin` group)
+      # 6. Switch back to `PROXY_ROLE_ASSIGNMENT_DRIVER: "default"``
+      # 7. Recreate opencloud container: `docker compose up -d opencloud`
+      PROXY_ROLE_ASSIGNMENT_DRIVER: "default"
+      GRAPH_ASSIGN_DEFAULT_USER_ROLE: "true"

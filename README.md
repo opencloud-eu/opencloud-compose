@@ -40,7 +40,10 @@ OpenCloud Compose offers a modular approach to deploying OpenCloud with several 
 
    > **Note**: The repository includes `.env.example` as a template with default settings and documentation. Your actual `.env` file is excluded from version control (via `.gitignore`) to prevent accidentally committing sensitive information like passwords and domain-specific settings.
 
-3. **Configure deployment options**:
+3. **Set admin password**:
+   set `INITIAL_ADMIN_PASSWORD=your_secure_password` environment variable in your `.env` file
+
+4. **Configure deployment options**:
 
    You can deploy using explicit `-f` flags:
    ```bash
@@ -57,17 +60,17 @@ OpenCloud Compose offers a modular approach to deploying OpenCloud with several 
    docker compose up -d
    ```
 
-4. **Add local domains to `/etc/hosts`**:
+5. **Add local domains to `/etc/hosts`**:
    ```
    127.0.0.1 cloud.opencloud.test
    127.0.0.1 traefik.opencloud.test
    127.0.0.1 keycloak.opencloud.test
    ```
 
-5. **Access OpenCloud**:
+6. **Access OpenCloud**:
    - URL: https://cloud.opencloud.test
    - Username: `admin`
-   - Password: Set via `INITIAL_ADMIN_PASSWORD` environment variable in your `.env` file
+   - Password: value of your `INITIAL_ADMIN_PASSWORD`
 
 ### Production Deployment
 
