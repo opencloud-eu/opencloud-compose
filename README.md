@@ -60,7 +60,7 @@ OpenCloud Compose offers a modular approach to deploying OpenCloud with several 
    docker compose up -d
    ```
 
-5. **Add local domains to `/etc/hosts`**:
+5. **Add local domains to `/etc/hosts`** (for local development only):
    ```
    127.0.0.1 cloud.opencloud.test
    127.0.0.1 traefik.opencloud.test
@@ -74,8 +74,10 @@ OpenCloud Compose offers a modular approach to deploying OpenCloud with several 
 
 ### Production Deployment
 
+> **DNS Requirements**: For production deployments, you need real DNS entries pointing to your server for all required subdomains. You can either create individual DNS A/AAAA records for each subdomain (e.g., `cloud.example.com`, `collabora.example.com`, `keycloak.example.com`) or use a wildcard DNS entry (`*.example.com`) that covers all subdomains.
+
 1. **Edit the `.env` file** and configure:
-   - Domain names
+   - Domain names (replace `.opencloud.test` domains with your real domains)
    - Admin password
    - SSL certificate email
    - Storage paths
@@ -96,6 +98,8 @@ OpenCloud Compose offers a modular approach to deploying OpenCloud with several 
 
 OpenCloud can be deployed with Keycloak for identity management and LDAP for the shared user directory:
 
+> **DNS Requirements**: This setup requires DNS entries for both the main OpenCloud domain and the Keycloak subdomain. Configure DNS A/AAAA records for your domains (e.g., `cloud.example.com`, `keycloak.example.com`) or use a wildcard DNS entry (`*.example.com`).
+
 Using `-f` flags:
 ```bash
 docker compose -f docker-compose.yml -f idm/ldap-keycloak.yml -f traefik/opencloud.yml -f traefik/ldap-keycloak.yml up -d
@@ -106,10 +110,10 @@ Or by setting in `.env`:
 COMPOSE_FILE=docker-compose.yml:idm/ldap-keycloak.yml:traefik/opencloud.yml:traefik/ldap-keycloak.yml
 ```
 
-Add to `/etc/hosts` for local development:
-```
-127.0.0.1 keycloak.opencloud.test
-```
+> **For local development only**: Add to `/etc/hosts`:
+> ```
+> 127.0.0.1 keycloak.opencloud.test
+> ```
 
 This setup includes:
 - Keycloak for authentication and identity management
@@ -119,6 +123,8 @@ This setup includes:
 ### With Collabora Online
 
 Include Collabora for document editing using either method:
+
+> **DNS Requirements**: This setup requires DNS entries for the main OpenCloud domain, Collabora subdomain, and WOPI server subdomain. Configure DNS A/AAAA records for your domains (e.g., `cloud.example.com`, `collabora.example.com`, `wopiserver.example.com`) or use a wildcard DNS entry (`*.example.com`).
 
 Using `-f` flags:
 ```bash
@@ -130,15 +136,17 @@ Or by setting in `.env`:
 COMPOSE_FILE=docker-compose.yml:weboffice/collabora.yml:traefik/opencloud.yml:traefik/collabora.yml
 ```
 
-Add to `/etc/hosts` for local development:
-```
-127.0.0.1 collabora.opencloud.test
-127.0.0.1 wopiserver.opencloud.test
-```
+> **For local development only**: Add to `/etc/hosts`:
+> ```
+> 127.0.0.1 collabora.opencloud.test
+> 127.0.0.1 wopiserver.opencloud.test
+> ```
 
 ### With Full Text Search
 
 Enable full text search capabilities with Apache Tika using either method:
+
+> **DNS Requirements**: This setup requires DNS entries for the main OpenCloud domain. Configure a DNS A/AAAA record for your domain (e.g., `cloud.example.com`) or use a wildcard DNS entry (`*.example.com`).
 
 Using `-f` flags:
 ```bash
@@ -159,6 +167,8 @@ This setup includes:
 
 Enable CalDAV (calendars, to-do lists) and CardDAV (contacts) server.
 
+> **DNS Requirements**: This setup requires DNS entries for the main OpenCloud domain. Configure a DNS A/AAAA record for your domain (e.g., `cloud.example.com`) or use a wildcard DNS entry (`*.example.com`).
+
 Using `-f` flags:
 ```bash
 docker compose -f docker-compose.yml -f radicale/radicale.yml -f traefik/opencloud.yml up -d
@@ -176,6 +186,8 @@ This setup includes:
 ### With Monitoring
 
 Enable monitoring capabilities with metrics endpoints using either method:
+
+> **DNS Requirements**: This setup requires DNS entries for the main OpenCloud domain. Configure a DNS A/AAAA record for your domain (e.g., `cloud.example.com`) or use a wildcard DNS entry (`*.example.com`).
 
 Using `-f` flags:
 ```bash
@@ -206,6 +218,8 @@ Access metrics endpoints:
 
 If you already have a reverse proxy (Nginx, Caddy, etc.), use either method:
 
+> **DNS Requirements**: When using an external proxy, you need to configure your external proxy to handle DNS and SSL termination. Ensure your DNS entries point to your external proxy server, and configure your proxy to forward requests to the exposed OpenCloud ports.
+
 Using `-f` flags:
 ```bash
 docker compose -f docker-compose.yml -f weboffice/collabora.yml -f external-proxy/opencloud.yml -f external-proxy/collabora.yml up -d
@@ -220,7 +234,6 @@ This exposes the necessary ports:
 - OpenCloud: 9200
 - Collabora: 9980
 - WOPI server: 9300
-
 
 **Please note:**
 If you're using **Nginx Proxy Manager (NPM)**, you **should NOT** activate **"Block Common Exploits"** for the Proxy Host.
