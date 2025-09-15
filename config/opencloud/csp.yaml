@@ -39,6 +39,7 @@ directives:
   script-src:
     - '''self'''
     - '''unsafe-inline'''
+    - 'https://${IDP_DOMAIN|keycloak.opencloud.test}/'
   style-src:
     - '''self'''
     - '''unsafe-inline'''
