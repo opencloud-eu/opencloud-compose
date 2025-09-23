@@ -1,0 +1,21 @@
+{
+  "server": "https://cloud.opencloud.test",
+  "theme": "https://cloud.opencloud.test/themes/opencloud/theme.json",
+  "options": {
+    "contextHelpersReadMore": true
+  },
+  "apps": [
+    "files",
+    "text-editor",
+    "pdf-viewer",
+    "search",
+    "external",
+    "admin-settings",
+    "webfinger",
+    "epub-reader",
+    "app-store",
+    "activities",
+    "preview",
+    "ocm"
+  ]
+}

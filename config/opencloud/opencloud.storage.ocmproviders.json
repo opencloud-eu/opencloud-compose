@@ -1,0 +1,46 @@
+[
+  {
+    "name": "host.docker.internal:9200",
+    "full_name": "host.docker.internal 9200",
+    "organization": "OpenCloud",
+    "domain": "host.docker.internal:9200",
+    "homepage": "https://opencloud.eu",
+    "services": [
+      {
+        "endpoint": {
+          "type": {
+            "name": "OCM",
+            "description": "OpenCloud Open Cloud Mesh API"
+          },
+          "name": "OpenCloud - OCM API",
+          "path": "https://host.docker.internal:9200/ocm/",
+          "is_monitored": true
+        },
+        "api_version": "0.0.1",
+        "host": "host.docker.internal:9200"
+      }
+    ]
+  },
+  {
+    "name": "cloud.opencloud.test",
+    "full_name": "cloud.opencloud.test",
+    "organization": "OpenCloud",
+    "domain": "cloud.opencloud.test",
+    "homepage": "https://opencloud.eu",
+    "services": [
+      {
+        "endpoint": {
+          "type": {
+            "name": "OCM",
+            "description": "OpenCloud Open Cloud Mesh API"
+          },
+          "name": "OpenCloud - OCM API",
+          "path": "https://cloud.opencloud.test/ocm/",
+          "is_monitored": true
+        },
+        "api_version": "0.0.1",
+        "host": "cloud.opencloud.test"
+      }
+    ]
+  }
+]
