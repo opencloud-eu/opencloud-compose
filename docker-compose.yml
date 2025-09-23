@@ -16,8 +16,8 @@ services:
       # enable services that are not started automatically
       OC_ADD_RUN_SERVICES: ${START_ADDITIONAL_SERVICES}
       OC_URL: https://${OC_DOMAIN:-cloud.opencloud.test}
-      OC_LOG_LEVEL: ${LOG_LEVEL:-warn}
-      OC_LOG_COLOR: "${LOG_PRETTY:-true}"
+      OC_LOG_LEVEL: ${LOG_LEVEL:-info}
+      OC_LOG_COLOR: "${LOG_PRETTY:-false}"
       OC_LOG_PRETTY: "${LOG_PRETTY:-false}"
       # do not use SSL between the reverse proxy and OpenCloud
       PROXY_TLS: "false"
@@ -58,17 +58,7 @@ services:
       OCM_OCM_INVITE_MANAGER_INSECURE: "true"
       OCM_OCM_SHARE_PROVIDER_INSECURE: "true"
       OCM_OCM_STORAGE_PROVIDER_INSECURE: "true"
-      
-      # WEB
-      WEB_ASSET_CORE_PATH: ${WEB_ASSET_CORE_PATH:-/web/dist}
-      WEB_ASSET_APPS_PATH: ${WEB_ASSET_APPS_PATH:-/web/apps}
-      WEB_UI_CONFIG_FILE: ${WEB_UI_CONFIG_FILE:-/web/config.json}
-  
-      #FRONTEND
-      FRONTEND_SEARCH_MIN_LENGTH: '2'
-      FRONTEND_OCS_ENABLE_DENIALS: 'true'
-      FRONTEND_FULL_TEXT_SEARCH_ENABLED: 'true'
-      GRAPH_INCLUDE_OCM_SHAREES: 'true'      
+      GRAPH_INCLUDE_OCM_SHAREES: "true"
 
     volumes:
       - ./config/opencloud/csp.yaml:/etc/opencloud/csp.yaml
