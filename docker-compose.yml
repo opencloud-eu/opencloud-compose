@@ -59,11 +59,13 @@ services:
       OCM_OCM_SHARE_PROVIDER_INSECURE: "true"
       OCM_OCM_STORAGE_PROVIDER_INSECURE: "true"
       GRAPH_INCLUDE_OCM_SHAREES: "true"
+      WEB_UI_CONFIG_FILE: ${WEB_UI_CONFIG_FILE:-/web/config.json}
+
 
     volumes:
       - ./config/opencloud/csp.yaml:/etc/opencloud/csp.yaml
       - ./config/opencloud/banned-password-list.txt:/etc/opencloud/banned-password-list.txt
-      - ./config/opencloud/opencloud.web.config.json:/web/config.json
+      - ${OC_WEB_CONFIG:-./config/opencloud/opencloud.web.config.json}:/web/config.json:ro
       - ./config/opencloud/opencloud.storage.ocmproviders.json:/etc/opencloud/ocmproviders.json
       # configure the .env file to use own paths instead of docker internal volumes
       - ${OC_CONFIG_DIR:-opencloud-config}:/etc/opencloud
