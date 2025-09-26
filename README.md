@@ -72,26 +72,6 @@ OpenCloud Compose offers a modular approach to deploying OpenCloud with several 
    - Username: `admin`
    - Password: value of your `INITIAL_ADMIN_PASSWORD`
 
-### Production Deployment
-
-> **DNS Requirements**: For production deployments, you need real DNS entries pointing to your server for all required subdomains. You can either create individual DNS A/AAAA records for each subdomain (e.g., `cloud.example.com`, `collabora.example.com`, `keycloak.example.com`) or use a wildcard DNS entry (`*.example.com`) that covers all subdomains.
-
-1. **Edit the `.env` file** and configure:
-   - Domain names (replace `.opencloud.test` domains with your real domains)
-   - Admin password
-   - SSL certificate email
-   - Storage paths
-
-2. **Configure deployment options** in `.env`:
-   ```
-   COMPOSE_FILE=docker-compose.yml:weboffice/collabora.yml:traefik/opencloud.yml:traefik/collabora.yml
-   ```
-
-3. **Start OpenCloud**:
-   ```bash
-   docker compose up -d
-   ```
-
 ## Deployment Options
 
 ### With Keycloak and LDAP using a Shared User Directory
