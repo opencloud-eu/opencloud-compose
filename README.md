@@ -2,6 +2,9 @@
 
 This repository provides Docker Compose configurations for deploying OpenCloud in various environments.
 
+> [!IMPORTANT]
+> Please use the [official docs](https://docs.opencloud.eu/docs/admin/getting-started/container/docker-compose/docker-compose-base) for a **Production Deployment**.
+
 ## Overview
 
 OpenCloud Compose offers a modular approach to deploying OpenCloud with several configuration options:
