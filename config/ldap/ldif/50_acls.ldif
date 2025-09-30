@@ -1,0 +1,19 @@
+# OpenCloud ldap acl file
+dn: olcDatabase={2}mdb,cn=config
+changetype: modify
+replace: olcAccess
+olcAccess: {0}to attrs=userPassword
+  by anonymous auth
+  by self write
+  by dn.base="cn=admin,dc=opencloud,dc=eu" write
+  by users auth
+olcAccess: {1}to attrs=shadowLastChange
+  by anonymous none
+  by self write
+  by dn.base="cn=admin,dc=opencloud,dc=eu" write
+  by * read
+olcAccess: {2}to *
+  by self write
+  by dn.base="cn=admin,dc=opencloud,dc=eu" write
+  by users read
+  by anonymous read
