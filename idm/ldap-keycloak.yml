@@ -57,14 +57,14 @@ services:
     volumes:
       - ./config/ldap/ldif/10_base.ldif:/ldifs/10_base.ldif
       - ./config/ldap/ldif/20_admin.ldif:/ldifs/20_admin.ldif
-      - ./config/ldap/ldif/50_aclsl.dif:/ldifs/50_acls.ldif
+      - ./config/ldap/ldif/50_acls.ldif:/opt/bitnami/openldap/share/50_acls.ldif
       - ./config/ldap/docker-entrypoint-override.sh:/opt/bitnami/scripts/openldap/docker-entrypoint-override.sh
       - ldap-certs:/opt/bitnami/openldap/share
       - ldap-data:/bitnami/openldap
     logging:
       driver: ${LOG_DRIVER:-local}
     restart: always
-
+                        
   postgres:
     image: postgres:17-alpine
     networks:
