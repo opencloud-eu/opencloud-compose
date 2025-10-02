@@ -2,10 +2,14 @@
 dn: olcDatabase={2}mdb,cn=config
 changetype: modify
 replace: olcAccess
-olcAccess: {0}to attrs=userPassword
+olcAccess: {0}to dn.subtree="dc=opencloud,dc=eu" attrs=entry,uid,objectClass,entryUUID
+  by * read
+olcAccess: {1}to attrs=userPassword
   by dn.base="cn=admin,dc=opencloud,dc=eu" write
   by self write
   by * auth
-olcAccess: {1}to *
+olcAccess: {2}to *
   by dn.base="cn=admin,dc=opencloud,dc=eu" write
+  by dn.base="uid=admin,ou=users,dc=opencloud,dc=eu" write
   by * none
+
