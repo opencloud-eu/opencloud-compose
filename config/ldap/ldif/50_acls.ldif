@@ -9,22 +9,3 @@ olcAccess: {0}to attrs=userPassword
 olcAccess: {1}to *
   by dn.base="cn=admin,dc=opencloud,dc=eu" write
   by * none
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
