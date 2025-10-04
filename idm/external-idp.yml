@@ -44,7 +44,7 @@ services:
       # The openCloud users need to be able to edit their account in the externa IdP
       WEB_OPTION_ACCOUNT_EDIT_LINK_HREF: ${IDP_ACCOUNT_URL}
   ldap-server:
-    image: bitnami/openldap:2.6
+    image: bitnamilegacy/openldap:2.6
     networks:
       opencloud-net:
     entrypoint: [ "/bin/sh", "/opt/bitnami/scripts/openldap/docker-entrypoint-override.sh", "/opt/bitnami/scripts/openldap/run.sh" ]
