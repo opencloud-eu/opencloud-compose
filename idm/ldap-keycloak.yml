@@ -51,9 +51,6 @@ services:
       LDAP_TLS_KEY_FILE: /opt/bitnami/openldap/share/openldap.key
       LDAP_ROOT: "dc=opencloud,dc=eu"
       LDAP_ADMIN_PASSWORD: ${LDAP_BIND_PASSWORD:-admin}
-    ports:
-      - "127.0.0.1:389:1389"
-      - "127.0.0.1:636:1636"
     volumes:
       - ./config/ldap/ldif/10_base.ldif:/ldifs/10_base.ldif
       - ./config/ldap/ldif/20_admin.ldif:/ldifs/20_admin.ldif
