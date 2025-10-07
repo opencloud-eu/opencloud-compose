@@ -31,6 +31,7 @@ services:
       WEB_OPTION_ACCOUNT_EDIT_LINK_HREF: "https://${KEYCLOAK_DOMAIN:-keycloak.opencloud.test}/realms/openCloud/account"
       # admin and demo accounts must be created in Keycloak
       OC_ADMIN_USER_ID: ""
+      IDM_CREATE_DEMO_USERS: "false" 
       SETTINGS_SETUP_DEFAULT_ASSIGNMENTS: "false"
       GRAPH_ASSIGN_DEFAULT_USER_ROLE: "false"
       GRAPH_USERNAME_MATCH: "none"
