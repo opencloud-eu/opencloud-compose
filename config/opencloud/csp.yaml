@@ -8,6 +8,7 @@ directives:
     - 'wss://${COMPANION_DOMAIN|companion.opencloud.test}/'
     - 'https://raw.githubusercontent.com/opencloud-eu/awesome-apps/'
     - 'https://${IDP_DOMAIN|keycloak.opencloud.test}/'
+    - 'https://update.opencloud.eu/'
   default-src:
     - '''none'''
   font-src:
