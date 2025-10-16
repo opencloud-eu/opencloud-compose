@@ -54,6 +54,8 @@ services:
     volumes:
       - ./config/ldap/ldif/10_base.ldif:/ldifs/10_base.ldif
       - ./config/ldap/ldif/20_admin.ldif:/ldifs/20_admin.ldif
+      - ./config/ldap/ldif/50_acls.ldif:/opt/bitnami/openldap/etc/schema/50_acls.ldif
+      - ./config/ldap/init-ldap-acls.sh:/docker-entrypoint-initdb.d/init-ldap-acls.sh
       - ./config/ldap/docker-entrypoint-override.sh:/opt/bitnami/scripts/openldap/docker-entrypoint-override.sh
       - ldap-certs:/opt/bitnami/openldap/share
       - ldap-data:/bitnami/openldap
