@@ -7,6 +7,3 @@ olcAccess: {0}to dn.subtree="dc=opencloud,dc=eu" attrs=entry,uid,objectClass,ent
 olcAccess: {1}to attrs=userPassword
   by self write
   by * auth
-olcAccess: {2}to *
-  by dn.base="uid=admin,ou=users,dc=opencloud,dc=eu" write
-  by * none
