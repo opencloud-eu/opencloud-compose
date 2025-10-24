@@ -635,7 +635,6 @@
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
-      "secret": "**********",
       "redirectUris": [
         "oc://android.opencloud.eu"
       ],
@@ -677,6 +676,7 @@
         "profile",
         "roles",
         "groups",
+        "OpenCloudUnique_ID",
         "basic",
         "email"
       ],
@@ -757,7 +757,6 @@
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
-      "secret": "**********",
       "redirectUris": [
         "oc://ios.opencloud.eu"
       ],
