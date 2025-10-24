@@ -51,12 +51,11 @@ services:
       LDAP_TLS_KEY_FILE: /opt/bitnami/openldap/share/openldap.key
       LDAP_ROOT: "dc=opencloud,dc=eu"
       LDAP_ADMIN_PASSWORD: ${LDAP_BIND_PASSWORD:-admin}
-    ports:
-      - "127.0.0.1:389:1389"
-      - "127.0.0.1:636:1636"
     volumes:
       - ./config/ldap/ldif/10_base.ldif:/ldifs/10_base.ldif
       - ./config/ldap/ldif/20_admin.ldif:/ldifs/20_admin.ldif
+      - ./config/ldap/ldif/50_acls.ldif:/opt/bitnami/openldap/etc/schema/50_acls.ldif
+      - ./config/ldap/init-ldap-acls.sh:/docker-entrypoint-initdb.d/init-ldap-acls.sh
       - ./config/ldap/docker-entrypoint-override.sh:/opt/bitnami/scripts/openldap/docker-entrypoint-override.sh
       - ldap-certs:/opt/bitnami/openldap/share
       - ldap-data:/bitnami/openldap
@@ -65,7 +64,7 @@ services:
     restart: always
 
   postgres:
-    image: postgres:alpine
+    image: postgres:17-alpine
     networks:
       opencloud-net:
     volumes:

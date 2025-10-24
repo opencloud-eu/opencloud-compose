@@ -1,0 +1,9 @@
+# OpenCloud ldap acl file which gets applied during the first db initialisation
+dn: olcDatabase={2}mdb,cn=config
+changetype: modify
+replace: olcAccess
+olcAccess: {0}to dn.subtree="dc=opencloud,dc=eu" attrs=entry,uid,objectClass,entryUUID
+  by * read
+olcAccess: {1}to attrs=userPassword
+  by self write
+  by * auth
