@@ -65,6 +65,7 @@ services:
       - ./config/ldap/docker-entrypoint-override.sh:/opt/bitnami/scripts/openldap/docker-entrypoint-override.sh
       - ${LDAP_CERTS_DIR:-ldap-certs}:/opt/bitnami/openldap/share
       - ${LDAP_DATA_DIR:-ldap-data}:/bitnami/openldap
+    restart: always
 
 volumes:
   ldap-certs:
