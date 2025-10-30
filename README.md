@@ -42,8 +42,9 @@ OpenCloud Compose offers a modular approach to deploying OpenCloud with several 
 
 3. **Set admin password**:
    set `INITIAL_ADMIN_PASSWORD=your_secure_password` environment variable in your `.env` file
-
-4. **Configure deployment options**:
+4. **Domain**:
+   optionally, set `OC_DOMAIN=your-domain.com` to overwrite the default `cloud.opencloud.test`
+5. **Configure deployment options**:
 
    You can deploy using explicit `-f` flags:
    ```bash
@@ -60,14 +61,14 @@ OpenCloud Compose offers a modular approach to deploying OpenCloud with several 
    docker compose up -d
    ```
 
-5. **Add local domains to `/etc/hosts`** (for local development only):
+6. **Add local domains to `/etc/hosts`** (for local development only):
    ```
    127.0.0.1 cloud.opencloud.test
    127.0.0.1 traefik.opencloud.test
    127.0.0.1 keycloak.opencloud.test
    ```
 
-6. **Access OpenCloud**:
+7. **Access OpenCloud**:
    - URL: https://cloud.opencloud.test
    - Username: `admin`
    - Password: value of your `INITIAL_ADMIN_PASSWORD`
