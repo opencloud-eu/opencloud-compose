@@ -58,7 +58,8 @@ services:
         --o:ssl.ssl_verification=${COLLABORA_SSL_VERIFICATION:-true} \
         --o:ssl.termination=true \
         --o:welcome.enable=false \
-        --o:net.frame_ancestors=${OC_DOMAIN:-cloud.opencloud.test}
+        --o:net.frame_ancestors=${OC_DOMAIN:-cloud.opencloud.test} \
+        --o:net.lok_allow.host[14]=${OC_DOMAIN-cloud.opencloud.test}
       username: ${COLLABORA_ADMIN_USER:-admin}
       password: ${COLLABORA_ADMIN_PASSWORD:-admin}
     cap_add:
