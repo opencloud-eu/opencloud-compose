@@ -44,7 +44,7 @@ services:
       # The openCloud users need to be able to edit their account in the externa IdP
       WEB_OPTION_ACCOUNT_EDIT_LINK_HREF: ${IDP_ACCOUNT_URL}
   ldap-server:
-    image: bitnami/openldap:2.6
+    image: bitnamilegacy/openldap:2.6
     networks:
       opencloud-net:
     entrypoint: [ "/bin/sh", "/opt/bitnami/scripts/openldap/docker-entrypoint-override.sh", "/opt/bitnami/scripts/openldap/run.sh" ]
@@ -57,9 +57,6 @@ services:
       LDAP_TLS_KEY_FILE: /opt/bitnami/openldap/share/openldap.key
       LDAP_ROOT: "dc=opencloud,dc=eu"
       LDAP_ADMIN_PASSWORD: ${LDAP_BIND_PASSWORD:-admin}
-    ports:
-      - "127.0.0.1:389:1389"
-      - "127.0.0.1:636:1636"
     volumes:
       # Only use the base ldif file to create the base structure
       - ./config/ldap/ldif/10_base.ldif:/ldifs/10_base.ldif
@@ -68,6 +65,7 @@ services:
       - ./config/ldap/docker-entrypoint-override.sh:/opt/bitnami/scripts/openldap/docker-entrypoint-override.sh
       - ${LDAP_CERTS_DIR:-ldap-certs}:/opt/bitnami/openldap/share
       - ${LDAP_DATA_DIR:-ldap-data}:/bitnami/openldap
+    restart: always
 
 volumes:
   ldap-certs:
