@@ -13,6 +13,7 @@ OpenCloud Compose offers a modular approach to deploying OpenCloud with several 
 - **Full text search** with Apache Tika for content extraction and metadata analysis
 - **Monitoring** with metrics endpoints for observability and performance monitoring
 - **Radicale** integration for Calendar and Contacts
+- **ClamAV** antivirus scanning with ClamAV
 
 ## Quick Start Guide
 
@@ -239,6 +240,25 @@ This exposes the necessary ports:
 **Please note:**
 If you're using **Nginx Proxy Manager (NPM)**, you **should NOT** activate **"Block Common Exploits"** for the Proxy Host.
 Otherwise, the desktop app authentication will return **error 403 Forbidden**.
+
+### ClamAV anti-virus
+
+Enable anti-virus scans for uploaded files.
+
+Using `-f` flags:
+```bash
+docker compose -f docker-compose.yml -f antivirus/clamav.yml -f traefik/opencloud.yml up -d
+```
+
+Or by setting in `.env`:
+```
+COMPOSE_FILE=docker-compose.yml:antivirus/clamav.yml:traefik/opencloud.yml
+```
+
+**Important:** adjust the variable in `.env` to start the antivirus service. Add additional services separated by comma, e.g. `notifications,antivirus`:
+```
+START_ADDITIONAL_SERVICES="antivirus"
+```
 
 
 ## SSL Certificate Support
