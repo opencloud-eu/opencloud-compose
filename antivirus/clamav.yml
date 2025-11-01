@@ -14,6 +14,10 @@ services:
       - clamav-socket:/var/run/clamav
   clamav:
     image: clamav/clamav:${CLAMAV_DOCKER_TAG:-latest}
+    environment:
+      # Accepts a number with optional K, M or G suffix. Must be greater or equal to ANTIVIRUS_MAX_SCAN_SIZE above.
+      # K = KiB (1024), M = MiB (1024 * 1024), G = GiB (1024 * 1024 * 1024)
+      CLAMD_CONF_StreamMaxLength: 100M
     networks:
       opencloud-net:
     volumes:
