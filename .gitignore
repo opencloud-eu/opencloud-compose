@@ -5,6 +5,7 @@
 # exclude the apps folder
 /config/opencloud/apps/*
 !/config/opencloud/apps/.gitkeep
+!/config/opencloud/apps/maps
 
 # exclude custom compose files
 /custom
