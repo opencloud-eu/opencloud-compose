@@ -41,7 +41,7 @@ services:
     volumes:
       # configure the .env file to use own paths instead of docker internal volumes
       - ${OC_CONFIG_DIR:-opencloud-config}:/etc/opencloud
-      # in order to add new fonts, add then to /usr/share/fonts/truetype on your local system
+      # in order to add new fonts, add them to /usr/share/fonts/truetype on your local system
       - /usr/share/fonts/truetype:/usr/share/fonts/truetype/more:ro
       - /usr/share/fonts/truetype:/opt/cool/systemplate/usr/share/fonts/truetype/more:ro
     logging:
