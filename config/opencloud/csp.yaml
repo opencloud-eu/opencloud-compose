@@ -28,6 +28,7 @@ directives:
     - 'data:'
     - 'blob:'
     - 'https://raw.githubusercontent.com/opencloud-eu/awesome-apps/'
+    - 'https://tile.openstreetmap.org/'
     # In contrary to bash and docker the default is given after the | character
     - 'https://${COLLABORA_DOMAIN|collabora.opencloud.test}/'
   manifest-src:
