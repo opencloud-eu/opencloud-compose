@@ -41,10 +41,6 @@ services:
     volumes:
       # configure the .env file to use own paths instead of docker internal volumes
       - ${OC_CONFIG_DIR:-opencloud-config}:/etc/opencloud
-      # Mount local TrueType fonts so the container can use system fonts
-      # (e.g. Microsoft fonts like Arial, Calibri, Cambria by installing the `ttf-mscorefonts-installer` package).
-      - /usr/share/fonts/truetype:/usr/share/fonts/truetype/more:ro
-      - /usr/share/fonts/truetype:/opt/cool/systemplate/usr/share/fonts/truetype/more:ro
     logging:
       driver: ${LOG_DRIVER:-local}
     restart: always
@@ -69,6 +65,11 @@ services:
       password: ${COLLABORA_ADMIN_PASSWORD:-admin}
     cap_add:
       - MKNOD
+    volumes:
+      # Mount local TrueType fonts so the container can use system fonts
+      # (e.g. Microsoft fonts like Arial, Calibri, Cambria by installing the `ttf-mscorefonts-installer` package).
+      - /usr/share/fonts/truetype:/usr/share/fonts/truetype/more:ro
+      - /usr/share/fonts/truetype:/opt/cool/systemplate/usr/share/fonts/truetype/more:ro
     logging:
       driver: ${LOG_DRIVER:-local}
     restart: always
