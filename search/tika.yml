@@ -1,7 +1,10 @@
 ---
 services:
   tika:
-    image: ${TIKA_IMAGE:-apache/tika:latest-full}
+    image: ${TIKA_IMAGE:-apache/tika:slim}
+    # Using slim variant for smaller image size and faster startup
+    # The slim variant includes core functionality for text extraction
+    # Full variant is only needed for specialized OCR/image processing
     # release notes: https://tika.apache.org
     networks:
       opencloud-net:
