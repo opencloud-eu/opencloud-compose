@@ -39,6 +39,7 @@ services:
       COLLABORATION_LOG_LEVEL: ${LOG_LEVEL:-info}
       OC_URL: https://${OC_DOMAIN:-cloud.opencloud.test}
     volumes:
+      - collaboration-data:/var/lib/opencloud
       # configure the .env file to use own paths instead of docker internal volumes
       - ${OC_CONFIG_DIR:-opencloud-config}:/etc/opencloud
     logging:
@@ -80,3 +81,6 @@ services:
       interval: 15s
       timeout: 10s
       retries: 5
+
+volumes:
+  collaboration-data:
