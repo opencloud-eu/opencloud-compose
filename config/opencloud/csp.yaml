@@ -4,10 +4,10 @@ directives:
   connect-src:
     - '''self'''
     - 'blob:'
-    - 'https://${COMPANION_DOMAIN|companion.opencloud.test}:${TRAEFIK_EXTERNAL_PORT|443}/'
-    - 'wss://${COMPANION_DOMAIN|companion.opencloud.test}:${TRAEFIK_EXTERNAL_PORT|443}/'
+    - 'https://${COMPANION_DOMAIN|companion.opencloud.test}${TRAEFIK_EXTERNAL_PORT}/'
+    - 'wss://${COMPANION_DOMAIN|companion.opencloud.test}${TRAEFIK_EXTERNAL_PORT}/'
     - 'https://raw.githubusercontent.com/opencloud-eu/awesome-apps/'
-    - 'https://${IDP_DOMAIN|keycloak.opencloud.test}:${TRAEFIK_EXTERNAL_PORT|443}/'
+    - 'https://${IDP_DOMAIN|keycloak.opencloud.test}${TRAEFIK_EXTERNAL_PORT}/'
     - 'https://update.opencloud.eu/'
   default-src:
     - '''none'''
@@ -20,7 +20,7 @@ directives:
     - 'blob:'
     - 'https://embed.diagrams.net/'
     # In contrary to bash and docker the default is given after the | character
-    - 'https://${COLLABORA_DOMAIN|collabora.opencloud.test}:${TRAEFIK_EXTERNAL_PORT|443}/'
+    - 'https://${COLLABORA_DOMAIN|collabora.opencloud.test}${TRAEFIK_EXTERNAL_PORT}/'
     # This is needed for the external-sites web extension when embedding sites
     - 'https://docs.opencloud.eu'
   img-src:
@@ -30,7 +30,7 @@ directives:
     - 'https://raw.githubusercontent.com/opencloud-eu/awesome-apps/'
     - 'https://tile.openstreetmap.org/'
     # In contrary to bash and docker the default is given after the | character
-    - 'https://${COLLABORA_DOMAIN|collabora.opencloud.test}:${TRAEFIK_EXTERNAL_PORT|443}/'
+    - 'https://${COLLABORA_DOMAIN|collabora.opencloud.test}${TRAEFIK_EXTERNAL_PORT}/'
   manifest-src:
     - '''self'''
   media-src:
@@ -41,7 +41,7 @@ directives:
   script-src:
     - '''self'''
     - '''unsafe-inline'''
-    - 'https://${IDP_DOMAIN|keycloak.opencloud.test}:${TRAEFIK_EXTERNAL_PORT|443}/'
+    - 'https://${IDP_DOMAIN|keycloak.opencloud.test}${TRAEFIK_EXTERNAL_PORT}/'
   style-src:
     - '''self'''
     - '''unsafe-inline'''
