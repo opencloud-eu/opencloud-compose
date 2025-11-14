@@ -22,9 +22,11 @@ services:
       - "TRAEFIK_ACME_CASERVER=${TRAEFIK_ACME_CASERVER:-https://acme-v02.api.letsencrypt.org/directory}"
       - "TRAEFIK_LOG_LEVEL=${TRAEFIK_LOG_LEVEL:-ERROR}"
       - "TRAEFIK_ACCESS_LOG=${TRAEFIK_ACCESS_LOG:-false}"
+      - "TRAEFIK_HTTP_PORT=${TRAEFIK_PORT_HTTP:-80}"
+      - "TRAEFIK_HTTPS_PORT=${TRAEFIK_PORT_HTTPS:-443}"
     ports:
-      - "80:80"
-      - "443:443"
+      - "${TRAEFIK_PORT_HTTP:-80}:${TRAEFIK_PORT_HTTP:-80}"
+      - "${TRAEFIK_PORT_HTTPS:-443}:${TRAEFIK_PORT_HTTPS:-443}"
     volumes:
       - "${DOCKER_SOCKET_PATH:-/var/run/docker.sock}:/var/run/docker.sock:ro"
       - "./config/traefik/docker-entrypoint-override.sh:/opt/traefik/bin/docker-entrypoint-override.sh"
