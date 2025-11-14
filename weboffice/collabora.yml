@@ -5,6 +5,7 @@ services:
     environment:
       # this is needed for setting the correct CSP header
       COLLABORA_DOMAIN: ${COLLABORA_DOMAIN:-collabora.opencloud.test}
+      TRAEFIK_EXTERNAL_PORT: ${TRAEFIK_PORT_HTTPS:-443}
       # expose nats and the reva gateway for the collaboration service
       NATS_NATS_HOST: 0.0.0.0
       GATEWAY_GRPC_ADDR: 0.0.0.0:9142
@@ -29,15 +30,15 @@ services:
       COLLABORATION_HTTP_ADDR: 0.0.0.0:9300
       MICRO_REGISTRY: "nats-js-kv"
       MICRO_REGISTRY_ADDRESS: "opencloud:9233"
-      COLLABORATION_WOPI_SRC: https://${WOPISERVER_DOMAIN:-wopiserver.opencloud.test}
+      COLLABORATION_WOPI_SRC: https://${WOPISERVER_DOMAIN:-wopiserver.opencloud.test}:${TRAEFIK_PORT_HTTPS:-443}
       COLLABORATION_APP_NAME: "CollaboraOnline"
       COLLABORATION_APP_PRODUCT: "Collabora"
-      COLLABORATION_APP_ADDR: https://${COLLABORA_DOMAIN:-collabora.opencloud.test}
-      COLLABORATION_APP_ICON: https://${COLLABORA_DOMAIN:-collabora.opencloud.test}/favicon.ico
+      COLLABORATION_APP_ADDR: https://${COLLABORA_DOMAIN:-collabora.opencloud.test}:${TRAEFIK_PORT_HTTPS:-443}
+      COLLABORATION_APP_ICON: https://${COLLABORA_DOMAIN:-collabora.opencloud.test}:${TRAEFIK_PORT_HTTPS:-443}/favicon.ico
       COLLABORATION_APP_INSECURE: "${INSECURE:-true}"
       COLLABORATION_CS3API_DATAGATEWAY_INSECURE: "${INSECURE:-true}"
       COLLABORATION_LOG_LEVEL: ${LOG_LEVEL:-info}
-      OC_URL: https://${OC_DOMAIN:-cloud.opencloud.test}
+      OC_URL: https://${OC_DOMAIN:-cloud.opencloud.test}:${TRAEFIK_PORT_HTTPS:-443}
     volumes:
       # configure the .env file to use own paths instead of docker internal volumes
       - ${OC_CONFIG_DIR:-opencloud-config}:/etc/opencloud
@@ -51,15 +52,15 @@ services:
     networks:
       opencloud-net:
     environment:
-      aliasgroup1: https://${WOPISERVER_DOMAIN:-wopiserver.opencloud.test}:443
+      aliasgroup1: https://${WOPISERVER_DOMAIN:-wopiserver.opencloud.test}:${TRAEFIK_PORT_HTTPS:-443}
       DONT_GEN_SSL_CERT: "YES"
       extra_params: |
         --o:ssl.enable=${COLLABORA_SSL_ENABLE:-true} \
         --o:ssl.ssl_verification=${COLLABORA_SSL_VERIFICATION:-true} \
         --o:ssl.termination=true \
         --o:welcome.enable=false \
-        --o:net.frame_ancestors=${OC_DOMAIN:-cloud.opencloud.test} \
-        --o:net.lok_allow.host[14]=${OC_DOMAIN-cloud.opencloud.test} \
+        --o:net.frame_ancestors=${OC_DOMAIN:-cloud.opencloud.test}:${TRAEFIK_PORT_HTTPS:-443} \
+        --o:net.lok_allow.host[14]=${OC_DOMAIN-cloud.opencloud.test}:${TRAEFIK_PORT_HTTPS:-443} \
         --o:home_mode.enable=${COLLABORA_HOME_MODE:-false}
       username: ${COLLABORA_ADMIN_USER:-admin}
       password: ${COLLABORA_ADMIN_PASSWORD:-admin}

@@ -15,7 +15,7 @@ services:
     environment:
       # enable services that are not started automatically
       OC_ADD_RUN_SERVICES: ${START_ADDITIONAL_SERVICES}
-      OC_URL: https://${OC_DOMAIN:-cloud.opencloud.test}
+      OC_URL: https://${OC_DOMAIN:-cloud.opencloud.test}:${TRAEFIK_PORT_HTTPS:-443}
       OC_LOG_LEVEL: ${LOG_LEVEL:-info}
       OC_LOG_COLOR: "${LOG_PRETTY:-false}"
       OC_LOG_PRETTY: "${LOG_PRETTY:-false}"
