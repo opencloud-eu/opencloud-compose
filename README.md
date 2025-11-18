@@ -149,12 +149,12 @@ This setup includes:
 - Support for documents, PDFs, images, and other file types
 
 **Tika Image Variant:**
-By default, OpenCloud Compose uses `apache/tika:slim` which provides:
+By default, OpenCloud Compose uses `apache/tika:latest` which provides:
 - Smaller image size (~300MB vs ~1.2GB for the full variant)
 - Faster container startup and deployment
 - Core text extraction functionality for common document formats (PDF, Office docs, text files, etc.)
 
-The slim variant is recommended for most use cases. If you need advanced features like specialized OCR processing or specific image format support, you can override the image by setting `TIKA_IMAGE=apache/tika:latest-full` in your `.env` file.
+The base variant is recommended for most use cases. If you need advanced features like specialized OCR processing or specific image format support, you can override the image by setting `TIKA_IMAGE=apache/tika:latest-full` in your `.env` file.
 
 ### With Radicale
 
