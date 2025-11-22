@@ -3,9 +3,9 @@
 services:
   collaboration:
     ports:
-      # expose the wopi server on localhost
+      # expose the wopi server on all ports
       - "0.0.0.0:9300:9300"
   collabora:
     ports:
-      # expose the collabora server on localhost
+      # expose the collabora server on all ports
       - "0.0.0.0:9980:9980"
