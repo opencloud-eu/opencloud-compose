@@ -1,0 +1,8 @@
+---
+# only expose the ports when you know what you re doing!
+services:
+  keycloak:
+    ports:
+      # expose the keycloak server on all interfaces
+      - "0.0.0.0:9000:9000"
+      - "0.0.0.0:8080:8080"

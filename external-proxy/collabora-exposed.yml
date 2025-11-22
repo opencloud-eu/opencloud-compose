@@ -1,0 +1,11 @@
+---
+# only expose the ports when you know what you are doing!
+services:
+  collaboration:
+    ports:
+      # expose the wopi server on all interfaces
+      - "0.0.0.0:9300:9300"
+  collabora:
+    ports:
+      # expose the collabora server on all interfaces
+      - "0.0.0.0:9980:9980"
