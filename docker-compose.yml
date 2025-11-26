@@ -4,6 +4,7 @@ services:
     image: ${OC_DOCKER_IMAGE:-opencloudeu/opencloud-rolling}:${OC_DOCKER_TAG:-latest}
     # changelog: https://github.com/opencloud-eu/opencloud/tree/main/changelog
     # release notes: https://docs.opencloud.eu/opencloud_release_notes.html
+    user: ${OC_CONTAINER_UID_GID:-1000:1000}
     networks:
       opencloud-net:
     entrypoint:
@@ -39,6 +40,7 @@ services:
       NOTIFICATIONS_SMTP_AUTHENTICATION: "${SMTP_AUTHENTICATION}"
       NOTIFICATIONS_SMTP_ENCRYPTION: "${SMTP_TRANSPORT_ENCRYPTION:-none}"
       FRONTEND_ARCHIVER_MAX_SIZE: "10000000000"
+      FRONTEND_CHECK_FOR_UPDATES: "${CHECK_FOR_UPDATES:-true}"
       PROXY_CSP_CONFIG_FILE_LOCATION: /etc/opencloud/csp.yaml
       # enable to allow using the banned passwords list
       OC_PASSWORD_POLICY_BANNED_PASSWORDS_LIST: banned-password-list.txt

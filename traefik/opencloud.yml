@@ -11,6 +11,7 @@ services:
   traefik:
     image: traefik:v3
     # release notes: https://github.com/traefik/traefik/releases
+    user: ${TRAEFIK_CONTAINER_UID_GID:-0:0}
     networks:
       opencloud-net:
         aliases:
