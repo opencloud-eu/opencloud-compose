@@ -14,10 +14,10 @@ add_arg "--log.level=${TRAEFIK_LOG_LEVEL:-ERROR}"
 # enable dashboard
 add_arg "--api.dashboard=true"
 # define entrypoints
-add_arg "--entryPoints.http.address=:80"
+add_arg "--entryPoints.http.address=:${TRAEFIK_PORT_HTTP:-80}"
 add_arg "--entryPoints.http.http.redirections.entryPoint.to=https"
 add_arg "--entryPoints.http.http.redirections.entryPoint.scheme=https"
-add_arg "--entryPoints.https.address=:443"
+add_arg "--entryPoints.https.address=:${TRAEFIK_PORT_HTTPS:-443}"
 # change default timeouts for long-running requests
 # this is needed for webdav clients that do not support the TUS protocol
 add_arg "--entryPoints.https.transport.respondingTimeouts.readTimeout=12h"
