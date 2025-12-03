@@ -1,7 +1,7 @@
 ---
 services:
   tika:
-    image: ${TIKA_IMAGE:-apache/tika:latest}
+    image: ${TIKA_IMAGE:-apache/tika:3.2.3.0}
     # Using the base variant for smaller image size and faster startup
     # The base variant includes core functionality for text extraction
     # Full variant is only needed for specialized OCR/image processing
