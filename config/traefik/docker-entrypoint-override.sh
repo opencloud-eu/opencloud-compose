@@ -23,7 +23,7 @@ add_arg "--entryPoints.https.address=:${TRAEFIK_PORT_HTTPS:-443}"
 add_arg "--entryPoints.https.transport.respondingTimeouts.readTimeout=12h"
 add_arg "--entryPoints.https.transport.respondingTimeouts.writeTimeout=12h"
 add_arg "--entryPoints.https.transport.respondingTimeouts.idleTimeout=3m"
-# allow only encoded characters required for WOPI/Collabora
+# allow encoded characters required for WOPI/Collabora
 add_arg "--entryPoints.https.http.encodedCharacters.allowEncodedSlash=true"
 add_arg "--entryPoints.https.http.encodedCharacters.allowEncodedQuestionMark=true"
 add_arg "--entryPoints.https.http.encodedCharacters.allowEncodedPercent=true"
