@@ -65,7 +65,6 @@ services:
         --o:home_mode.enable=${COLLABORA_HOME_MODE:-false}
       username: ${COLLABORA_ADMIN_USER:-admin}
       password: ${COLLABORA_ADMIN_PASSWORD:-admin}
-    privileged: true
     cap_add:
       - SYS_ADMIN
       - MKNOD
