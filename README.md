@@ -341,7 +341,7 @@ Key variables:
 | `OC_DOMAIN`                   | OpenCloud domain                                      | cloud.opencloud.test         |
 | `INITIAL_ADMIN_PASSWORD `     | OpenCloud password for the admin user                 | (no value)                   |
 | `OC_DOCKER_TAG`               | OpenCloud image tag                                   | latest                       |
-| `OC_CONFIG_DIR`               | Config directory path                                 | (Docker volume)              |
+| `OC_CONF_DIR`               | Config directory path                                 | (Docker volume)              |
 | `OC_DATA_DIR`                 | Data directory path                                   | (Docker volume)              |
 | `INSECURE`                    | Skip certificate validation                           | true                         |
 | `COLLABORA_DOMAIN`            | Collabora domain                                      | collabora.opencloud.test     |
@@ -384,7 +384,7 @@ For more details, see the [OpenCloud documentation](https://docs.opencloud.eu/do
 For production, configure persistent storage:
 
 ```
-OC_CONFIG_DIR=/path/to/opencloud/config
+OC_CONF_DIR=/path/to/opencloud/config
 OC_DATA_DIR=/path/to/opencloud/data
 ```
 
