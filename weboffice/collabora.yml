@@ -66,11 +66,7 @@ services:
       username: ${COLLABORA_ADMIN_USER:-admin}
       password: ${COLLABORA_ADMIN_PASSWORD:-admin}
     cap_add:
-      - SYS_ADMIN
       - MKNOD
-    security_opt:
-      - seccomp=unconfined
-      - apparmor:unconfined
     volumes:
       # Mount local TrueType fonts so the container can use system fonts
       # (e.g. Microsoft fonts like Arial, Calibri, Cambria by installing the `ttf-mscorefonts-installer` package).
