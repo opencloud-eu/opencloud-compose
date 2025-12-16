@@ -23,10 +23,14 @@ add_arg "--entryPoints.https.address=:${TRAEFIK_PORT_HTTPS:-443}"
 add_arg "--entryPoints.https.transport.respondingTimeouts.readTimeout=12h"
 add_arg "--entryPoints.https.transport.respondingTimeouts.writeTimeout=12h"
 add_arg "--entryPoints.https.transport.respondingTimeouts.idleTimeout=3m"
-# allow encoded characters required for WOPI/Collabora
+# allow encoded characters
+# required for WOPI/Collabora
 add_arg "--entryPoints.https.http.encodedCharacters.allowEncodedSlash=true"
 add_arg "--entryPoints.https.http.encodedCharacters.allowEncodedQuestionMark=true"
 add_arg "--entryPoints.https.http.encodedCharacters.allowEncodedPercent=true"
+# required for file operations with supported encoded characters
+add_arg "--entryPoints.https.http.encodedCharacters.allowEncodedSemicolon=true"
+add_arg "--entryPoints.https.http.encodedCharacters.allowEncodedHash=true"
 # docker provider (get configuration from container labels)
 add_arg "--providers.docker.endpoint=unix:///var/run/docker.sock"
 add_arg "--providers.docker.exposedByDefault=false"
