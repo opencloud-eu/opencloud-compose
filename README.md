@@ -2,6 +2,9 @@
 
 This repository provides Docker Compose configurations for deploying OpenCloud in various environments.
 
+> [!IMPORTANT]
+> Please use the [official docs](https://docs.opencloud.eu/docs/admin/getting-started/container/docker-compose/docker-compose-base) for a **Production Deployment**.
+
 ## Overview
 
 OpenCloud Compose offers a modular approach to deploying OpenCloud with several configuration options:
@@ -13,6 +16,7 @@ OpenCloud Compose offers a modular approach to deploying OpenCloud with several 
 - **Full text search** with Apache Tika for content extraction and metadata analysis
 - **Monitoring** with metrics endpoints for observability and performance monitoring
 - **Radicale** integration for Calendar and Contacts
+- **ClamAV** antivirus scanning with ClamAV
 
 ## Quick Start Guide
 
@@ -42,8 +46,9 @@ OpenCloud Compose offers a modular approach to deploying OpenCloud with several 
 
 3. **Set admin password**:
    set `INITIAL_ADMIN_PASSWORD=your_secure_password` environment variable in your `.env` file
-
-4. **Configure deployment options**:
+4. **Domain**:
+   optionally, set `OC_DOMAIN=your-domain.com` to overwrite the default `cloud.opencloud.test`
+5. **Configure deployment options**:
 
    You can deploy using explicit `-f` flags:
    ```bash
@@ -60,37 +65,17 @@ OpenCloud Compose offers a modular approach to deploying OpenCloud with several 
    docker compose up -d
    ```
 
-5. **Add local domains to `/etc/hosts`** (for local development only):
+6. **Add local domains to `/etc/hosts`** (for local development only):
    ```
    127.0.0.1 cloud.opencloud.test
    127.0.0.1 traefik.opencloud.test
    127.0.0.1 keycloak.opencloud.test
    ```
 
-6. **Access OpenCloud**:
+7. **Access OpenCloud**:
    - URL: https://cloud.opencloud.test
    - Username: `admin`
    - Password: value of your `INITIAL_ADMIN_PASSWORD`
-
-### Production Deployment
-
-> **DNS Requirements**: For production deployments, you need real DNS entries pointing to your server for all required subdomains. You can either create individual DNS A/AAAA records for each subdomain (e.g., `cloud.example.com`, `collabora.example.com`, `keycloak.example.com`) or use a wildcard DNS entry (`*.example.com`) that covers all subdomains.
-
-1. **Edit the `.env` file** and configure:
-   - Domain names (replace `.opencloud.test` domains with your real domains)
-   - Admin password
-   - SSL certificate email
-   - Storage paths
-
-2. **Configure deployment options** in `.env`:
-   ```
-   COMPOSE_FILE=docker-compose.yml:weboffice/collabora.yml:traefik/opencloud.yml:traefik/collabora.yml
-   ```
-
-3. **Start OpenCloud**:
-   ```bash
-   docker compose up -d
-   ```
 
 ## Deployment Options
 
@@ -162,6 +147,14 @@ This setup includes:
 - Apache Tika for text extraction and metadata analysis from various file formats
 - Full text search functionality in the OpenCloud interface
 - Support for documents, PDFs, images, and other file types
+
+**Tika Image Variant:**
+By default, OpenCloud Compose uses `apache/tika:latest` which provides:
+- Smaller image size (~300MB vs ~1.2GB for the full variant)
+- Faster container startup and deployment
+- Core text extraction functionality for common document formats (PDF, Office docs, text files, etc.)
+
+The base variant is recommended for most use cases. If you need advanced features like specialized OCR processing or specific image format support, you can override the image by setting `TIKA_IMAGE=apache/tika:latest-full` in your `.env` file.
 
 ### With Radicale
 
@@ -238,6 +231,25 @@ This exposes the necessary ports:
 **Please note:**
 If you're using **Nginx Proxy Manager (NPM)**, you **should NOT** activate **"Block Common Exploits"** for the Proxy Host.
 Otherwise, the desktop app authentication will return **error 403 Forbidden**.
+
+### ClamAV anti-virus
+
+Enable anti-virus scans for uploaded files.
+
+Using `-f` flags:
+```bash
+docker compose -f docker-compose.yml -f antivirus/clamav.yml -f traefik/opencloud.yml up -d
+```
+
+Or by setting in `.env`:
+```
+COMPOSE_FILE=docker-compose.yml:antivirus/clamav.yml:traefik/opencloud.yml
+```
+
+**Important:** adjust the variable in `.env` to start the antivirus service. Add additional services separated by comma, e.g. `notifications,antivirus`:
+```
+START_ADDITIONAL_SERVICES="antivirus"
+```
 
 
 ## SSL Certificate Support
@@ -334,7 +346,7 @@ Key variables:
 | `INSECURE`                    | Skip certificate validation                           | true                         |
 | `COLLABORA_DOMAIN`            | Collabora domain                                      | collabora.opencloud.test     |
 | `WOPISERVER_DOMAIN`           | WOPI server domain                                    | wopiserver.opencloud.test    |
-| `TIKA_IMAGE`                  | Apache Tika image tag                                 | apache/tika:latest-full      |
+| `TIKA_IMAGE`                  | Apache Tika image tag                                 | apache/tika:slim             |
 | `KEYCLOAK_DOMAIN`             | Keycloak domain                                       | keycloak.opencloud.test      |
 | `KEYCLOAK_ADMIN`              | Keycloak admin username                               | kcadmin                      |
 | `KEYCLOAK_ADMIN_PASSWORD`     | Keycloak admin password                               | admin                        |
