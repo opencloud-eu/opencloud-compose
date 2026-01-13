@@ -285,10 +285,6 @@ OpenCloud Compose supports adding SSL certificates for public domains and develo
          keyFile: /certs/opencloud.test.key
          stores:
            - default
-       - certFile: /certs/wildcard.example.com.crt
-         keyFile: /certs/wildcard.example.com.key
-         stores:
-           - default
    ```
 
 3. **Configure environment variables**:
