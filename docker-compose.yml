@@ -12,7 +12,10 @@ services:
     # run opencloud init to initialize a configuration file with random secrets
     # it will fail on subsequent runs, because the config file already exists
     # therefore we ignore the error and then start the opencloud server
-    command: ["-c", "opencloud init || true; opencloud server"]
+    command: ["-c", "
+      [ -n \"$BANNED_PASSWORDS_URLS\" ] && echo \"$BANNED_PASSWORDS_URLS\" | tr ',' '\\n' | xargs -I{} curl -sfL {} | sort -u > /etc/opencloud/banned-password-list.txt;
+      opencloud init || true; opencloud server
+    "]
     environment:
       # enable services that are not started automatically
       OC_ADD_RUN_SERVICES: ${START_ADDITIONAL_SERVICES}
