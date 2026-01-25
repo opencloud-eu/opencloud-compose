@@ -344,8 +344,8 @@ Key variables:
 | `WOPISERVER_DOMAIN`           | WOPI server domain                                    | wopiserver.opencloud.test    |
 | `TIKA_IMAGE`                  | Apache Tika image tag                                 | apache/tika:slim             |
 | `KEYCLOAK_DOMAIN`             | Keycloak domain                                       | keycloak.opencloud.test      |
-| `KEYCLOAK_ADMIN`              | Keycloak admin username                               | kcadmin                      |
-| `KEYCLOAK_ADMIN_PASSWORD`     | Keycloak admin password                               | admin                        |
+| `KC_BOOTSTRAP_ADMIN_USERNAME`              | Keycloak bootstrap admin username                               | kcadmin                      |
+| `KC_BOOTSTRAP_ADMIN_PASSWORD`     | Keycloak boostrap admin password                               | admin                        |
 | `LDAP_BIND_PASSWORD`          | LDAP password for the bind user                       | admin                        |
 | `KC_DB_USERNAME`              | Database user for keycloak                            | keycloak                     |
 | `KC_DB_PASSWORD`              | Database password for keycloak                        | keycloak                     |

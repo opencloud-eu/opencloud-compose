@@ -35,8 +35,8 @@ services:
       KC_LOG_LEVEL: ${KC_LOG_LEVEL:-INFO}
       KC_PROXY_HEADERS: xforwarded
       KC_HTTP_ENABLED: true
-      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN:-kcadmin}
-      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-admin}
+      KC_BOOTSTRAP_ADMIN_USERNAME: ${KC_BOOTSTRAP_ADMIN_USERNAME:-kcadmin}
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KC_BOOTSTRAP_ADMIN_PASSWORD:-admin}
     depends_on:
       - postgres
     logging:
