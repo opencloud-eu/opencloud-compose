@@ -4,12 +4,12 @@ services:
     networks:
       opencloud-net:
         aliases:
-          - ${KEYCLOAK_DOMAIN:-keycloak.opencloud.test}
+          - ${KC_DOMAIN:-keycloak.opencloud.test}
   keycloak:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.keycloak.entrypoints=https"
-      - "traefik.http.routers.keycloak.rule=Host(`${KEYCLOAK_DOMAIN:-keycloak.opencloud.test}`)"
+      - "traefik.http.routers.keycloak.rule=Host(`${KC_DOMAIN:-keycloak.opencloud.test}`)"
       - "traefik.http.routers.keycloak.${TRAEFIK_SERVICES_TLS_CONFIG}"
       - "traefik.http.routers.keycloak.service=keycloak"
       - "traefik.http.services.keycloak.loadbalancer.server.port=8080"

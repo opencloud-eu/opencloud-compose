@@ -23,19 +23,19 @@ services:
       # Keycloak IDP specific configuration
       PROXY_AUTOPROVISION_ACCOUNTS: "false"
       PROXY_ROLE_ASSIGNMENT_DRIVER: "oidc"
-      OC_OIDC_ISSUER: https://${KEYCLOAK_DOMAIN:-keycloak.opencloud.test}/realms/openCloud
+      OC_OIDC_ISSUER: https://${KC_DOMAIN:-keycloak.opencloud.test}/realms/openCloud
       PROXY_OIDC_REWRITE_WELLKNOWN: "true"
       WEB_OIDC_CLIENT_ID: ${OC_OIDC_CLIENT_ID:-web}
       PROXY_USER_OIDC_CLAIM: "uuid"
       PROXY_USER_CS3_CLAIM: "userid"
-      WEB_OPTION_ACCOUNT_EDIT_LINK_HREF: "https://${KEYCLOAK_DOMAIN:-keycloak.opencloud.test}/realms/openCloud/account"
+      WEB_OPTION_ACCOUNT_EDIT_LINK_HREF: "https://${KC_DOMAIN:-keycloak.opencloud.test}/realms/openCloud/account"
       # admin and demo accounts must be created in Keycloak
       OC_ADMIN_USER_ID: ""
       SETTINGS_SETUP_DEFAULT_ASSIGNMENTS: "false"
       GRAPH_ASSIGN_DEFAULT_USER_ROLE: "false"
       GRAPH_USERNAME_MATCH: "none"
       # This is needed to set the correct CSP rules for OpenCloud
-      IDP_DOMAIN: ${KEYCLOAK_DOMAIN:-keycloak.opencloud.test}
+      IDP_DOMAIN: ${KC_DOMAIN:-keycloak.opencloud.test}
 
   ldap-server:
     image: bitnamilegacy/openldap:2.6
@@ -90,7 +90,7 @@ services:
     environment:
       LDAP_ADMIN_PASSWORD: ${LDAP_BIND_PASSWORD:-admin}
       OC_DOMAIN: ${OC_DOMAIN:-cloud.opencloud.test}
-      KC_HOSTNAME: ${KEYCLOAK_DOMAIN:-keycloak.opencloud.test}
+      KC_HOSTNAME: ${KC_DOMAIN:-keycloak.opencloud.test}
       KC_DB: postgres
       KC_DB_URL: "jdbc:postgresql://postgres:5432/keycloak"
       KC_DB_USERNAME: ${KC_DB_USERNAME:-keycloak}

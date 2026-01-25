@@ -26,7 +26,7 @@ services:
       - "./config/keycloak/themes/opencloud:/opt/keycloak/themes/opencloud"
     environment:
       OC_DOMAIN: ${OC_DOMAIN:-cloud.opencloud.test}
-      KC_HOSTNAME: ${KEYCLOAK_DOMAIN:-keycloak.opencloud.test}
+      KC_HOSTNAME: ${KC_DOMAIN:-keycloak.opencloud.test}
       KC_DB: postgres
       KC_DB_URL: "jdbc:postgresql://postgres:5432/keycloak"
       KC_DB_USERNAME: ${KC_DB_USERNAME:-keycloak}
