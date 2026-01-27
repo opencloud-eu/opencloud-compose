@@ -2,6 +2,7 @@
 services:
   postgres:
     image: postgres:17-alpine
+    user: postgres
     networks:
       opencloud-net:
     volumes:
