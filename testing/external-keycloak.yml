@@ -14,6 +14,12 @@ services:
     logging:
       driver: ${LOG_DRIVER:-local}
     restart: always
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "${KC_DB_USERNAME}"]
+      start_period: 5s
+      interval: 15s
+      timeout: 5s
+      retries: 5
 
   keycloak:
     image: quay.io/keycloak/keycloak:26.3.3
@@ -43,6 +49,15 @@ services:
     logging:
       driver: ${LOG_DRIVER:-local}
     restart: always
+    healthcheck:
+      test: >
+        bash -c "exec 3<>/dev/tcp/localhost/8080 &&
+        printf 'GET /realms/openCloud/.well-known/openid-configuration HTTP/1.1\r\nHost: localhost\r\nConnection: close\r\n\r\n' >&3 &&
+        head -n1 <&3 | grep -qE '200 OK'"
+      start_period: 30s
+      interval: 15s
+      timeout: 5s
+      retries: 5
 
 volumes:
   keycloak_postgres_data:

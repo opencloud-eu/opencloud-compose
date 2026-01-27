@@ -46,6 +46,12 @@ services:
     logging:
       driver: ${LOG_DRIVER:-local}
     restart: always
+    healthcheck:
+      test: [ "CMD", "opencloud", "collaboration", "health" ]
+      start_period: 5s
+      interval: 15s
+      timeout: 10s
+      retries: 3
 
   collabora:
     image: collabora/code:25.04.7.1.1
@@ -78,7 +84,7 @@ services:
     entrypoint: [ '/bin/bash', '-c' ]
     command: [ 'coolconfig generate-proof-key && /start-collabora-online.sh' ]
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:9980/hosting/discovery" ]
+      test: [ "CMD", "curl", "--fail", "http://localhost:9980/hosting/discovery" ]
       interval: 15s
       timeout: 10s
       retries: 5

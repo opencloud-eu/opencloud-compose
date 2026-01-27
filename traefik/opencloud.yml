@@ -45,3 +45,9 @@ services:
     logging:
       driver: ${LOG_DRIVER:-local}
     restart: always
+    healthcheck:
+      test: ["CMD", "traefik", "healthcheck", "--ping"]
+      start_period: 30s
+      interval: 15s
+      timeout: 5s
+      retries: 3

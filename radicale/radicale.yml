@@ -15,5 +15,12 @@ services:
     volumes:
       - ./config/radicale/config:/etc/radicale/config
       - ${RADICALE_DATA_DIR:-radicale-data}:/var/lib/radicale
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "-O-", "--no-cache", "http://localhost:5232"]
+      start_period: 5s
+      interval: 10s
+      timeout: 15s
+      retries: 3
+
 volumes:
   radicale-data:
