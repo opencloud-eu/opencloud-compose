@@ -48,7 +48,7 @@ services:
     restart: always
 
   collabora:
-    image: collabora/code:25.04.7.1.1
+    image: collabora/code:25.04.9.1.1
     # release notes: https://www.collaboraonline.com/release-notes/
     networks:
       opencloud-net:
@@ -66,7 +66,10 @@ services:
       username: ${COLLABORA_ADMIN_USER:-admin}
       password: ${COLLABORA_ADMIN_PASSWORD:-admin}
     cap_add:
-      - MKNOD
+      - SYS_ADMIN
+    security_opt:
+      - seccomp=unconfined
+      - apparmor:unconfined
     volumes:
       # Mount local TrueType fonts so the container can use system fonts
       # (e.g. Microsoft fonts like Arial, Calibri, Cambria by installing the `ttf-mscorefonts-installer` package).
