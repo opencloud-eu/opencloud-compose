@@ -1,10 +1,12 @@
 ---
 services:
   collaboration:
+    container_name: collaboration    
     ports:
       # expose the wopi server on localhost
       - "127.0.0.1:9300:9300"
   collabora:
+    container_name: collabora
     ports:
       # expose the collabora server on localhost
       - "127.0.0.1:9980:9980"
