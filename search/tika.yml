@@ -11,6 +11,15 @@ services:
     restart: always
     logging:
       driver: ${LOG_DRIVER:-local}
+    healthcheck:
+      test: >
+        bash -c "exec 3<>/dev/tcp/localhost/9998 &&
+        printf 'GET /tika HTTP/1.1\r\nHost: localhost\r\nConnection: close\r\n\r\n' >&3 &&
+        head -n1 <&3 | grep -qE '200 OK'"
+      start_period: 10s
+      interval: 15s
+      timeout: 5s
+      retries: 3
 
   opencloud:
     environment:

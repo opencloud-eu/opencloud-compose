@@ -13,6 +13,8 @@ TRAEFIK_CMD="traefik"
 add_arg "--log.level=${TRAEFIK_LOG_LEVEL:-ERROR}"
 # enable dashboard
 add_arg "--api.dashboard=true"
+# enable ping for healthchecks
+add_arg "--ping=true"
 # define entrypoints
 add_arg "--entryPoints.http.address=:${TRAEFIK_PORT_HTTP:-80}"
 add_arg "--entryPoints.http.http.redirections.entryPoint.to=https"
