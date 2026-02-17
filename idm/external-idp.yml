@@ -15,7 +15,7 @@ services:
       FRONTEND_READONLY_USER_ATTRIBUTES: "user.onPremisesSamAccountName,user.displayName,user.mail,user.passwordProfile,user.accountEnabled,user.appRoleAssignments"
       PROXY_OIDC_REWRITE_WELLKNOWN: "true"
       WEB_OIDC_CLIENT_ID: ${OC_OIDC_CLIENT_ID:-web}
-      PROXY_ROLE_ASSIGNMENT_DRIVER: "oidc"
+      PROXY_ROLE_ASSIGNMENT_DRIVER: ${PROXY_ROLE_ASSIGNMENT_DRIVER:-oidc}
       OC_OIDC_ISSUER: ${IDP_ISSUER_URL:-https://keycloak.opencloud.test/realms/openCloud}
       # This specifies to start all services except idm and idp. These are replaced by external services.
       OC_EXCLUDE_RUN_SERVICES: idm,idp
@@ -37,7 +37,7 @@ services:
       OC_LDAP_DISABLE_USER_MECHANISM: "attribute"
       OC_ADMIN_USER_ID: ""
       SETTINGS_SETUP_DEFAULT_ASSIGNMENTS: "false"
-      GRAPH_ASSIGN_DEFAULT_USER_ROLE: "false"
+      GRAPH_ASSIGN_DEFAULT_USER_ROLE: ${GRAPH_ASSIGN_DEFAULT_USER_ROLE:-false}
       GRAPH_USERNAME_MATCH: "none"
       # We need to set the IDP_DOMAIN to allow the CSP rules to be set correctly
       IDP_DOMAIN: ${IDP_DOMAIN:-keycloak.opencloud.test}
