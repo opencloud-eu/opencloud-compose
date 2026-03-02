@@ -6,6 +6,7 @@ services:
       - "traefik.http.routers.opencloud.entrypoints=https"
       - "traefik.http.routers.opencloud.rule=Host(`${OC_DOMAIN:-cloud.opencloud.test}`)"
       - "traefik.http.routers.opencloud.service=opencloud"
+      - "traefik.http.routers.opencloud.middlewares=hsts-header"
       - "traefik.http.services.opencloud.loadbalancer.server.port=9200"
       - "traefik.http.routers.opencloud.${TRAEFIK_SERVICES_TLS_CONFIG}"
   traefik:
@@ -42,6 +43,10 @@ services:
       - "traefik.http.routers.traefik.middlewares=traefik-auth"
       - "traefik.http.routers.traefik.${TRAEFIK_SERVICES_TLS_CONFIG}"
       - "traefik.http.routers.traefik.service=api@internal"
+      - "traefik.http.middlewares.hsts-header.headers.stsSeconds=31536000"
+      - "traefik.http.middlewares.hsts-header.headers.stsIncludeSubdomains=true"
+      - "traefik.http.middlewares.hsts-header.headers.stsPreload=true"
+      - "traefik.http.middlewares.hsts-header.headers.forceSTSHeader=true"
     logging:
       driver: ${LOG_DRIVER:-local}
     restart: always
