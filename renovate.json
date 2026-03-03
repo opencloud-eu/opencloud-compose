@@ -23,5 +23,17 @@
     "fileMatch": [
       ".+\\.ya?ml$"
     ]
-  }
+  },
+  "regexManagers": [
+    {
+      "fileMatch": [
+        "^docker-compose\\.yml$",
+        "^weboffice/collabora\\.yml$"
+      ],
+      "matchStrings": [
+        "# renovate: depName=(?<depName>[^\\s]+)\\n\\s+image: [^:]+:\\$\\{[^}]+-(?<currentValue>[0-9]+\\.[0-9]+\\.[0-9]+)\\}"
+      ],
+      "datasourceTemplate": "docker"
+    }
+  ]
 }
