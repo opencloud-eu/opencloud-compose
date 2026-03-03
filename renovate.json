@@ -1,0 +1,27 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "enabledManagers": ["docker-compose"],
+  "baseBranches": ["main", "stable-4.0"],
+  "packageRules": [
+    {
+      "matchManagers": ["docker-compose"],
+      "automerge": false,
+      "labels": ["Type:Dependencies", "docker"]
+    },
+    {
+      "matchManagers": ["docker-compose"],
+      "matchUpdateTypes": ["patch"],
+      "automerge": true
+    },
+    {
+      "matchBaseBranches": ["stable-4.0"],
+      "matchUpdateTypes": ["major", "minor"],
+      "enabled": false
+    }
+  ],
+  "docker-compose": {
+    "fileMatch": [
+      ".+\\.ya?ml$"
+    ]
+  }
+}
