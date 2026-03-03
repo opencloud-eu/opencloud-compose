@@ -5,7 +5,6 @@
   "packageRules": [
     {
       "matchManagers": ["docker-compose"],
-      "automerge": false,
       "labels": ["Type:Dependencies", "docker"]
     },
     {
@@ -16,7 +15,8 @@
     {
       "matchBaseBranches": ["stable-4.0"],
       "matchUpdateTypes": ["major", "minor"],
-      "enabled": false
+      "enabled": false,
+      "automerge": false
     },
     {
       "matchPackageNames": ["postgres"],
