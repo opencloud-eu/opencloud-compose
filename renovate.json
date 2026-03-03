@@ -17,6 +17,11 @@
       "matchBaseBranches": ["stable-4.0"],
       "matchUpdateTypes": ["major", "minor"],
       "enabled": false
+    },
+    {
+      "matchPackageNames": ["postgres"],
+      "matchManagers": ["docker-compose"],
+      "allowedVersions": "/^17\\.\\d+-alpine$/"
     }
   ],
   "docker-compose": {

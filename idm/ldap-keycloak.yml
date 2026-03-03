@@ -64,7 +64,7 @@ services:
     restart: always
 
   postgres:
-    image: postgres:17-alpine
+    image: postgres:17.9-alpine
     networks:
       opencloud-net:
     volumes:
