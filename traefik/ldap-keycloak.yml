@@ -12,4 +12,5 @@ services:
       - "traefik.http.routers.keycloak.rule=Host(`${KEYCLOAK_DOMAIN:-keycloak.opencloud.test}`)"
       - "traefik.http.routers.keycloak.${TRAEFIK_SERVICES_TLS_CONFIG}"
       - "traefik.http.routers.keycloak.service=keycloak"
+      - "traefik.http.routers.keycloak.middlewares=hsts-header"
       - "traefik.http.services.keycloak.loadbalancer.server.port=8080"
