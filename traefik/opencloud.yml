@@ -3,6 +3,12 @@ services:
   opencloud:
     labels:
       - "traefik.enable=true"
+      # define middleware here, to make sure its loaded with the first defined container (opencloud)
+      # if defined in the traefik container with a disabled dashboard it won't be loaded fast enough
+      - "traefik.http.middlewares.hsts-header.headers.stsSeconds=31536000"
+      - "traefik.http.middlewares.hsts-header.headers.stsIncludeSubdomains=true"
+      - "traefik.http.middlewares.hsts-header.headers.stsPreload=true"
+      - "traefik.http.middlewares.hsts-header.headers.forceSTSHeader=true"
       - "traefik.http.routers.opencloud.entrypoints=https"
       - "traefik.http.routers.opencloud.rule=Host(`${OC_DOMAIN:-cloud.opencloud.test}`)"
       - "traefik.http.routers.opencloud.service=opencloud"
@@ -43,10 +49,6 @@ services:
       - "traefik.http.routers.traefik.middlewares=traefik-auth"
       - "traefik.http.routers.traefik.${TRAEFIK_SERVICES_TLS_CONFIG}"
       - "traefik.http.routers.traefik.service=api@internal"
-      - "traefik.http.middlewares.hsts-header.headers.stsSeconds=31536000"
-      - "traefik.http.middlewares.hsts-header.headers.stsIncludeSubdomains=true"
-      - "traefik.http.middlewares.hsts-header.headers.stsPreload=true"
-      - "traefik.http.middlewares.hsts-header.headers.forceSTSHeader=true"
     logging:
       driver: ${LOG_DRIVER:-local}
     restart: always
