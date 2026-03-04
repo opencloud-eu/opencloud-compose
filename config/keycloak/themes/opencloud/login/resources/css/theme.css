@@ -28,11 +28,16 @@ body {
 .kc-logo-text {
     background-image: url(../img/logo.svg) !important;
     background-size: contain;
-    width: 400px;
-    margin: 0 !important;
+    background-position: center;
 }
 
-#kc-header-wrapper{
+#kc-header-wrapper {
     display: flex;
     justify-content: center;
+}
+
+@media (max-width: 767px) {
+    #kc-header-wrapper {
+        padding: 20px 60px 0;
+    }
 }
