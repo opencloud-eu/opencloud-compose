@@ -44,5 +44,8 @@ body {
 
 .pf-c-button.pf-m-secondary {
     color: var(--pf-global--Color--light-100) !important;
+}
+
+.kc-margin-top {
     margin-top: var(--pf-global--spacer--sm);
 }
