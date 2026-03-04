@@ -1,11 +1,12 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "enabledManagers": ["docker-compose"],
-  "baseBranches": ["main", "stable-4.0"],
+  "platformAutomerge": true,
+  "enabledManagers": ["docker-compose", "custom.regex"],
+  "baseBranchPatterns": ["main", "stable-4.0"],
   "packageRules": [
     {
-      "matchManagers": ["docker-compose"],
-      "labels": ["Type:Dependencies", "docker"]
+      "matchManagers": ["docker-compose", "custom.regex"],
+      "labels": ["Type:Dependencies", "Bot:Renovate"]
     },
     {
       "matchManagers": ["docker-compose"],
@@ -15,8 +16,7 @@
     {
       "matchBaseBranches": ["stable-4.0"],
       "matchUpdateTypes": ["major", "minor"],
-      "enabled": false,
-      "automerge": false
+      "enabled": false
     },
     {
       "matchPackageNames": ["postgres"],
@@ -25,18 +25,17 @@
     }
   ],
   "docker-compose": {
-    "fileMatch": [
-      ".+\\.ya?ml$"
-    ]
+    "managerFilePatterns": ["/.+\\.ya?ml$/"]
   },
-  "regexManagers": [
+  "customManagers": [
     {
-      "fileMatch": [
-        "^docker-compose\\.yml$",
-        "^weboffice/collabora\\.yml$"
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^docker-compose\\.yml$/",
+        "/^weboffice\\/collabora\\.yml$/"
       ],
       "matchStrings": [
-        "# renovate: depName=(?<depName>[^\\s]+)\\n\\s+image: [^:]+:\\$\\{[^}]+-(?<currentValue>[0-9]+\\.[0-9]+\\.[0-9]+)\\}"
+        "# renovate: depName=(?<depName>[^\\s]+)\\n\\s+image: \\$\\{[^}]+\\}:\\$\\{[^}]+-(?<currentValue>[0-9]+\\.[0-9]+\\.[0-9]+)\\}"
       ],
       "datasourceTemplate": "docker"
     }
