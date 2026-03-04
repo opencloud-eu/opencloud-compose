@@ -41,3 +41,8 @@ body {
         padding: 20px 60px 0;
     }
 }
+
+.pf-c-button.pf-m-secondary {
+    color: var(--pf-global--Color--light-100) !important;
+    margin-top: var(--pf-global--spacer--sm);
+}
