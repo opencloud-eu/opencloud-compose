@@ -1,0 +1,43 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "platformAutomerge": true,
+  "enabledManagers": ["docker-compose", "custom.regex"],
+  "baseBranchPatterns": ["main", "stable-4.0"],
+  "packageRules": [
+    {
+      "matchManagers": ["docker-compose", "custom.regex"],
+      "labels": ["Type:Dependencies", "Bot:Renovate"]
+    },
+    {
+      "matchManagers": ["docker-compose"],
+      "matchUpdateTypes": ["patch"],
+      "automerge": true
+    },
+    {
+      "matchBaseBranches": ["stable-4.0"],
+      "matchUpdateTypes": ["major", "minor"],
+      "enabled": false
+    },
+    {
+      "matchPackageNames": ["postgres"],
+      "matchManagers": ["docker-compose"],
+      "allowedVersions": "/^17\\.\\d+-alpine$/"
+    }
+  ],
+  "docker-compose": {
+    "managerFilePatterns": ["/.+\\.ya?ml$/"]
+  },
+  "customManagers": [
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^docker-compose\\.yml$/",
+        "/^weboffice\\/collabora\\.yml$/"
+      ],
+      "matchStrings": [
+        "# renovate: depName=(?<depName>[^\\s]+)\\n\\s+image: \\$\\{[^}]+\\}:\\$\\{[^}]+-(?<currentValue>[0-9]+\\.[0-9]+\\.[0-9]+)\\}"
+      ],
+      "datasourceTemplate": "docker"
+    }
+  ]
+}
