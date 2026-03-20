@@ -1,6 +1,7 @@
 ---
 services:
   opencloud:
+    container_name: opencloud      
       environment:
         # bind to all interfaces
         PROXY_HTTP_ADDR: "0.0.0.0:9200"
