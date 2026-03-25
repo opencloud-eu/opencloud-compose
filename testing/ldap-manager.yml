@@ -22,3 +22,9 @@ services:
     logging:
       driver: ${LOG_DRIVER:-local}
     restart: always
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8080/login"]
+      start_period: 5s
+      interval: 30s
+      timeout: 5s
+      retries: 3
