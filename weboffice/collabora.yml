@@ -15,7 +15,7 @@ services:
 
   collaboration:
     # renovate: depName=opencloudeu/opencloud-rolling
-    image: ${OC_DOCKER_IMAGE:-opencloudeu/opencloud-rolling}:${OC_DOCKER_TAG:-5.2.0}
+    image: ${OC_DOCKER_IMAGE:-opencloudeu/opencloud-rolling}:${OC_DOCKER_TAG:-6.0.0}
     user: ${OC_CONTAINER_UID_GID:-1000:1000}
     networks:
       opencloud-net:
