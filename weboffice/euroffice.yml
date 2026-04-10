@@ -4,7 +4,7 @@ services:
   opencloud:
     environment:
       # this is needed for setting the correct CSP header
-      ONLYOFFICE_DOMAIN: ${EURO_OFFICE_DOMAIN:-euro-office.opencloud.test}
+      EURO_OFFICE_DOMAIN: ${EURO_OFFICE_DOMAIN:-euro-office.opencloud.test}
       TRAEFIK_PORT_HTTPS: ${TRAEFIK_PORT_HTTPS:+:}${TRAEFIK_PORT_HTTPS:-}
       # expose nats and the reva gateway for the collaboration service
       NATS_NATS_HOST: 0.0.0.0
