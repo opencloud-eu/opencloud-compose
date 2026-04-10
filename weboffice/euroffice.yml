@@ -1,0 +1,82 @@
+---
+services:
+
+  opencloud:
+    environment:
+      # this is needed for setting the correct CSP header
+      ONLYOFFICE_DOMAIN: ${EURO_OFFICE_DOMAIN:-euro-office.opencloud.test}
+      TRAEFIK_PORT_HTTPS: ${TRAEFIK_PORT_HTTPS:+:}${TRAEFIK_PORT_HTTPS:-}
+      # expose nats and the reva gateway for the collaboration service
+      NATS_NATS_HOST: 0.0.0.0
+      GATEWAY_GRPC_ADDR: 0.0.0.0:9142
+    volumes:
+      - ./config/euro-office/app-registry.yaml:/etc/opencloud/app-registry.yaml
+
+  collaboration-eo:
+    # renovate: depName=opencloudeu/opencloud-rolling
+    image: ${OC_DOCKER_IMAGE:-opencloudeu/opencloud-rolling}:${OC_DOCKER_TAG:-6.0.0}
+    user: ${OC_CONTAINER_UID_GID:-1000:1000}
+    networks:
+      opencloud-net:
+    depends_on:
+      opencloud:
+        condition: service_started
+      euro-office:
+        condition: service_healthy
+    entrypoint:
+      - /bin/sh
+    command: [ "-c", "opencloud collaboration server" ]
+    environment:
+      COLLABORATION_GRPC_ADDR: 0.0.0.0:9301
+      COLLABORATION_HTTP_ADDR: 0.0.0.0:9300
+      MICRO_REGISTRY: "nats-js-kv"
+      MICRO_REGISTRY_ADDRESS: "opencloud:9233"
+      COLLABORATION_WOPI_SRC: https://${EURO_OFFICE_WOPISERVER_DOMAIN:-wopiserver-eo.opencloud.test}${TRAEFIK_PORT_HTTPS:+:}${TRAEFIK_PORT_HTTPS:-}
+      COLLABORATION_APP_NAME: "Euro-Office"
+      COLLABORATION_APP_PRODUCT: "OnlyOffice"
+      COLLABORATION_SERVICE_NAME: "collaboration-eo"
+      COLLABORATION_APP_ADDR: https://${EURO_OFFICE_DOMAIN:-euro-office.opencloud.test}${TRAEFIK_PORT_HTTPS:+:}${TRAEFIK_PORT_HTTPS:-}
+      COLLABORATION_APP_ICON: https://${EURO_OFFICE_DOMAIN:-euro-office.opencloud.test}${TRAEFIK_PORT_HTTPS:+:}${TRAEFIK_PORT_HTTPS:-}/web-apps/apps/documenteditor/main/resources/img/favicon.ico
+      COLLABORATION_APP_INSECURE: "${INSECURE:-true}"
+      COLLABORATION_CS3API_DATAGATEWAY_INSECURE: "${INSECURE:-true}"
+      COLLABORATION_APP_PROOF_DISABLE: "true"
+      COLLABORATION_LOG_LEVEL: ${LOG_LEVEL:-info}
+      OC_URL: https://${OC_DOMAIN:-cloud.opencloud.test}${TRAEFIK_PORT_HTTPS:+:}${TRAEFIK_PORT_HTTPS:-}
+    volumes:
+      # configure the .env file to use own paths instead of docker internal volumes
+      - ${OC_CONFIG_DIR:-opencloud-config}:/etc/opencloud
+    logging:
+      driver: ${LOG_DRIVER:-local}
+    restart: always
+
+  euro-office:
+    image: ${EURO_OFFICE_DOCKER_IMAGE:-ghcr.io/euro-office/documentserver}:${EURO_OFFICE_DOCKER_TAG:-latest}
+    # changelog https://github.com/EURO-office/DocumentServer/releases
+    networks:
+      opencloud-net:
+    entrypoint:
+      - /bin/sh
+      - /entrypoint-override.sh
+    environment:
+      WOPI_ENABLED: "true"
+      JWT_SECRET: "${EURO_OFFICE_JWT_SECRET:-changeme}"
+      # self-signed certificates
+      USE_UNAUTHORIZED_STORAGE: "${INSECURE:-false}"
+    volumes:
+      - ./config/euro-office/entrypoint-override.sh:/entrypoint-override.sh
+      - ./config/euro-office/onlyoffice-docs-formats.json:/var/www/onlyoffice/documentserver/document-formats/onlyoffice-docs-formats.json
+    logging:
+      driver: ${LOG_DRIVER:-local}
+    restart: always
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "bash",
+          "-c",
+          "exec 3<>/dev/tcp/127.0.0.1/80 && printf 'GET /hosting/discovery HTTP/1.1\r\nHost: localhost\r\nConnection: close\r\n\r\n' >&3 && cat <&3 | head -1 | grep -q '200 OK'"
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 120s
