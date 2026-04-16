@@ -14,7 +14,17 @@ services:
       GRAPH_LDAP_REFINT_ENABLED: "true" # osixia has refint enabled.
       FRONTEND_READONLY_USER_ATTRIBUTES: "user.onPremisesSamAccountName,user.displayName,user.mail,user.passwordProfile,user.accountEnabled,user.appRoleAssignments"
       PROXY_OIDC_REWRITE_WELLKNOWN: "true"
-      WEB_OIDC_CLIENT_ID: ${OC_OIDC_CLIENT_ID:-web}
+      OC_OIDC_CLIENT_ID: ${OC_OIDC_CLIENT_ID:-web}
+      OC_OIDC_CLIENT_SCOPES: ${PROXY_ROLE_ASSIGNMENT_OIDC_CLAIM:-openid profile email roles offline_access}
+      PROXY_ROLE_ASSIGNMENT_OIDC_CLAIM: ${PROXY_ROLE_ASSIGNMENT_OIDC_CLAIM:-roles}
+      WEBFINGER_WEB_OIDC_CLIENT_ID: ${WEBFINGER_WEB_OIDC_CLIENT_ID:-${OC_OIDC_CLIENT_ID}}
+      WEBFINGER_WEB_OIDC_CLIENT_SCOPES: ${WEBFINGER_WEB_OIDC_CLIENT_SCOPES:-${OC_OIDC_CLIENT_SCOPES}}
+      WEBFINGER_ANDROID_OIDC_CLIENT_ID: ${WEBFINGER_ANDROID_OIDC_CLIENT_ID:-${OC_OIDC_CLIENT_ID}}
+      WEBFINGER_ANDROID_OIDC_CLIENT_SCOPES: ${WEBFINGER_ANDROID_OIDC_CLIENT_SCOPES:-${OC_OIDC_CLIENT_SCOPES}}
+      WEBFINGER_IOS_OIDC_CLIENT_ID: ${WEBFINGER_IOS_OIDC_CLIENT_ID:-${OC_OIDC_CLIENT_ID}}
+      WEBFINGER_IOS_OIDC_CLIENT_SCOPES: ${WEBFINGER_IOS_OIDC_CLIENT_SCOPES:-${OC_OIDC_CLIENT_SCOPES}}
+      WEBFINGER_DESKTOP_OIDC_CLIENT_ID: ${WEBFINGER_DESKTOP_OIDC_CLIENT_ID:-${OC_OIDC_CLIENT_ID}}
+      WEBFINGER_DESKTOP_OIDC_CLIENT_SCOPES: ${WEBFINGER_DESKTOP_OIDC_CLIENT_SCOPES:-${OC_OIDC_CLIENT_SCOPES}}
       PROXY_ROLE_ASSIGNMENT_DRIVER: "oidc"
       OC_OIDC_ISSUER: ${IDP_ISSUER_URL:-https://keycloak.opencloud.test/realms/openCloud}
       # This specifies to start all services except idm and idp. These are replaced by external services.
@@ -45,6 +55,8 @@ services:
       WEB_OPTION_ACCOUNT_EDIT_LINK_HREF: ${IDP_ACCOUNT_URL}
   ldap-server:
     image: bitnamilegacy/openldap:2.6
+    # Bitnami images require GID 0 to write to internal socket and PID directories
+    user: ${LDAP_UID_GID:-1000:0}
     networks:
       opencloud-net:
     entrypoint: [ "/bin/sh", "/opt/bitnami/scripts/openldap/docker-entrypoint-override.sh", "/opt/bitnami/scripts/openldap/run.sh" ]
