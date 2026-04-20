@@ -58,7 +58,11 @@ services:
       JWT_SECRET: "${EURO_OFFICE_JWT_SECRET:-changeme}"
       # self-signed certificates
       USE_UNAUTHORIZED_STORAGE: "${INSECURE:-false}"
+    entrypoint:
+      - /bin/sh
+      - /init-wopi.sh
     volumes:
+      - ./config/euro-office/init-wopi.sh:/init-wopi.sh:ro
       - ./config/euro-office/onlyoffice-docs-formats.json:/var/www/onlyoffice/documentserver/document-formats/onlyoffice-docs-formats.json
     logging:
       driver: ${LOG_DRIVER:-local}
