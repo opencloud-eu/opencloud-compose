@@ -5,16 +5,16 @@ services:
       opencloud-net:
         aliases:
           - ${EURO_OFFICE_DOMAIN:-euro-office.opencloud.test}
-          - ${EURO_OFFICE_WOPISERVER_DOMAIN:-wopiserver-eo.opencloud.test}
-  collaboration-eo:
+          - ${WOPISERVER_DOMAIN:-wopiserver.opencloud.test}
+  collaboration:
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.collaboration-eo.entrypoints=https"
-      - "traefik.http.routers.collaboration-eo.rule=Host(`${EURO_OFFICE_WOPISERVER_DOMAIN:-wopiserver-eo.opencloud.test}`)"
-      - "traefik.http.routers.collaboration-eo.${TRAEFIK_SERVICES_TLS_CONFIG}"
-      - "traefik.http.routers.collaboration-eo.service=collaboration-eo"
-      - "traefik.http.routers.collaboration-eo.middlewares=hsts-header"
-      - "traefik.http.services.collaboration-eo.loadbalancer.server.port=9300"
+      - "traefik.http.routers.collaboration.entrypoints=https"
+      - "traefik.http.routers.collaboration.rule=Host(`${WOPISERVER_DOMAIN:-wopiserver.opencloud.test}`)"
+      - "traefik.http.routers.collaboration.${TRAEFIK_SERVICES_TLS_CONFIG}"
+      - "traefik.http.routers.collaboration.service=collaboration"
+      - "traefik.http.routers.collaboration.middlewares=hsts-header"
+      - "traefik.http.services.collaboration.loadbalancer.server.port=9300"
   euro-office:
     labels:
       - "traefik.enable=true"

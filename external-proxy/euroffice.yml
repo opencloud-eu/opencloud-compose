@@ -1,9 +1,9 @@
 ---
 services:
-  collaboration-eo:
+  collaboration:
     ports:
-      # expose the euro-office wopi server on localhost
-      - "127.0.0.1:9302:9300"
+      # expose the wopi server on localhost
+      - "127.0.0.1:9300:9300"
   euro-office:
     ports:
       # expose the euro-office document server on localhost

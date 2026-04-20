@@ -1,10 +1,10 @@
 ---
 # only expose the ports when you know what you are doing!
 services:
-  collaboration-eo:
+  collaboration:
     ports:
-      # expose the euro-office wopi server on all interfaces
-      - "0.0.0.0:9302:9300"
+      # expose the wopi server on all interfaces
+      - "0.0.0.0:9300:9300"
   euro-office:
     ports:
       # expose the euro-office document server on all interfaces
