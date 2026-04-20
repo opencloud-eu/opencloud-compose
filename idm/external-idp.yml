@@ -66,6 +66,12 @@ services:
       - ${LDAP_CERTS_DIR:-ldap-certs}:/opt/bitnami/openldap/share
       - ${LDAP_DATA_DIR:-ldap-data}:/bitnami/openldap
     restart: always
+    healthcheck:
+      test: ["CMD", "ldapwhoami", "-x", "-H", "ldap://localhost:1389"]
+      start_period: 30s
+      interval: 15s
+      timeout: 5s
+      retries: 5
 
 volumes:
   ldap-certs:
