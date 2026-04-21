@@ -1,0 +1,59 @@
+---
+services:
+  opencloud:
+    environment:
+      # Point the search service at OpenSearch instead of the embedded bleve index.
+      SEARCH_ENGINE_TYPE: open-search
+      SEARCH_ENGINE_OPEN_SEARCH_CLIENT_ADDRESSES: http://opensearch:9200
+      SEARCH_ENGINE_OPEN_SEARCH_CLIENT_INSECURE: "true"
+      SEARCH_ENGINE_OPEN_SEARCH_RESOURCE_INDEX_NAME: ${OPENSEARCH_RESOURCE_INDEX:-opencloud-resources}
+    depends_on:
+      opensearch:
+        condition: service_healthy
+
+  opensearch:
+    image: ${OPENSEARCH_DOCKER_IMAGE:-opensearchproject/opensearch}:${OPENSEARCH_DOCKER_TAG:-2.19.5}
+    environment:
+      discovery.type: single-node
+      bootstrap.memory_lock: "true"
+      OPENSEARCH_JAVA_OPTS: ${OPENSEARCH_JAVA_OPTS:--Xms512m -Xmx512m}
+      # Security plugin is disabled: OpenSearch is only reachable on the
+      # internal opencloud-net bridge and no port is published to the host.
+      # Do NOT enable a published port or expose this via the reverse proxy
+      # without first enabling and configuring the security plugin.
+      DISABLE_SECURITY_PLUGIN: "true"
+      DISABLE_INSTALL_DEMO_CONFIG: "true"
+      # Disable the disk-based shard allocation watermarks. By default OpenSearch
+      # marks indices read-only when the host disk is <5% free, which silently
+      # turns bulk upserts into no-ops. Fine to disable on a single-node dev box.
+      cluster.routing.allocation.disk.threshold_enabled: "false"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    networks:
+      opencloud-net:
+    volumes:
+      - ${OPENSEARCH_DATA_DIR:-opensearch-data}:/usr/share/opensearch/data
+    healthcheck:
+      # Single-node clusters can't go green (replicas have nowhere to land), so
+      # yellow is the healthy state. Still gates opencloud until opensearch accepts
+      # requests.
+      test:
+        [
+          "CMD-SHELL",
+          "curl -sf 'http://localhost:9200/_cluster/health?wait_for_status=yellow&timeout=5s' > /dev/null || exit 1",
+        ]
+      interval: 5s
+      timeout: 10s
+      retries: 24
+      start_period: 60s
+    logging:
+      driver: ${LOG_DRIVER:-local}
+    restart: always
+
+volumes:
+  opensearch-data:
