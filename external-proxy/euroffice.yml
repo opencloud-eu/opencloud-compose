@@ -1,0 +1,10 @@
+---
+services:
+  collaboration:
+    ports:
+      # expose the wopi server on localhost
+      - "127.0.0.1:9300:9300"
+  euro-office:
+    ports:
+      # expose the euro-office document server on localhost
+      - "127.0.0.1:9900:80"
