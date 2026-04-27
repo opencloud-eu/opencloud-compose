@@ -1,0 +1,10 @@
+---
+services:
+  authelia:
+    ports:
+      # expose the authelia portal on localhost
+      - "127.0.0.1:9091:9091"
+  lldap:
+    ports:
+      # expose the LLDAP web UI on localhost
+      - "127.0.0.1:17170:17170"

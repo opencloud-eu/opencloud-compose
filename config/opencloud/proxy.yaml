@@ -1,3 +1,17 @@
+# Role assignment via OIDC groups (Authelia / external IdP)
+# Uncomment and configure the section below to map a group from your IdP to an OpenCloud role.
+# This is needed when using idm/authelia-lldap.yml or idm/external-authelia.yml.
+# See the bootstrap instructions in idm/authelia-lldap.yml for the full setup procedure.
+#
+# proxy:
+#   role_assignment:
+#     driver: oidc
+#     oidc_role_mapper:
+#       role_claim: groups
+#       role_mapping:
+#         - role_name: admin          # OpenCloud role name
+#           claim_value: opencloud-admin  # group name in LLDAP / your IdP
+
 # This adds four additional routes to the proxy. Forwarding
 # request on '/carddav/', '/caldav/' and the respective '/.well-knwown'
 # endpoints to the radicale container and setting the required headers.

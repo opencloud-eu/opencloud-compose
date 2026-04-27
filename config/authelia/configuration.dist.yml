@@ -1,0 +1,181 @@
+---
+# Authelia configuration template for OpenCloud + LLDAP integration.
+# This file is processed by Authelia's Go template engine (X_AUTHELIA_CONFIG_FILTERS=template).
+# Environment variables referenced here are passed into the authelia container.
+
+theme: auto
+default_2fa_method: totp
+
+server:
+  address: tcp://0.0.0.0:9091/
+
+log:
+  level: warn
+
+totp:
+  disable: false
+  issuer: '{{ env "AUTHELIA_DOMAIN" }}'
+
+webauthn:
+  disable: false
+  timeout: 60s
+  attestation_conveyance_preference: indirect
+  user_verification: preferred
+
+authentication_backend:
+  ldap:
+    implementation: lldap
+    address: 'ldap://lldap:3890'
+    base_dn: 'dc=opencloud,dc=eu'
+    user: 'uid=admin,ou=people,dc=opencloud,dc=eu'
+    password: '{{ env "LLDAP_ADMIN_PASSWORD" }}'
+
+access_control:
+  default_policy: two_factor
+
+session:
+  name: authelia_session
+  cookies:
+    - domain: '{{ env "AUTHELIA_DOMAIN" }}'
+      authelia_url: 'https://{{ env "AUTHELIA_DOMAIN" }}'
+  expiration: 24h
+  inactivity: 24h
+  remember_me_duration: 30d
+  redis:
+    host: redis
+    port: 6379
+
+regulation:
+  max_retries: 3
+  find_time: 2m
+  ban_time: 5m
+
+storage:
+  local:
+    path: /config/db.sqlite3
+
+notifier:
+  filesystem:
+    filename: /config/notifications.txt
+
+identity_providers:
+  oidc:
+    lifespans:
+      access_token: 1d
+      refresh_token: 30d
+    jwks:
+      - key_id: opencloud
+        algorithm: RS256
+        use: sig
+        key: |
+          {{ secret "/config/secrets/oidc_jwks.pem" | mindent 10 "|" | msquote }}
+    cors:
+      endpoints:
+        - authorization
+        - token
+        - revocation
+        - introspection
+        - userinfo
+      allowed_origins:
+        - 'https://{{ env "OC_DOMAIN" }}'
+      allowed_origins_from_client_redirect_uris: false
+    clients:
+      - client_id: web
+        client_name: OpenCloud Web
+        public: true
+        authorization_policy: two_factor
+        consent_mode: auto
+        pre_configured_consent_duration: 1w
+        scopes:
+          - openid
+          - email
+          - profile
+          - groups
+          - offline_access
+        redirect_uris:
+          - 'https://{{ env "OC_DOMAIN" }}/'
+          - 'https://{{ env "OC_DOMAIN" }}/oidc-callback.html'
+          - 'https://{{ env "OC_DOMAIN" }}/oidc-silent-redirect.html'
+        grant_types:
+          - refresh_token
+          - authorization_code
+        response_types:
+          - code
+        response_modes:
+          - form_post
+          - query
+          - fragment
+        userinfo_signed_response_alg: none
+
+      - client_id: OpenCloudDesktop
+        client_name: OpenCloud Desktop Client
+        public: true
+        authorization_policy: one_factor
+        consent_mode: auto
+        pre_configured_consent_duration: 1w
+        scopes:
+          - openid
+          - groups
+          - profile
+          - email
+          - offline_access
+        redirect_uris:
+          - http://127.0.0.1
+        grant_types:
+          - refresh_token
+          - authorization_code
+        response_types:
+          - code
+        response_modes:
+          - form_post
+        userinfo_signed_response_alg: none
+
+      - client_id: OpenCloudIOS
+        client_name: OpenCloud iOS Client
+        public: true
+        authorization_policy: one_factor
+        consent_mode: auto
+        pre_configured_consent_duration: 1w
+        allow_multiple_auth_methods: true
+        scopes:
+          - openid
+          - groups
+          - profile
+          - email
+          - offline_access
+        redirect_uris:
+          - oc://ios.opencloud.eu
+        grant_types:
+          - refresh_token
+          - authorization_code
+        response_types:
+          - code
+        response_modes:
+          - form_post
+          - query
+        userinfo_signed_response_alg: none
+
+      - client_id: OpenCloudAndroid
+        client_name: OpenCloud Android Client
+        public: true
+        authorization_policy: one_factor
+        consent_mode: auto
+        pre_configured_consent_duration: 1w
+        allow_multiple_auth_methods: true
+        scopes:
+          - openid
+          - groups
+          - profile
+          - email
+          - offline_access
+        redirect_uris:
+          - oc://android.opencloud.eu
+        grant_types:
+          - refresh_token
+          - authorization_code
+        response_types:
+          - code
+        response_modes:
+          - form_post
+          - query
+        userinfo_signed_response_alg: none
