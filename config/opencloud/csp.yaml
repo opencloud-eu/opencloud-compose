@@ -9,6 +9,7 @@ directives:
     - 'https://raw.githubusercontent.com/opencloud-eu/awesome-apps/'
     - 'https://${IDP_DOMAIN|keycloak.opencloud.test}${TRAEFIK_PORT_HTTPS}/'
     - 'https://update.opencloud.eu/'
+    - 'https://tile.openstreetmap.org/'
   default-src:
     - '''none'''
   font-src:
@@ -31,6 +32,7 @@ directives:
     - 'https://tile.openstreetmap.org/'
     # In contrary to bash and docker the default is given after the | character
     - 'https://${COLLABORA_DOMAIN|collabora.opencloud.test}${TRAEFIK_PORT_HTTPS}/'
+    - 'https://tile.openstreetmap.org/'
   manifest-src:
     - '''self'''
   media-src:
@@ -45,3 +47,6 @@ directives:
   style-src:
     - '''self'''
     - '''unsafe-inline'''
+  worker-src:
+    - "'self'"
+    - 'blob:'
