@@ -1,0 +1,28 @@
+---
+services:
+  traefik:
+    networks:
+      opencloud-net:
+        aliases:
+          - ${EURO_OFFICE_DOMAIN:-euro-office.opencloud.test}
+          - ${WOPISERVER_DOMAIN:-wopiserver.opencloud.test}
+  collaboration:
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.collaboration.entrypoints=https"
+      - "traefik.http.routers.collaboration.rule=Host(`${WOPISERVER_DOMAIN:-wopiserver.opencloud.test}`)"
+      - "traefik.http.routers.collaboration.${TRAEFIK_SERVICES_TLS_CONFIG}"
+      - "traefik.http.routers.collaboration.service=collaboration"
+      - "traefik.http.routers.collaboration.middlewares=hsts-header"
+      - "traefik.http.services.collaboration.loadbalancer.server.port=9300"
+  euro-office:
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.euro-office.entrypoints=https"
+      - "traefik.http.routers.euro-office.rule=Host(`${EURO_OFFICE_DOMAIN:-euro-office.opencloud.test}`)"
+      - "traefik.http.routers.euro-office.${TRAEFIK_SERVICES_TLS_CONFIG}"
+      - "traefik.http.routers.euro-office.service=euro-office"
+      - "traefik.http.services.euro-office.loadbalancer.server.port=80"
+      # websockets can't be opened when this is omitted
+      - "traefik.http.middlewares.euro-office.headers.customrequestheaders.X-Forwarded-Proto=https"
+      - "traefik.http.routers.euro-office.middlewares=euro-office"
