@@ -56,6 +56,10 @@ services:
       OC_PASSWORD_POLICY_MIN_SPECIAL_CHARACTERS: "${OC_PASSWORD_POLICY_MIN_SPECIAL_CHARACTERS:-1}"
       # default language for services/WebUI; defaults to English, language code (ISO 639-1, e.g. de, en, fr)
       OC_DEFAULT_LANGUAGE: ${DEFAULT_LANGUAGE}
+      # custom
+      WEB_ASSET_THEMES_PATH: /themes
+      WEB_UI_THEME_PATH: rshb
+      WEB_UI_CONFIG_FILE: /etc/opencloud/opencloud-web.json
     volumes:
       - ./config/opencloud/csp.yaml:/etc/opencloud/csp.yaml
       - ./config/opencloud/banned-password-list.txt:/etc/opencloud/banned-password-list.txt
@@ -63,6 +67,9 @@ services:
       - ${OC_CONFIG_DIR:-opencloud-config}:/etc/opencloud
       - ${OC_DATA_DIR:-opencloud-data}:/var/lib/opencloud
       - ${OC_APPS_DIR:-./config/opencloud/apps}:/var/lib/opencloud/web/assets/apps
+      # custom
+      - ./themes:/themes:ro
+      - ./config/opencloud-web.json:/etc/opencloud/opencloud-web.json:ro
     logging:
       driver: ${LOG_DRIVER:-local}
     restart: always

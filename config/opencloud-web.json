@@ -1,0 +1,27 @@
+{
+    "openIdConnect": {
+        "metadata_url": "https://cloud.iliadacloud.ru/.well-known/openid-configuration",
+        "authority": "https://cloud.iliadacloud.ru",
+        "client_id": "web",
+        "response_type": "code",
+        "scope": "openid profile email"
+    },
+    "apps": [
+        "files",
+        "search",
+        "text-editor",
+        "pdf-viewer",
+        "external",
+        "admin-settings",
+        "epub-reader",
+        "preview"
+    ],
+    "options": {
+        "contextHelpersReadMore": true,
+        "tokenStorageLocal": true,
+        "embed": {},
+        "concurrentRequests": {
+            "shares": {}
+        }
+    }
+}

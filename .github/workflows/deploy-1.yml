@@ -29,7 +29,7 @@ jobs:
           DEMO_USERS=false
           PROXY_ENABLE_BASIC_AUTH=true
           # Traefik SSL (выберите один вариант)
-          TRAEFIK_LETSENCRYPT_EMAIL=${{ secrets.LETSENCRYPT_EMAIL }}
+          TRAEFIK_LETSENCRYPT_EMAIL=${{ secrets.EMAIL }}
           TRAEFIK_SERVICES_TLS_CONFIG="tls.certresolver=letsencrypt"
           # Если используете самоподписные сертификаты, замените две строки выше на:
           # TRAEFIK_SERVICES_TLS_CONFIG="tls=true"
