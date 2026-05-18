@@ -1,7 +1,7 @@
 ---
 services:
   postgres:
-    image: postgres:17.9-alpine
+    image: postgres:17.10-alpine
     networks:
       opencloud-net:
     volumes:
