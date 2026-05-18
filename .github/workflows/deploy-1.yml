@@ -54,13 +54,13 @@ jobs:
             ./config/ \
             ./themes/ \
             .env \
-            root@iliadacloud.ru:/opt/opencloud/
+            root@${{ secrets.IP }}:/opt/opencloud/
 
       - name: Deploy with docker compose (Traefik + OpenCloud)
         env:
           SSHPASS: ${{ secrets.SSH_PASSWORD }}
         run: |
-          sshpass -e ssh -o StrictHostKeyChecking=no root@iliadacloud.ru << 'EOF'
+          sshpass -e ssh -o StrictHostKeyChecking=no root@${{ secrets.IP }} << 'EOF'
             cd /opt/opencloud
             # Остановить старые контейнеры
             docker compose -f docker-compose.yml -f traefik/opencloud.yml down --remove-orphans
