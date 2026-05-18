@@ -1,0 +1,73 @@
+name: Deploy OpenCloud with custom theme (Traefik)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: vanilla-with-themes-and-no-store
+
+      - name: Install sshpass
+        run: sudo apt-get update && sudo apt-get install -y sshpass
+
+      - name: Prepare .env file
+        run: |
+          cat > .env <<EOF
+          # Domain
+          OC_DOMAIN=cloud.iliadacloud.ru
+          # Admin password (required)
+          INITIAL_ADMIN_PASSWORD=${{ secrets.ADMIN_PASSWORD }}
+          # OpenCloud settings
+          INSECURE=false   # Traefik будет с SSL, но сам OpenCloud внутри считает TLS необязательным
+          LOG_LEVEL=info
+          LOG_PRETTY=true
+          DEMO_USERS=false
+          PROXY_ENABLE_BASIC_AUTH=true
+          # Traefik SSL (выберите один вариант)
+          TRAEFIK_LETSENCRYPT_EMAIL=${{ secrets.LETSENCRYPT_EMAIL }}
+          TRAEFIK_SERVICES_TLS_CONFIG="tls.certresolver=letsencrypt"
+          # Если используете самоподписные сертификаты, замените две строки выше на:
+          # TRAEFIK_SERVICES_TLS_CONFIG="tls=true"
+          # Дополнительные настройки (опционально)
+          DEFAULT_LANGUAGE=en
+          START_ADDITIONAL_SERVICES=""
+          # Для темы и отключения магазина (уже в docker-compose.yml, но продублируем на всякий)
+          WEB_ASSET_THEMES_PATH=/themes
+          WEB_UI_THEME_PATH=rshb
+          WEB_UI_CONFIG_FILE=/etc/opencloud/opencloud-web.json
+          WEB_OPTION_RUNTIME_APPS='[]'
+          EOF
+
+      - name: Copy files to server
+        env:
+          SSHPASS: ${{ secrets.SSH_PASSWORD }}
+        run: |
+          sshpass -e rsync -avz --delete \
+            -e "ssh -o StrictHostKeyChecking=no" \
+            ./docker-compose.yml \
+            ./traefik/ \
+            ./config/ \
+            ./themes/ \
+            .env \
+            root@iliadacloud.ru:/opt/opencloud/
+
+      - name: Deploy with docker compose (Traefik + OpenCloud)
+        env:
+          SSHPASS: ${{ secrets.SSH_PASSWORD }}
+        run: |
+          sshpass -e ssh -o StrictHostKeyChecking=no root@iliadacloud.ru << 'EOF'
+            cd /opt/opencloud
+            # Остановить старые контейнеры
+            docker compose -f docker-compose.yml -f traefik/opencloud.yml down --remove-orphans
+            # Подтянуть свежие образы
+            docker compose -f docker-compose.yml -f traefik/opencloud.yml pull
+            # Запустить
+            docker compose -f docker-compose.yml -f traefik/opencloud.yml up -d
+            # Показать статус
+            docker compose -f docker-compose.yml -f traefik/opencloud.yml ps
+          EOF
