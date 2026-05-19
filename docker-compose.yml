@@ -59,7 +59,6 @@ services:
       # custom
       WEB_UI_CONFIG_FILE: /etc/opencloud/opencloud-web.json
       WEB_ASSET_THEMES_PATH: /themes
-      WEB_UI_THEME_PATH: /rshb
     volumes:
       - ./config/opencloud/csp.yaml:/etc/opencloud/csp.yaml
       - ./config/opencloud/banned-password-list.txt:/etc/opencloud/banned-password-list.txt
