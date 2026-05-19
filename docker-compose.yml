@@ -58,7 +58,7 @@ services:
       OC_DEFAULT_LANGUAGE: ${DEFAULT_LANGUAGE}
       # custom
       WEB_ASSET_THEMES_PATH: /themes
-      WEB_UI_THEME_PATH: rshb
+      WEB_UI_THEME_PATH: /rshb
       WEB_UI_CONFIG_FILE: /etc/opencloud/opencloud-web.json
     volumes:
       - ./config/opencloud/csp.yaml:/etc/opencloud/csp.yaml

@@ -15,6 +15,12 @@ jobs:
       - name: Install sshpass
         run: sudo apt-get update && sudo apt-get install -y sshpass
 
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
       - name: Prepare .env file
         run: |
           cat > .env <<EOF
@@ -38,9 +44,9 @@ jobs:
           START_ADDITIONAL_SERVICES=""
           # Для темы и отключения магазина (уже в docker-compose.yml, но продублируем на всякий)
           WEB_ASSET_THEMES_PATH=/themes
-          WEB_UI_THEME_PATH=rshb
+          WEB_UI_THEME_PATH=/rshb
           WEB_UI_CONFIG_FILE=/etc/opencloud/opencloud-web.json
-          WEB_OPTION_RUNTIME_APPS='[]'
+          COMPOSE_FILE=docker-compose.yml:traefik/opencloud.yml
           EOF
 
       - name: Copy files to server
@@ -49,12 +55,12 @@ jobs:
         run: |
           sshpass -e rsync -avz --delete \
             -e "ssh -o StrictHostKeyChecking=no" \
-            ./docker-compose.yml \
-            ./traefik/ \
-            ./config/ \
-            ./themes/ \
-            .env \
-            root@iliadacloud.ru:/opt/opencloud/
+            --exclude='.git' \
+            --exclude='.github' \
+            --exclude='venv' \
+            --exclude='node_modules' \
+            ./ \
+            root@${{ secrets.IP }}:/opt/opencloud/
 
       - name: Deploy with docker compose (Traefik + OpenCloud)
         env:
