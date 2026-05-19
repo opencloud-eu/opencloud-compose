@@ -40,7 +40,7 @@ jobs:
           # Если используете самоподписные сертификаты, замените две строки выше на:
           # TRAEFIK_SERVICES_TLS_CONFIG="tls=true"
           # Дополнительные настройки (опционально)
-          DEFAULT_LANGUAGE=en
+          DEFAULT_LANGUAGE=ru
           START_ADDITIONAL_SERVICES=""
           # Для темы и отключения магазина (уже в docker-compose.yml, но продублируем на всякий)
           WEB_UI_CONFIG_FILE=/etc/opencloud/opencloud-web.json

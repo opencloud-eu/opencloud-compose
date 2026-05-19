@@ -71,6 +71,23 @@ services:
     logging:
       driver: ${LOG_DRIVER:-local}
     restart: always
+  # --- НОВЫЙ СЕРВИС ДЛЯ РАЗДАЧИ СТАТИКИ ---
+  themes:
+    image: nginx:alpine                        # Легковесный образ Nginx
+    container_name: opencloud-themes           # Имя контейнера
+    volumes:
+      - ./themes:/usr/share/nginx/html/themes:ro # Монтируем вашу папку с темами
+    networks:
+      - opencloud-net
+    labels:
+      - "traefik.enable=true"
+      # Маршрутизируем все запросы к /themes на этот сервис
+      - "traefik.http.routers.themes.rule=PathPrefix(`/themes`)"
+      - "traefik.http.routers.themes.entrypoints=websecure"
+      # Указываем Traefik использовать тот же самый резолвер сертификатов
+      - "traefik.http.routers.themes.tls.certResolver=letsencrypt"
+      - "traefik.http.services.themes.loadbalancer.server.port=80"
+    restart: unless-stopped
 
 volumes:
   opencloud-config:
