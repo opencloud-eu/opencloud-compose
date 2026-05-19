@@ -43,8 +43,6 @@ jobs:
           DEFAULT_LANGUAGE=en
           START_ADDITIONAL_SERVICES=""
           # Для темы и отключения магазина (уже в docker-compose.yml, но продублируем на всякий)
-          WEB_ASSET_THEMES_PATH=/themes
-          WEB_UI_THEME_PATH=/rshb
           WEB_UI_CONFIG_FILE=/etc/opencloud/opencloud-web.json
           COMPOSE_FILE=docker-compose.yml:traefik/opencloud.yml
           EOF

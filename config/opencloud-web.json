@@ -1,4 +1,5 @@
 {
+    "theme": "https://cloud.iliadacloud.ru/themes/rshb/theme.json",
     "openIdConnect": {
         "metadata_url": "https://cloud.iliadacloud.ru/.well-known/openid-configuration",
         "authority": "https://cloud.iliadacloud.ru",
