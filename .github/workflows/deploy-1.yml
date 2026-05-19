@@ -29,7 +29,7 @@ jobs:
           # Admin password (required)
           INITIAL_ADMIN_PASSWORD=${{ secrets.ADMIN_PASSWORD }}
           # OpenCloud settings
-          INSECURE=false   # Traefik будет с SSL, но сам OpenCloud внутри считает TLS необязательным
+          INSECURE=true   # Traefik будет с SSL, но сам OpenCloud внутри считает TLS необязательным
           LOG_LEVEL=info
           LOG_PRETTY=true
           DEMO_USERS=false
