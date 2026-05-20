@@ -24,6 +24,7 @@ directives:
     - 'https://${COLLABORA_DOMAIN|collabora.opencloud.test}${TRAEFIK_PORT_HTTPS}/'
     # This is needed for the external-sites web extension when embedding sites
     - 'https://docs.opencloud.eu'
+    - 'https://${IDP_DOMAIN|keycloak.opencloud.test}${TRAEFIK_PORT_HTTPS}/'
   img-src:
     - '''self'''
     - 'data:'
