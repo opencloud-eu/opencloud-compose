@@ -78,7 +78,7 @@ services:
     restart: always
 
   keycloak:
-    image: quay.io/keycloak/keycloak:26.6.2
+    image: quay.io/keycloak/keycloak:26.6.3
     networks:
       opencloud-net:
     command: [ "start", "--spi-connections-http-client-default-disable-trust-manager=${INSECURE:-false}", "--import-realm" ]
