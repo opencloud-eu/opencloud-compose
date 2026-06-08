@@ -2,35 +2,52 @@
 services:
   opencloud:
     environment:
-      # enable opaque access tokens
+      # Disable the built-in identity management and identity provider
+      OC_EXCLUDE_RUN_SERVICES: idm,idp
+      # External Authelia OIDC provider
+      OC_OIDC_ISSUER: ${IDP_ISSUER_URL:?IDP_ISSUER_URL must be set to your Authelia base URL, e.g. https://auth.example.com}
+      WEB_OIDC_CLIENT_ID: ${OC_OIDC_CLIENT_ID:-web}
+      # Authelia issues opaque access tokens; disable JWT verification
       PROXY_OIDC_ACCESS_TOKEN_VERIFY_METHOD: "none"
-      PROXY_OIDC_SKIP_VERIFICATION: "false"
-
-      # Enable authelia usernames as username in OpenCloud (instead of an id)
-      # PROXY_USER_OIDC_CLAIM: "preferred_username"
-      # PROXY_AUTOPROVISION_CLAIM_USERNAME: "preferred_username"
-
+      PROXY_OIDC_REWRITE_WELLKNOWN: "true"
+      # Use preferred_username from Authelia as the OpenCloud user identifier
+      PROXY_USER_OIDC_CLAIM: "preferred_username"
+      PROXY_USER_CS3_CLAIM: "username"
+      # Include groups claim for role assignment
+      WEB_OIDC_SCOPE: "openid profile email groups offline_access"
       PROXY_ROLE_ASSIGNMENT_OIDC_CLAIM: "groups"
-      WEB_OIDC_SCOPE: "openid profile email groups"
+      # No auto-provisioning: user management is handled by the external identity provider
+      PROXY_AUTOPROVISION_ACCOUNTS: "false"
+      OC_ADMIN_USER_ID: ""
+      SETTINGS_SETUP_DEFAULT_ASSIGNMENTS: "false"
+      GRAPH_ASSIGN_DEFAULT_USER_ROLE: "true"
+      GRAPH_USERNAME_MATCH: "none"
+      # Allow the external Authelia domain in CSP frame/connect directives
+      IDP_DOMAIN: ${IDP_DOMAIN:?IDP_DOMAIN must be set to your Authelia domain, e.g. auth.example.com}
 
-      # The desktop client currently doesn't work when oidc assignment driver is used : https://github.com/opencloud-eu/desktop/issues/217
-      # That's why you only can use it to bootstrap your admin user currently (if you want to use the desktop client).
+      # Some clients currently doesn't work when oidc assignment driver is used:
+      # https://github.com/opencloud-eu/desktop/issues/217
+      # That's why you can only use it to bootstrap your admin user currently.
       #
       # 1. *Before* first startup: Switch to `PROXY_ROLE_ASSIGNMENT_DRIVER: "oidc"`
       # 2. Start opencloud container to generate initial config: `docker compose up -d`
-      # 3. Map the `opencloud-admin` group from authelia to the `admin` role from OpenCloud in opencloud-config/opencloud.yaml :
-      #
-      # proxy:
-      #   role_assignment:
-      #    oidc_role_mapper:
-      #        role_claim: groups
-      #        role_mapping:
-      #          - role_name: admin
-      #            claim_value: opencloud-admin
+      # 3. Uncomment and adjust the role mapping block in config/opencloud/proxy.yaml:
+      #    Set `claim_value` to the group name in your IdP that should get the `admin` role.
       #
       # 4. Restart opencloud container: `docker compose restart opencloud`
       # 5. Login with your admin user (the one with the `opencloud-admin` group)
-      # 6. Switch back to `PROXY_ROLE_ASSIGNMENT_DRIVER: "default"``
+      # 6. Switch back to `PROXY_ROLE_ASSIGNMENT_DRIVER: "default"`
       # 7. Recreate opencloud container: `docker compose up -d opencloud`
       PROXY_ROLE_ASSIGNMENT_DRIVER: "default"
-      GRAPH_ASSIGN_DEFAULT_USER_ROLE: "true"
+
+      # Optional: if your Authelia instance also manages an LDAP/LLDAP directory,
+      # configure OpenCloud to read user data from it directly:
+      # OC_LDAP_URI: ldap://your-ldap-server:389
+      # OC_LDAP_INSECURE: "true"
+      # OC_LDAP_BIND_DN: "uid=admin,ou=people,dc=example,dc=com"
+      # OC_LDAP_BIND_PASSWORD: ${LDAP_BIND_PASSWORD}
+      # OC_LDAP_GROUP_BASE_DN: "ou=groups,dc=example,dc=com"
+      # OC_LDAP_USER_BASE_DN: "ou=people,dc=example,dc=com"
+      # OC_LDAP_USER_FILTER: "(objectclass=inetOrgPerson)"
+      # OC_LDAP_SERVER_WRITE_ENABLED: "false"
+      # FRONTEND_READONLY_USER_ATTRIBUTES: "user.onPremisesSamAccountName,user.displayName,user.mail,user.passwordProfile,user.accountEnabled,user.appRoleAssignments"

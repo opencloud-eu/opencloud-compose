@@ -1,0 +1,11 @@
+---
+# only expose the ports when you know what you are doing!
+services:
+  authelia:
+    ports:
+      # expose the authelia portal on all interfaces
+      - "0.0.0.0:9091:9091"
+  lldap:
+    ports:
+      # expose the LLDAP web UI on all interfaces
+      - "0.0.0.0:17170:17170"

@@ -105,6 +105,78 @@ This setup includes:
 - Shared LDAP server as a user directory with demo users and groups
 - Integration with Keycloak using OpenCloud clients (`web`, `OpenCloudDesktop`, `OpenCloudAndroid`, `OpenCloudIOS`)
 
+### With Authelia and LLDAP
+
+OpenCloud can be deployed with [Authelia](https://www.authelia.com/) as the authentication portal and [LLDAP](https://github.com/lldap/lldap) as a lightweight LDAP user directory:
+
+> **DNS Requirements**: This setup requires DNS entries for the OpenCloud domain, the Authelia domain, and the LLDAP admin domain. Configure DNS A/AAAA records (e.g., `cloud.example.com`, `auth.example.com`, `lldap.example.com`) or use a wildcard DNS entry (`*.example.com`).
+
+Using `-f` flags:
+```bash
+docker compose -f docker-compose.yml -f idm/authelia-lldap.yml -f traefik/opencloud.yml -f traefik/authelia-lldap.yml up -d
+```
+
+Or by setting in `.env`:
+```
+COMPOSE_FILE=docker-compose.yml:idm/authelia-lldap.yml:traefik/opencloud.yml:traefik/authelia-lldap.yml
+```
+
+Configure the required secrets in your `.env` file (generate each with `openssl rand -hex 32`):
+```ini
+AUTHELIA_DOMAIN=auth.example.com
+LLDAP_DOMAIN=lldap.example.com
+LLDAP_ADMIN_PASSWORD=your_lldap_admin_password
+LLDAP_JWT_SECRET=
+AUTHELIA_JWT_SECRET=
+AUTHELIA_SESSION_SECRET=
+AUTHELIA_STORAGE_ENCRYPTION_KEY=
+AUTHELIA_OIDC_HMAC_SECRET=
+```
+
+> **For local development only**: Add to `/etc/hosts`:
+> ```
+> 127.0.0.1 auth.opencloud.test
+> 127.0.0.1 lldap.opencloud.test
+> ```
+
+This setup includes:
+- Authelia as a self-hosted authentication portal with 2FA (TOTP and WebAuthn)
+- LLDAP as a lightweight LDAP server for managing users and groups
+- Redis session persistence 
+- OIDC integration with OpenCloud web, desktop, iOS, and Android clients
+
+**First-time admin setup:**
+
+Before starting, you must create at least one user in LLDAP. After the stack is up, navigate to `https://lldap.example.com` (or `http://localhost:17170` if using the external proxy variant) and:
+
+1. Log in with `admin` and the `LLDAP_ADMIN_PASSWORD` you set
+2. Create a group named `opencloud-admin`
+3. Create your admin user and add them to the `opencloud-admin` group
+
+Then follow the role-assignment bootstrap steps described in `idm/authelia-lldap.yml` to enable the OIDC role mapping: uncomment and adjust the block at the top of `config/opencloud/proxy.yaml`, setting `claim_value` to your admin group name.
+
+**OIDC JWKS key**: The RSA private key used to sign OIDC tokens is automatically generated on first startup and persisted in the `authelia-config` Docker volume. No manual key generation is required.
+
+### With External Authelia
+
+If you already have a running Authelia instance, use the external variant. Configure your Authelia instance with the OIDC clients from `config/authelia/configuration.dist.yml` and point OpenCloud at it:
+
+Using `-f` flags:
+```bash
+docker compose -f docker-compose.yml -f idm/external-authelia.yml -f traefik/opencloud.yml up -d
+```
+
+Or by setting in `.env`:
+```
+COMPOSE_FILE=docker-compose.yml:idm/external-authelia.yml:traefik/opencloud.yml
+```
+
+Set in `.env`:
+```ini
+IDP_DOMAIN=auth.example.com
+IDP_ISSUER_URL=https://auth.example.com
+```
+
 ### With Collabora Online
 
 Include Collabora for document editing using either method:

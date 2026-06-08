@@ -1,0 +1,116 @@
+---
+services:
+  opencloud:
+    environment:
+      # LLDAP-specific LDAP configuration
+      OC_LDAP_URI: ldap://lldap:3890
+      OC_LDAP_INSECURE: "true"
+      OC_LDAP_BIND_DN: "uid=admin,ou=people,dc=opencloud,dc=eu"
+      OC_LDAP_BIND_PASSWORD: ${LLDAP_ADMIN_PASSWORD:-admin}
+      OC_LDAP_GROUP_BASE_DN: "ou=groups,dc=opencloud,dc=eu"
+      OC_LDAP_GROUP_SCHEMA_ID: "entryUUID"
+      OC_LDAP_USER_BASE_DN: "ou=people,dc=opencloud,dc=eu"
+      OC_LDAP_USER_FILTER: "(objectclass=inetOrgPerson)"
+      OC_LDAP_USER_SCHEMA_ID: "entryUUID"
+      OC_LDAP_DISABLE_USER_MECHANISM: "none"
+      GRAPH_LDAP_SERVER_UUID: "true"
+      GRAPH_LDAP_GROUP_CREATE_BASE_DN: "ou=custom,ou=groups,dc=opencloud,dc=eu"
+      GRAPH_LDAP_REFINT_ENABLED: "false"
+      # User attributes are managed in LLDAP, make them read-only in OpenCloud
+      FRONTEND_READONLY_USER_ATTRIBUTES: "user.onPremisesSamAccountName,user.displayName,user.mail,user.passwordProfile,user.accountEnabled,user.appRoleAssignments"
+      # LLDAP manages the user directory - OpenCloud must not write to it
+      OC_LDAP_SERVER_WRITE_ENABLED: "false"
+      # Disable the built-in identity management and identity provider
+      OC_EXCLUDE_RUN_SERVICES: idm,idp
+      # Authelia OIDC provider configuration
+      OC_OIDC_ISSUER: https://${AUTHELIA_DOMAIN:-auth.opencloud.test}${TRAEFIK_PORT_HTTPS:+:}${TRAEFIK_PORT_HTTPS:-}
+      WEB_OIDC_CLIENT_ID: ${OC_OIDC_CLIENT_ID:-web}
+      # Authelia issues opaque access tokens; disable JWT verification
+      PROXY_OIDC_ACCESS_TOKEN_VERIFY_METHOD: "none"
+      PROXY_OIDC_REWRITE_WELLKNOWN: "true"
+      # Use preferred_username from Authelia as the OpenCloud user identifier
+      PROXY_USER_OIDC_CLAIM: "preferred_username"
+      PROXY_USER_CS3_CLAIM: "username"
+      # Include groups claim for role assignment
+      WEB_OIDC_SCOPE: "openid profile email groups offline_access"
+      PROXY_ROLE_ASSIGNMENT_OIDC_CLAIM: "groups"
+      # No auto-provisioning: users are managed in LLDAP
+      PROXY_AUTOPROVISION_ACCOUNTS: "false"
+      OC_ADMIN_USER_ID: ""
+      SETTINGS_SETUP_DEFAULT_ASSIGNMENTS: "false"
+      GRAPH_ASSIGN_DEFAULT_USER_ROLE: "true"
+      GRAPH_USERNAME_MATCH: "none"
+      # Some clients currently doesn't work when oidc assignment driver is used:
+      # https://github.com/opencloud-eu/desktop/issues/217
+      # That's why you can only use it to bootstrap your admin user currently.
+      #
+      # 1. *Before* first startup: Switch to `PROXY_ROLE_ASSIGNMENT_DRIVER: "oidc"`
+      # 2. Start opencloud container to generate initial config: `docker compose up -d`
+      # 3. Uncomment and adjust the role mapping block in config/opencloud/proxy.yaml:
+      #    Set `claim_value` to the LLDAP group name that should get the `admin` role.
+      #
+      # 4. Restart opencloud container: `docker compose restart opencloud`
+      # 5. Login with your admin user (the one with the `opencloud-admin` group in LLDAP)
+      # 6. Switch back to `PROXY_ROLE_ASSIGNMENT_DRIVER: "default"`
+      # 7. Recreate opencloud container: `docker compose up -d opencloud`
+      PROXY_ROLE_ASSIGNMENT_DRIVER: "default"
+      # Allow Authelia to be embedded in CSP frame/connect directives
+      IDP_DOMAIN: ${AUTHELIA_DOMAIN:-auth.opencloud.test}
+
+  authelia:
+    image: authelia/authelia:latest
+    networks:
+      opencloud-net:
+    entrypoint: ["/bin/sh", "/config/docker-entrypoint-override.sh"]
+    environment:
+      X_AUTHELIA_CONFIG_FILTERS: template
+      AUTHELIA_IDENTITY_VALIDATION_RESET_PASSWORD_JWT_SECRET: ${AUTHELIA_JWT_SECRET:?AUTHELIA_JWT_SECRET must be set}
+      AUTHELIA_SESSION_SECRET: ${AUTHELIA_SESSION_SECRET:?AUTHELIA_SESSION_SECRET must be set}
+      AUTHELIA_STORAGE_ENCRYPTION_KEY: ${AUTHELIA_STORAGE_ENCRYPTION_KEY:?AUTHELIA_STORAGE_ENCRYPTION_KEY must be set}
+      AUTHELIA_IDENTITY_PROVIDERS_OIDC_HMAC_SECRET: ${AUTHELIA_OIDC_HMAC_SECRET:?AUTHELIA_OIDC_HMAC_SECRET must be set}
+      # Pass domain variables so the config template can reference them
+      OC_DOMAIN: ${OC_DOMAIN:-cloud.opencloud.test}
+      AUTHELIA_DOMAIN: ${AUTHELIA_DOMAIN:-auth.opencloud.test}
+      LLDAP_ADMIN_PASSWORD: ${LLDAP_ADMIN_PASSWORD:-admin}
+      TRAEFIK_PORT_HTTPS: ${TRAEFIK_PORT_HTTPS:-}
+    volumes:
+      - authelia-config:/config
+      - "./config/authelia/configuration.dist.yml:/config/configuration.yml:ro"
+      - "./config/authelia/docker-entrypoint-override.sh:/config/docker-entrypoint-override.sh:ro"
+    depends_on:
+      - redis
+      - lldap
+    logging:
+      driver: ${LOG_DRIVER:-local}
+    restart: always
+
+  redis:
+    image: redis:alpine
+    networks:
+      opencloud-net:
+    volumes:
+      - redis-data:/data
+    logging:
+      driver: ${LOG_DRIVER:-local}
+    restart: always
+
+  lldap:
+    image: lldap/lldap:stable
+    networks:
+      opencloud-net:
+    environment:
+      LLDAP_LDAP_BASE_DN: "dc=opencloud,dc=eu"
+      LLDAP_LDAP_USER_DN: "admin"
+      LLDAP_LDAP_USER_PASS: ${LLDAP_ADMIN_PASSWORD:-admin}
+      LLDAP_HTTP_URL: https://${LLDAP_DOMAIN:-lldap.opencloud.test}${TRAEFIK_PORT_HTTPS:+:}${TRAEFIK_PORT_HTTPS:-}
+      LLDAP_JWT_SECRET: ${LLDAP_JWT_SECRET:?LLDAP_JWT_SECRET must be set}
+    volumes:
+      - lldap-data:/data
+    logging:
+      driver: ${LOG_DRIVER:-local}
+    restart: always
+
+volumes:
+  authelia-config:
+  redis-data:
+  lldap-data:

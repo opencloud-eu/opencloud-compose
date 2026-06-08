@@ -1,0 +1,26 @@
+---
+services:
+  traefik:
+    networks:
+      opencloud-net:
+        aliases:
+          - ${AUTHELIA_DOMAIN:-auth.opencloud.test}
+          - ${LLDAP_DOMAIN:-lldap.opencloud.test}
+  authelia:
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.authelia.entrypoints=https"
+      - "traefik.http.routers.authelia.rule=Host(`${AUTHELIA_DOMAIN:-auth.opencloud.test}`)"
+      - "traefik.http.routers.authelia.${TRAEFIK_SERVICES_TLS_CONFIG}"
+      - "traefik.http.routers.authelia.service=authelia"
+      - "traefik.http.routers.authelia.middlewares=hsts-header"
+      - "traefik.http.services.authelia.loadbalancer.server.port=9091"
+  lldap:
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.lldap.entrypoints=https"
+      - "traefik.http.routers.lldap.rule=Host(`${LLDAP_DOMAIN:-lldap.opencloud.test}`)"
+      - "traefik.http.routers.lldap.${TRAEFIK_SERVICES_TLS_CONFIG}"
+      - "traefik.http.routers.lldap.service=lldap"
+      - "traefik.http.routers.lldap.middlewares=hsts-header"
+      - "traefik.http.services.lldap.loadbalancer.server.port=17170"
