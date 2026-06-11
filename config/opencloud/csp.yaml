@@ -9,6 +9,7 @@ directives:
     - 'https://raw.githubusercontent.com/opencloud-eu/awesome-apps/'
     - 'https://${IDP_DOMAIN|keycloak.opencloud.test}${TRAEFIK_PORT_HTTPS}/'
     - 'https://update.opencloud.eu/'
+    - 'https://tile.openstreetmap.org/'
   default-src:
     - '''none'''
   font-src:
@@ -47,3 +48,6 @@ directives:
   style-src:
     - '''self'''
     - '''unsafe-inline'''
+  worker-src:
+    - "'self'"
+    - 'blob:'

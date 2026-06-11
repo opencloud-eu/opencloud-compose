@@ -12,6 +12,9 @@ services:
       ANTIVIRUS_SCANNER_TYPE: clamav
     volumes:
       - clamav-socket:/var/run/clamav
+    depends_on:
+      clamav:
+        condition: service_healthy
   clamav:
     image: clamav/clamav:${CLAMAV_DOCKER_TAG:-latest}
     environment:
@@ -26,6 +29,10 @@ services:
     logging:
       driver: ${LOG_DRIVER:-local}
     restart: always
+    healthcheck:
+      test: sh -c "[ -S /tmp/clamd.sock ]"
+      timeout: 1s
+      retries: 20
 volumes:
   clamav-db:
   clamav-socket:

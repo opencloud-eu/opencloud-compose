@@ -2,12 +2,14 @@
 set -e
 
 CONFIG_FILE="/etc/onlyoffice/documentserver/local.json"
+CONFIG_DIR="$(dirname "$CONFIG_FILE")"
 DATA_DIR="/var/www/onlyoffice/Data"
 WOPI_PRIVATE_KEY="${DATA_DIR}/wopi_private.key"
 WOPI_PUBLIC_KEY="${DATA_DIR}/wopi_public.key"
 
 if [ "${WOPI_ENABLED:-false}" = "true" ]; then
-    mkdir -p "$DATA_DIR"
+    mkdir -p "$CONFIG_DIR" "$DATA_DIR"
+    [ -f "$CONFIG_FILE" ] || echo '{}' > "$CONFIG_FILE"
 
     if [ ! -f "$WOPI_PRIVATE_KEY" ]; then
         echo "Generating WOPI private key..."
