@@ -41,6 +41,7 @@ services:
       COLLABORATION_APP_PROOF_DISABLE: "true"
       COLLABORATION_LOG_LEVEL: ${LOG_LEVEL:-info}
       OC_URL: https://${OC_DOMAIN:-cloud.opencloud.test}${TRAEFIK_PORT_HTTPS:+:}${TRAEFIK_PORT_HTTPS:-}
+      OC_EVENTS_ENDPOINT: "opencloud:9233"
     volumes:
       # configure the .env file to use own paths instead of docker internal volumes
       - ${OC_CONFIG_DIR:-opencloud-config}:/etc/opencloud
@@ -55,15 +56,12 @@ services:
       opencloud-net:
     environment:
       WOPI_ENABLED: "true"
-      JWT_SECRET: "${EURO_OFFICE_JWT_SECRET:-changeme}"
       # self-signed certificates
       USE_UNAUTHORIZED_STORAGE: "${INSECURE:-false}"
-    entrypoint:
-      - /bin/sh
-      - /init-wopi.sh
     volumes:
-      - ./config/euro-office/init-wopi.sh:/init-wopi.sh:ro
-      - ./config/euro-office/onlyoffice-docs-formats.json:/var/www/onlyoffice/documentserver/document-formats/onlyoffice-docs-formats.json
+      # Mount local TrueType fonts so the container can use system fonts
+      # (e.g. Microsoft fonts like Arial, Calibri, Cambria by installing the `ttf-mscorefonts-installer` package).
+      - /usr/share/fonts/truetype:/usr/share/fonts/truetype/more:ro
     logging:
       driver: ${LOG_DRIVER:-local}
     restart: always
