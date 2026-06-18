@@ -1,0 +1,23 @@
+(cloudflare) {
+        tls {
+                dns cloudflare APIKEY
+                resolvers 1.1.1.1
+        }
+}
+*.fqdn.de {
+        import cloudflare
+
+        @cloud host cloud.fqdn.de
+        @collabora host collabora.fqdn.de
+        @wopiserver host wopiserver.fqdn.de
+
+        handle @cloud {
+                reverse_proxy opencloud:9200
+        }
+        handle @collabora {
+                reverse_proxy collabora:9980
+        }
+        handle @wopiserver {
+                reverse_proxy collaboration:9300
+        }
+}
