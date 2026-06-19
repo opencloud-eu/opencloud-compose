@@ -6,32 +6,13 @@ services:
       # this is needed for setting the correct CSP header
       EURO_OFFICE_DOMAIN: ${EURO_OFFICE_DOMAIN:-euro-office.opencloud.test}
       TRAEFIK_PORT_HTTPS: ${TRAEFIK_PORT_HTTPS:+:}${TRAEFIK_PORT_HTTPS:-}
-      # expose nats and the reva gateway for the collaboration service
-      NATS_NATS_HOST: 0.0.0.0
-      GATEWAY_GRPC_ADDR: 0.0.0.0:9142
-    volumes:
-      - ./config/euro-office/app-registry.yaml:/etc/opencloud/app-registry.yaml
-
-  collaboration:
-    # renovate: depName=opencloudeu/opencloud-rolling
-    image: ${OC_DOCKER_IMAGE:-opencloudeu/opencloud-rolling}:${OC_DOCKER_TAG:-6.2.0}
-    user: ${OC_CONTAINER_UID_GID:-1000:1000}
-    networks:
-      opencloud-net:
-    depends_on:
-      opencloud:
-        condition: service_started
-      euro-office:
-        condition: service_healthy
-    entrypoint:
-      - /bin/sh
-    command: [ "-c", "opencloud collaboration server" ]
-    environment:
-      COLLABORATION_GRPC_ADDR: 0.0.0.0:9301
-      COLLABORATION_HTTP_ADDR: 0.0.0.0:9300
-      MICRO_REGISTRY: "nats-js-kv"
-      MICRO_REGISTRY_ADDRESS: "opencloud:9233"
-      COLLABORATION_WOPI_SRC: https://${WOPISERVER_DOMAIN:-wopiserver.opencloud.test}${TRAEFIK_PORT_HTTPS:+:}${TRAEFIK_PORT_HTTPS:-}
+      # run the collaboration (WOPI) service inside the main opencloud process,
+      # appended to any user defined services in START_ADDITIONAL_SERVICES
+      OC_ADD_RUN_SERVICES: ${START_ADDITIONAL_SERVICES:-}${START_ADDITIONAL_SERVICES:+,}collaboration
+      # collaboration service configuration; the WOPI endpoint is served by the
+      # opencloud proxy on the opencloud domain (/wopi and /collaboration routes),
+      # so no separate wopiserver domain, route or port is needed
+      COLLABORATION_WOPI_SRC: https://${OC_DOMAIN:-cloud.opencloud.test}${TRAEFIK_PORT_HTTPS:+:}${TRAEFIK_PORT_HTTPS:-}
       COLLABORATION_APP_NAME: "Euro-Office"
       COLLABORATION_APP_PRODUCT: "OnlyOffice"
       COLLABORATION_APP_ADDR: https://${EURO_OFFICE_DOMAIN:-euro-office.opencloud.test}${TRAEFIK_PORT_HTTPS:+:}${TRAEFIK_PORT_HTTPS:-}
@@ -39,15 +20,8 @@ services:
       COLLABORATION_APP_INSECURE: "${INSECURE:-true}"
       COLLABORATION_CS3API_DATAGATEWAY_INSECURE: "${INSECURE:-true}"
       COLLABORATION_APP_PROOF_DISABLE: "true"
-      COLLABORATION_LOG_LEVEL: ${LOG_LEVEL:-info}
-      OC_URL: https://${OC_DOMAIN:-cloud.opencloud.test}${TRAEFIK_PORT_HTTPS:+:}${TRAEFIK_PORT_HTTPS:-}
-      OC_EVENTS_ENDPOINT: "opencloud:9233"
     volumes:
-      # configure the .env file to use own paths instead of docker internal volumes
-      - ${OC_CONFIG_DIR:-opencloud-config}:/etc/opencloud
-    logging:
-      driver: ${LOG_DRIVER:-local}
-    restart: always
+      - ./config/euro-office/app-registry.yaml:/etc/opencloud/app-registry.yaml
 
   euro-office:
     image: ${EURO_OFFICE_DOCKER_IMAGE:-ghcr.io/euro-office/documentserver}:${EURO_OFFICE_DOCKER_TAG:-latest}
