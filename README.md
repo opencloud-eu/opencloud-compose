@@ -12,6 +12,7 @@ OpenCloud Compose offers a modular approach to deploying OpenCloud with several 
 - **Standard deployment** with Traefik reverse proxy and Let's Encrypt certificates or certificates from files
 - **External proxy** support for environments with existing reverse proxies (like Nginx, Caddy, etc.)
 - **Collabora Online** integration for document editing
+- **Euro Office** integration for document editing
 - **Keycloak and LDAP** integration for centralized identity management
 - **Full text search** with Apache Tika for content extraction and metadata analysis
 - **Monitoring** with metrics endpoints for observability and performance monitoring
@@ -107,9 +108,12 @@ This setup includes:
 
 ### With Collabora Online
 
+> [!NOTE]
+> Collabora Online and [Euro Office](#with-euro-office) are mutually exclusive web office backends — both use the same `collaboration` (WOPI) service, which runs inside the main OpenCloud process. Enable only one of them at a time.
+
 Include Collabora for document editing using either method:
 
-> **DNS Requirements**: This setup requires DNS entries for the main OpenCloud domain, Collabora subdomain, and WOPI server subdomain. Configure DNS A/AAAA records for your domains (e.g., `cloud.example.com`, `collabora.example.com`, `wopiserver.example.com`) or use a wildcard DNS entry (`*.example.com`).
+> **DNS Requirements**: This setup requires DNS entries for the main OpenCloud domain and the Collabora subdomain. The WOPI server is served by OpenCloud on the main domain, so it does not need its own subdomain. Configure DNS A/AAAA records for your domains (e.g., `cloud.example.com`, `collabora.example.com`) or use a wildcard DNS entry (`*.example.com`).
 
 Using `-f` flags:
 ```bash
@@ -124,8 +128,43 @@ COMPOSE_FILE=docker-compose.yml:weboffice/collabora.yml:traefik/opencloud.yml:tr
 > **For local development only**: Add to `/etc/hosts`:
 > ```
 > 127.0.0.1 collabora.opencloud.test
-> 127.0.0.1 wopiserver.opencloud.test
 > ```
+
+> [!IMPORTANT]
+> **Upgrading from a previous setup**: The `collaboration` (WOPI) service no longer runs as a separate container or on its own `wopiserver.*` domain — it now runs inside the main OpenCloud process and is served by the OpenCloud proxy on the main domain under the `/wopi` and `/collaboration` paths. When upgrading:
+> - Pull the latest compose files and recreate the stack (`docker compose up -d`). The old `collaboration` container is removed automatically.
+> - You can retire the `wopiserver.*` DNS entry (and its `/etc/hosts` line), its reverse-proxy/Traefik route, and the `WOPISERVER_DOMAIN` variable in `.env` — all are now unused.
+> - If you run behind an external proxy, make sure it forwards `/wopi` and `/collaboration` on the OpenCloud domain to OpenCloud (port 9200). Forwarding the whole OpenCloud domain, as already configured, covers this.
+
+### With Euro Office
+
+> [!NOTE]
+> Euro Office and [Collabora Online](#with-collabora-online) are mutually exclusive web office backends — both use the same `collaboration` (WOPI) service, which runs inside the main OpenCloud process. Enable only one of them at a time.
+
+Include Euro Office for document editing using either method:
+
+> **DNS Requirements**: This setup requires DNS entries for the main OpenCloud domain and the Euro Office subdomain. The WOPI server is served by OpenCloud on the main domain, so it does not need its own subdomain. Configure DNS A/AAAA records for your domains (e.g., `cloud.example.com`, `euro-office.example.com`) or use a wildcard DNS entry (`*.example.com`).
+
+Using `-f` flags:
+```bash
+docker compose -f docker-compose.yml -f weboffice/euroffice.yml -f traefik/opencloud.yml -f traefik/euroffice.yml up -d
+```
+
+Or by setting in `.env`:
+```
+COMPOSE_FILE=docker-compose.yml:weboffice/euroffice.yml:traefik/opencloud.yml:traefik/euroffice.yml
+```
+
+> **For local development only**: Add to `/etc/hosts`:
+> ```
+> 127.0.0.1 euro-office.opencloud.test
+> ```
+
+> [!IMPORTANT]
+> Set a strong `EURO_OFFICE_JWT_SECRET` in your `.env` file for production. The default value (`changeme`) is intended for local development only.
+
+> [!NOTE]
+> Upgrading from a previous setup? See [Upgrading from a previous setup](#with-collabora-online) under Collabora Online — the WOPI server changes (no more separate container or `wopiserver.*` domain) apply to Euro Office as well.
 
 ### With Full Text Search
 
@@ -226,7 +265,28 @@ COMPOSE_FILE=docker-compose.yml:weboffice/collabora.yml:external-proxy/opencloud
 This exposes the necessary ports:
 - OpenCloud: 9200
 - Collabora: 9980
-- WOPI server: 9300
+
+The WOPI server runs inside the OpenCloud process and is served on the OpenCloud port (9200) under the `/wopi` and `/collaboration` paths, so no separate port needs to be exposed for it.
+
+To use Euro Office instead of Collabora behind an external proxy, swap the web office compose files:
+
+```bash
+docker compose -f docker-compose.yml -f weboffice/euroffice.yml -f external-proxy/opencloud.yml -f external-proxy/euroffice.yml up -d
+```
+
+Or by setting in `.env`:
+```
+COMPOSE_FILE=docker-compose.yml:weboffice/euroffice.yml:external-proxy/opencloud.yml:external-proxy/euroffice.yml
+```
+
+This exposes the necessary ports:
+- OpenCloud: 9200
+- Euro Office: 9900
+
+As with Collabora, the WOPI server is served on the OpenCloud port (9200) under the `/wopi` and `/collaboration` paths and needs no separate port.
+
+> [!WARNING]
+> `external-proxy/euroffice.yml` binds the exposed ports to `127.0.0.1` only. If your external proxy runs on a different host, use `external-proxy/euroffice-exposed.yml`, which binds to all interfaces (`0.0.0.0`). Only expose these ports when you know what you are doing.
 
 **Please note:**
 If you're using **Nginx Proxy Manager (NPM)**, you **should NOT** activate **"Block Common Exploits"** for the Proxy Host.
@@ -341,7 +401,10 @@ Key variables:
 | `OC_DATA_DIR`                 | Data directory path                                   | (Docker volume)              |
 | `INSECURE`                    | Skip certificate validation                           | true                         |
 | `COLLABORA_DOMAIN`            | Collabora domain                                      | collabora.opencloud.test     |
-| `WOPISERVER_DOMAIN`           | WOPI server domain                                    | wopiserver.opencloud.test    |
+| `EURO_OFFICE_DOMAIN`          | Euro Office document server domain                    | euro-office.opencloud.test   |
+| `EURO_OFFICE_JWT_SECRET`      | JWT secret for Euro Office (change for production!)   | changeme                     |
+| `EURO_OFFICE_DOCKER_IMAGE`    | Euro Office Docker image                              | ghcr.io/euro-office/documentserver |
+| `EURO_OFFICE_DOCKER_TAG`      | Euro Office Docker tag                                | latest                       |
 | `TIKA_IMAGE`                  | Apache Tika image tag                                 | apache/tika:slim             |
 | `KEYCLOAK_DOMAIN`             | Keycloak domain                                       | keycloak.opencloud.test      |
 | `KEYCLOAK_ADMIN`              | Keycloak admin username                               | kcadmin                      |

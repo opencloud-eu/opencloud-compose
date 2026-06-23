@@ -1,0 +1,7 @@
+---
+# only expose the ports when you know what you are doing!
+services:
+  euro-office:
+    ports:
+      # expose the euro-office document server on all interfaces
+      - "0.0.0.0:9900:80"
