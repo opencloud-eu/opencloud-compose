@@ -319,12 +319,12 @@ OpenCloud Compose supports adding SSL certificates for public domains and develo
 ### Use Let's Encrypt with ACME Challenge
 
 1. **Enable Let's Encrypt**:
-   - Set `TRAEFIK_LETSENCRYPT_EMAIL` to your email address for the ACME challenge
+   - Set `TRAEFIK_ACME_MAIL` to your email address for the ACME challenge
    - Set `TRAEFIK_SERVICES_TLS_CONFIG="tls.certresolver=letsencrypt"` to use Let's Encrypt (default value)
 
    ```bash
    # In your .env file
-   TRAEFIK_LETSENCRYPT_EMAIL=devops@your-domain.tld
+   TRAEFIK_ACME_MAIL=devops@your-domain.tld
    TRAEFIK_SERVICES_TLS_CONFIG="tls.certresolver=letsencrypt"
    ```
 
@@ -412,7 +412,7 @@ Key variables:
 | `LDAP_BIND_PASSWORD`          | LDAP password for the bind user                       | admin                        |
 | `KC_DB_USERNAME`              | Database user for keycloak                            | keycloak                     |
 | `KC_DB_PASSWORD`              | Database password for keycloak                        | keycloak                     |
-| `TRAEFIK_LETSENCRYPT_EMAIL`   | Email Address for the Let's Encrypt ACME challenge    | example@example.org          |
+| `TRAEFIK_ACME_MAIL`           | Email Address for the Let's Encrypt ACME challenge    | example@example.org          |
 | `TRAEFIK_SERVICES_TLS_CONFIG` | Tell traefik and the services which TLS config to use | tls.certresolver=letsencrypt |
 | `TRAEFIK_CERTS_DIR`           | Directory for custom certificates.                    | ./certs                      |
 
