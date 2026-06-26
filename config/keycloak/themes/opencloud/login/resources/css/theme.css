@@ -1,8 +1,9 @@
 :root {
-    --pf-global--primary-color--100: #e2baff;
-    --pf-global--primary-color--200: #e2baff;
-    --pf-global--primary-color--dark-100: #e2baff;
-    --pf-global--Color--light-100: #20434f;
+    --pf-v5-global--primary-color--100: #e2baff;
+    --pf-v5-global--primary-color--200: #e2baff;
+    --pf-v5-global--primary-color--dark-100: #e2baff;
+    --pf-v5-c-button--m-secondary--Color: #e2baff;
+    --pf-v5-global--Color--light-100: #20434f;
 }
 
 @font-face {
@@ -26,13 +27,31 @@ body {
 }
 
 .kc-logo-text {
-    background-image: url(../img/logo.svg) !important;
+    display: block;
+    width: 300px;
+    height: 63px;
+    background: url('../img/logo.svg') no-repeat center;
     background-size: contain;
-    width: 400px;
-    margin: 0 !important;
 }
 
-#kc-header-wrapper{
+.kc-logo-text span {
+    display: none;
+}
+
+#kc-header-wrapper {
     display: flex;
     justify-content: center;
+}
+
+.pf-v5-c-login__main-header {
+    border-top: 4px solid var(--pf-v5-global--primary-color--100);
+}
+
+@media (min-width: 1200px) {
+    .pf-v5-c-login__container {
+        grid-template-columns: 34rem;
+        grid-template-areas:
+        "header"
+        "main";
+    }
 }
