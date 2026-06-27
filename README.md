@@ -147,12 +147,12 @@ Include Euro Office for document editing using either method:
 
 Using `-f` flags:
 ```bash
-docker compose -f docker-compose.yml -f weboffice/euroffice.yml -f traefik/opencloud.yml -f traefik/euroffice.yml up -d
+docker compose -f docker-compose.yml -f weboffice/euro-office.yml -f traefik/opencloud.yml -f traefik/euro-office.yml up -d
 ```
 
 Or by setting in `.env`:
 ```
-COMPOSE_FILE=docker-compose.yml:weboffice/euroffice.yml:traefik/opencloud.yml:traefik/euroffice.yml
+COMPOSE_FILE=docker-compose.yml:weboffice/euro-office.yml:traefik/opencloud.yml:traefik/euro-office.yml
 ```
 
 > **For local development only**: Add to `/etc/hosts`:
@@ -271,12 +271,12 @@ The WOPI server runs inside the OpenCloud process and is served on the OpenCloud
 To use Euro Office instead of Collabora behind an external proxy, swap the web office compose files:
 
 ```bash
-docker compose -f docker-compose.yml -f weboffice/euroffice.yml -f external-proxy/opencloud.yml -f external-proxy/euroffice.yml up -d
+docker compose -f docker-compose.yml -f weboffice/euro-office.yml -f external-proxy/opencloud.yml -f external-proxy/euro-office.yml up -d
 ```
 
 Or by setting in `.env`:
 ```
-COMPOSE_FILE=docker-compose.yml:weboffice/euroffice.yml:external-proxy/opencloud.yml:external-proxy/euroffice.yml
+COMPOSE_FILE=docker-compose.yml:weboffice/euro-office.yml:external-proxy/opencloud.yml:external-proxy/euro-office.yml
 ```
 
 This exposes the necessary ports:
@@ -286,7 +286,7 @@ This exposes the necessary ports:
 As with Collabora, the WOPI server is served on the OpenCloud port (9200) under the `/wopi` and `/collaboration` paths and needs no separate port.
 
 > [!WARNING]
-> `external-proxy/euroffice.yml` binds the exposed ports to `127.0.0.1` only. If your external proxy runs on a different host, use `external-proxy/euroffice-exposed.yml`, which binds to all interfaces (`0.0.0.0`). Only expose these ports when you know what you are doing.
+> `external-proxy/euro-office.yml` binds the exposed ports to `127.0.0.1` only. If your external proxy runs on a different host, use `external-proxy/euro-office-exposed.yml`, which binds to all interfaces (`0.0.0.0`). Only expose these ports when you know what you are doing.
 
 **Please note:**
 If you're using **Nginx Proxy Manager (NPM)**, you **should NOT** activate **"Block Common Exploits"** for the Proxy Host.
