@@ -24,7 +24,7 @@ services:
       COLLABORATION_CS3API_DATAGATEWAY_INSECURE: "${INSECURE:-true}"
 
   collabora:
-    image: collabora/code:26.04.1.4.1
+    image: collabora/code:26.04.2.1.1
     # release notes: https://www.collaboraonline.com/release-notes/
     networks:
       opencloud-net:
