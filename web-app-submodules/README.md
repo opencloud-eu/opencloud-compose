@@ -15,8 +15,8 @@ web-app-presentation-viewer/dist/mdpresentation-viewer/   →   OC_APPS_DIR/mdpr
                                         (/var/lib/opencloud/web/assets/apps)
 ```
 
-- **`OC_WEB_APPS`** selects apps from `web-extensions` only
-- **Standalone submodules** are always built: comments, 3dviewer, web-calendar, presentation-viewer
+- **`OC_WEB_APPS`** selects apps from `web-extensions` when building without app arguments
+- **Standalone submodules** are built on every default run; pass app names to build only selected extensions
 - **Build output** stays in each submodule's `dist/` directory
 - **`OC_APPS_DIR`** is the directory OpenCloud reads extensions from (default: `./config/opencloud/apps`)
 - The build script **cleans** `OC_APPS_DIR` (except `.gitkeep`) and **copies** each built app into it (no symlinks)
@@ -54,13 +54,18 @@ From the repository root:
 ./web-app-submodules/build-web-extensions.sh
 ```
 
-The script reads `OC_WEB_APPS` from `.env` for the web-extensions monorepo. App names from web-extensions can also be passed directly:
+The script reads `OC_WEB_APPS` from `.env` for the web-extensions monorepo and builds all standalone submodules when no app names are passed.
+
+Build only selected extensions (monorepo apps or standalone repos):
 
 ```bash
-./web-app-submodules/build-web-extensions.sh calculator unzip
+./web-app-submodules/build-web-extensions.sh comments
+./web-app-submodules/build-web-extensions.sh calculator draw-io
+./web-app-submodules/build-web-extensions.sh --all
+./web-app-submodules/build-web-extensions.sh --list
 ```
 
-Standalone submodules are built on every run, even when `OC_WEB_APPS` is empty.
+App names from web-extensions can use the short name (`calculator`) or `web-app-calculator`. Standalone repos accept deploy names or directory names (`comments`, `web-app-comments`, `calendar` for web-calendar).
 
 After building, restart the OpenCloud container to load new extensions.
 
@@ -76,9 +81,11 @@ Pin standalone submodules to **extension-sdk 7.1.2** (same as the `web-extension
 
 `arcade`, `calculator`, `cast`, `draw-io`, `external-sites`, `importer`, `json-viewer`, `maps`, `notes`, `pastebin`, `progress-bars`, `unzip`
 
-## Always-built standalone submodules
+## Default build (no arguments)
 
-`comments`, `3dviewer`, `web-calendar`, `mdpresentation-viewer`
+`comments`, `3dviewer`, `web-calendar`, `mdpresentation-viewer`, plus apps listed in `OC_WEB_APPS`
+
+Use `--all` to build every web-extensions app as well.
 
 For `external-sites` and `importer`, copy and customize the configuration first:
 
