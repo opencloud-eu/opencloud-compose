@@ -17,3 +17,5 @@
 # exclude the certificates config folder
 /config/traefik/dynamic/*
 !/config/traefik/dynamic/.gitkeep
+
+.DS_Store
