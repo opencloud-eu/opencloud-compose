@@ -11,6 +11,18 @@ services:
     restart: always
     logging:
       driver: ${LOG_DRIVER:-local}
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "bash",
+          "-c",
+          "exec 3<>/dev/tcp/127.0.0.1/9998 && printf 'GET /tika HTTP/1.1\r\nHost: localhost\r\nConnection: close\r\n\r\n' >&3 && grep '200 OK' <&3",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
 
   opencloud:
     environment:
@@ -18,3 +30,6 @@ services:
       SEARCH_EXTRACTOR_TYPE: tika
       SEARCH_EXTRACTOR_TIKA_TIKA_URL: http://tika:9998
       FRONTEND_FULL_TEXT_SEARCH_ENABLED: "true"
+    depends_on:
+      tika:
+        condition: service_healthy

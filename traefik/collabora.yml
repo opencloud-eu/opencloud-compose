@@ -5,16 +5,6 @@ services:
       opencloud-net:
         aliases:
           - ${COLLABORA_DOMAIN:-collabora.opencloud.test}
-          - ${WOPISERVER_DOMAIN:-wopiserver.opencloud.test}
-  collaboration:
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.collaboration.entrypoints=https"
-      - "traefik.http.routers.collaboration.rule=Host(`${WOPISERVER_DOMAIN:-wopiserver.opencloud.test}`)"
-      - "traefik.http.routers.collaboration.${TRAEFIK_SERVICES_TLS_CONFIG}"
-      - "traefik.http.routers.collaboration.service=collaboration"
-      - "traefik.http.routers.collaboration.middlewares=hsts-header"
-      - "traefik.http.services.collaboration.loadbalancer.server.port=9300"
   collabora:
     labels:
       - "traefik.enable=true"

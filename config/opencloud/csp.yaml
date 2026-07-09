@@ -22,8 +22,10 @@ directives:
     - 'https://embed.diagrams.net/'
     # In contrary to bash and docker the default is given after the | character
     - 'https://${COLLABORA_DOMAIN|collabora.opencloud.test}${TRAEFIK_PORT_HTTPS}/'
+    - 'https://${EURO_OFFICE_DOMAIN|euro-office.opencloud.test}${TRAEFIK_PORT_HTTPS}/'
     # This is needed for the external-sites web extension when embedding sites
     - 'https://docs.opencloud.eu'
+    - 'https://${IDP_DOMAIN|keycloak.opencloud.test}${TRAEFIK_PORT_HTTPS}/'
   img-src:
     - '''self'''
     - 'data:'
@@ -32,7 +34,7 @@ directives:
     - 'https://tile.openstreetmap.org/'
     # In contrary to bash and docker the default is given after the | character
     - 'https://${COLLABORA_DOMAIN|collabora.opencloud.test}${TRAEFIK_PORT_HTTPS}/'
-    - 'https://tile.openstreetmap.org/'
+    - 'https://${EURO_OFFICE_DOMAIN|euro-office.opencloud.test}${TRAEFIK_PORT_HTTPS}/'
   manifest-src:
     - '''self'''
   media-src:
