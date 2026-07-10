@@ -2,7 +2,7 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "platformAutomerge": true,
   "enabledManagers": ["docker-compose", "custom.regex"],
-  "baseBranchPatterns": ["main", "stable-4.0"],
+  "baseBranchPatterns": ["main", "stable-7.2"],
   "packageRules": [
     {
       "matchManagers": ["docker-compose", "custom.regex"],
@@ -14,7 +14,7 @@
       "automerge": true
     },
     {
-      "matchBaseBranches": ["stable-4.0"],
+      "matchBaseBranches": ["stable-7.2"],
       "matchUpdateTypes": ["major", "minor"],
       "enabled": false
     },

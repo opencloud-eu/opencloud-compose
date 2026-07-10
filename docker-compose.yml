@@ -1,8 +1,8 @@
 ---
 services:
   opencloud:
-    # renovate: depName=opencloudeu/opencloud-rolling
-    image: ${OC_DOCKER_IMAGE:-opencloudeu/opencloud-rolling}:${OC_DOCKER_TAG:-6.2.0}
+    # renovate: depName=opencloudeu/opencloud
+    image: ${OC_DOCKER_IMAGE:-opencloudeu/opencloud}:${OC_DOCKER_TAG:-6.2.0}
     # changelog: https://github.com/opencloud-eu/opencloud/tree/main/changelog
     # release notes: https://docs.opencloud.eu/opencloud_release_notes.html
     user: ${OC_CONTAINER_UID_GID:-1000:1000}
@@ -29,6 +29,10 @@ services:
       PROXY_ENABLE_BASIC_AUTH: "${PROXY_ENABLE_BASIC_AUTH:-false}"
       # demo users
       IDM_CREATE_DEMO_USERS: "${DEMO_USERS:-false}"
+      #STORAGE_USERS_DRIVER: "decomposed"
+      STORAGE_USERS_PURGE_TRASH_BIN_PROJECT_DELETE_BEFORE: "30s"
+      STORAGE_USERS_PURGE_TRASH_BIN_PERSONAL_DELETE_BEFORE: "30s"
+
       # admin password
       IDM_ADMIN_PASSWORD: "${INITIAL_ADMIN_PASSWORD}"
       # email server (if configured)
@@ -56,6 +60,7 @@ services:
       OC_PASSWORD_POLICY_MIN_SPECIAL_CHARACTERS: "${OC_PASSWORD_POLICY_MIN_SPECIAL_CHARACTERS:-1}"
       # default language for services/WebUI; defaults to English, language code (ISO 639-1, e.g. de, en, fr)
       OC_DEFAULT_LANGUAGE: ${DEFAULT_LANGUAGE}
+      OC_SHOW_USER_EMAIL_IN_RESULTS: true
     volumes:
       - ./config/opencloud/csp.yaml:/etc/opencloud/csp.yaml
       - ./config/opencloud/banned-password-list.txt:/etc/opencloud/banned-password-list.txt
