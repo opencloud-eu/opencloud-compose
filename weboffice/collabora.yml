@@ -24,7 +24,7 @@ services:
       COLLABORATION_CS3API_DATAGATEWAY_INSECURE: "${INSECURE:-true}"
 
   collabora:
-    image: collabora/code:26.04.2.2.1
+    image: collabora/code:26.04.2.3.1
     # release notes: https://www.collaboraonline.com/release-notes/
     networks:
       opencloud-net:
@@ -32,13 +32,13 @@ services:
       # WOPI host allowlist; the WOPI endpoint is served by the opencloud proxy on the opencloud domain
       aliasgroup1: https://${OC_DOMAIN:-cloud.opencloud.test}${TRAEFIK_PORT_HTTPS:+:}${TRAEFIK_PORT_HTTPS:-}
       DONT_GEN_SSL_CERT: "YES"
-      extra_params: |
-        --o:ssl.enable=${COLLABORA_SSL_ENABLE:-true} \
-        --o:ssl.ssl_verification=${COLLABORA_SSL_VERIFICATION:-true} \
-        --o:ssl.termination=true \
-        --o:welcome.enable=false \
-        --o:net.frame_ancestors=${OC_DOMAIN:-cloud.opencloud.test}${TRAEFIK_PORT_HTTPS:+:}${TRAEFIK_PORT_HTTPS:-} \
-        --o:net.lok_allow.host[14]=${OC_DOMAIN:-cloud.opencloud.test}${TRAEFIK_PORT_HTTPS:+:}${TRAEFIK_PORT_HTTPS:-} \
+      extra_params: >
+        --o:ssl.enable=${COLLABORA_SSL_ENABLE:-true} 
+        --o:ssl.ssl_verification=${COLLABORA_SSL_VERIFICATION:-true} 
+        --o:ssl.termination=true 
+        --o:welcome.enable=false 
+        --o:net.frame_ancestors=${OC_DOMAIN:-cloud.opencloud.test}${TRAEFIK_PORT_HTTPS:+:}${TRAEFIK_PORT_HTTPS:-} 
+        --o:net.lok_allow.host[14]=${OC_DOMAIN:-cloud.opencloud.test}${TRAEFIK_PORT_HTTPS:+:}${TRAEFIK_PORT_HTTPS:-} 
         --o:home_mode.enable=${COLLABORA_HOME_MODE:-false}
       username: ${COLLABORA_ADMIN_USER:-admin}
       password: ${COLLABORA_ADMIN_PASSWORD:-admin}
@@ -55,16 +55,8 @@ services:
     logging:
       driver: ${LOG_DRIVER:-local}
     restart: always
-    entrypoint: [ '/bin/bash', '-c' ]
-    command: [ 'coolconfig generate-proof-key && /start-collabora-online.sh' ]
     healthcheck:
-      test:
-        [
-          "CMD",
-          "bash",
-          "-c",
-          "exec 3<>/dev/tcp/127.0.0.1/9980 && printf 'GET /hosting/discovery HTTP/1.1\r\nHost: localhost\r\nConnection: close\r\n\r\n' >&3 && cat <&3 | head -1 | grep -q '200 OK'"
-        ]
+      test: ["CMD", "/usr/bin/coolwsd", "--probe"]
       interval: 15s
       timeout: 10s
       retries: 5
