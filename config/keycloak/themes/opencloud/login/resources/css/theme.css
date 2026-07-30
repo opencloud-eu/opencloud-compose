@@ -4,6 +4,12 @@
     --pf-v5-global--primary-color--dark-100: #e2baff;
     --pf-v5-c-button--m-secondary--Color: #e2baff;
     --pf-v5-global--Color--light-100: #20434f;
+    --pf-v5-global--FontFamily--text: "Inter", "RedHatText", helvetica, arial, sans-serif;
+    --pf-v5-global--FontFamily--heading: "Inter", "RedHatDisplay", helvetica, arial, sans-serif;
+    --pf-v5-global--FontFamily--text--vf: "Inter", "RedHatTextVF", "RedHatText", helvetica, arial, sans-serif;
+    --pf-v5-global--FontFamily--heading--vf: "Inter", "RedHatDisplayVF", "RedHatDisplay", helvetica, arial, sans-serif;
+    --pf-v5-global--FontFamily--monospace: "Inter", "RedHatMono", "Liberation Mono", consolas, "SFMono-Regular", menlo, monaco, "Courier New", monospace;
+    --pf-v5-global--FontFamily--monospace--vf: "Inter", "RedHatMonoVF", "RedHatMono", "Liberation Mono", consolas, "SFMono-Regular", menlo, monaco, "Courier New", monospace;
 }
 
 @font-face {
@@ -14,7 +20,6 @@
 }
 
 body {
-    font-family: "Inter", "Open Sans", Helvetica, Arial, sans-serif;
     background: url(../img/background.png) no-repeat center fixed !important;
     background-size: cover !important;
 }
