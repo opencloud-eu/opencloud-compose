@@ -7,21 +7,14 @@
 }
 
 @font-face {
-    font-family: OpenCloud;
-    src: url('../fonts/OpenCloud500-Regular.woff2') format('woff2');
-    font-weight: normal;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: OpenCloud;
-    src: url('../fonts/OpenCloud750-Bold.woff2') format('woff2');
-    font-weight: bold;
+    font-family: Inter;
+    src: url('../fonts/Inter-Variable.woff2') format('woff2');
+    font-weight: 100 900;
     font-style: normal;
 }
 
 body {
-    font-family: "OpenCloud", "Open Sans", Helvetica, Arial, sans-serif;
+    font-family: "Inter", "Open Sans", Helvetica, Arial, sans-serif;
     background: url(../img/background.png) no-repeat center fixed !important;
     background-size: cover !important;
 }
