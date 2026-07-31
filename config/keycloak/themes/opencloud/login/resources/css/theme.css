@@ -4,24 +4,18 @@
     --pf-v5-global--primary-color--dark-100: #e2baff;
     --pf-v5-c-button--m-secondary--Color: #e2baff;
     --pf-v5-global--Color--light-100: #20434f;
+    --pf-v5-global--FontFamily--text: "Inter", "RedHatText", helvetica, arial, sans-serif;
+    --pf-v5-global--FontFamily--heading: "Inter", "RedHatDisplay", helvetica, arial, sans-serif;
 }
 
 @font-face {
-    font-family: OpenCloud;
-    src: url('../fonts/OpenCloud500-Regular.woff2') format('woff2');
-    font-weight: normal;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: OpenCloud;
-    src: url('../fonts/OpenCloud750-Bold.woff2') format('woff2');
-    font-weight: bold;
+    font-family: Inter;
+    src: url('../fonts/Inter-Variable.woff2') format('woff2');
+    font-weight: 100 900;
     font-style: normal;
 }
 
 body {
-    font-family: "OpenCloud", "Open Sans", Helvetica, Arial, sans-serif;
     background: url(../img/background.png) no-repeat center fixed !important;
     background-size: cover !important;
 }
