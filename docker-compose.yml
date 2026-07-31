@@ -58,6 +58,7 @@ services:
       OC_DEFAULT_LANGUAGE: ${DEFAULT_LANGUAGE}
     volumes:
       - ./config/opencloud/csp.yaml:/etc/opencloud/csp.yaml
+      - ./config/opencloud/apps.yaml:/etc/opencloud/apps.yaml
       - ./config/opencloud/banned-password-list.txt:/etc/opencloud/banned-password-list.txt
       # configure the .env file to use own paths instead of docker internal volumes
       - ${OC_CONFIG_DIR:-opencloud-config}:/etc/opencloud
