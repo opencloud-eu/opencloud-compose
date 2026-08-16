@@ -45,7 +45,7 @@ services:
           "CMD",
           "bash",
           "-c",
-          "exec 3<>/dev/tcp/127.0.0.1/80 && printf 'GET /hosting/discovery HTTP/1.1\r\nHost: localhost\r\nConnection: close\r\n\r\n' >&3 && cat <&3 | head -1 | grep -q '200 OK'",
+          "exec 3<>/dev/tcp/127.0.0.1/80 && printf 'GET /hosting/discovery HTTP/1.1\r\nHost: localhost\r\nConnection: close\r\n\r\n' >&3 && cat <&3 | head -1 | grep -q '200 OK'"
         ]
       interval: 30s
       timeout: 10s
