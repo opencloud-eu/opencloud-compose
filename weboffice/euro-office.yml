@@ -1,5 +1,6 @@
 ---
 services:
+
   opencloud:
     environment:
       # this is needed for setting the correct CSP header
