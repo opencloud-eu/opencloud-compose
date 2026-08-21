@@ -1,5 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "dependencyDashboard": true,
   "platformAutomerge": true,
   "enabledManagers": ["docker-compose", "custom.regex"],
   "baseBranchPatterns": ["main", "stable-4.0", "stable-7.2"],
