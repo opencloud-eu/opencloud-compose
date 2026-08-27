@@ -49,6 +49,7 @@ directives:
   style-src:
     - '''self'''
     - '''unsafe-inline'''
+    - 'blob:'
   worker-src:
     - "'self'"
     - 'blob:'
