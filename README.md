@@ -395,7 +395,7 @@ Key variables:
 |-------------------------------|-------------------------------------------------------|------------------------------|
 | `COMPOSE_FILE`                | Colon-separated list of compose files to use          | (commented out)              |
 | `OC_DOMAIN`                   | OpenCloud domain                                      | cloud.opencloud.test         |
-| `INITIAL_ADMIN_PASSWORD `     | OpenCloud password for the admin user                 | (no value)                   |
+| `INITIAL_ADMIN_PASSWORD`      | OpenCloud password for the admin user                 | (no value)                   |
 | `OC_DOCKER_TAG`               | OpenCloud image tag                                   | latest                       |
 | `OC_CONFIG_DIR`               | Config directory path                                 | (Docker volume)              |
 | `OC_DATA_DIR`                 | Data directory path                                   | (Docker volume)              |
@@ -435,6 +435,15 @@ For external LDAP servers, the admin password is managed by the LDAP server itse
 ```
 INITIAL_ADMIN_PASSWORD=your-secure-password-here
 ```
+Alternatively, use Docker secrets:
+
+```bash
+mkdir -p secrets
+printf '%s' 'your-secure-password-here' > secrets/idm_admin_password
+COMPOSE_FILE=docker-compose.yml:secrets/idm-admin-password.yml
+```
+
+Leave `INITIAL_ADMIN_PASSWORD` empty when using `IDM_ADMIN_PASSWORD_FILE`.
 
 For more details, see the [OpenCloud documentation](https://docs.opencloud.eu/docs/admin/resources/common-issues#-change-admin-password-set-in-env).
 

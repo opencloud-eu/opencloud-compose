@@ -17,3 +17,6 @@
 # exclude the certificates config folder
 /config/traefik/dynamic/*
 !/config/traefik/dynamic/.gitkeep
+
+# exclude local secrets
+/secrets/idm_admin_password
