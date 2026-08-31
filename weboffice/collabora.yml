@@ -29,7 +29,7 @@ services:
   # To rotate the key, remove the volume and start again:
   #   docker compose down collabora && docker volume rm <project>_collabora-proof-key
   collabora-proof-key:
-    image: alpine/openssl:3.5.7
+    image: alpine/openssl:3.5.8
     entrypoint: ["/bin/sh"]
     command:
       - -ec
