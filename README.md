@@ -215,6 +215,11 @@ This setup includes:
 - Radicale as a CalDAV (calendars, to-do lists) and CardDAV (contacts) server
 - Users access to a Personal Calendar and Addressbook
 
+Clients connect to `https://<your-domain>/caldav/` (calendar) and
+`https://<your-domain>/carddav/` (contacts) — note the required trailing
+slash — using an App Token as password. See [radicale/README.md](radicale/README.md)
+for client setup (GNOME Online Accounts, Thunderbird) and troubleshooting.
+
 ### With Monitoring
 
 Enable monitoring capabilities with metrics endpoints using either method:
