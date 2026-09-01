@@ -1,6 +1,10 @@
-# This adds four additional routes to the proxy. Forwarding
-# request on '/carddav/', '/caldav/' and the respective '/.well-knwown'
+# This adds four additional routes to the proxy, forwarding requests
+# on '/caldav/', '/carddav/' and the respective '/.well-known'
 # endpoints to the radicale container and setting the required headers.
+#
+# Client URLs (trailing slash required, see radicale/README.md):
+#   CalDAV:  https://<your-domain>/caldav/
+#   CardDAV: https://<your-domain>/carddav/
 additional_policies:
   - name: default
     routes:
@@ -10,10 +14,15 @@ additional_policies:
         skip_x_access_token: true
         additional_headers:
           - X-Script-Name: /caldav
+      # The '.well-known' endpoints are 'unprotected' so that DAV clients
+      # can discover the CalDAV/CardDAV URLs (RFC 6764) before they
+      # authenticate. Radicale only ever answers these paths with a 301
+      # redirect to '/caldav/' or '/carddav/' and serves no data here
+      # (deeper paths return 404), so no authentication is required.
       - endpoint: /.well-known/caldav
         backend: http://radicale:5232
-        remote_user_header: X-Remote-User
         skip_x_access_token: true
+        unprotected: true
         additional_headers:
           - X-Script-Name: /caldav
       - endpoint: /carddav/
@@ -24,8 +33,8 @@ additional_policies:
           - X-Script-Name: /carddav
       - endpoint: /.well-known/carddav
         backend: http://radicale:5232
-        remote_user_header: X-Remote-User
         skip_x_access_token: true
+        unprotected: true
         additional_headers:
           - X-Script-Name: /carddav
 # To enable the radicale web UI add this rule.
