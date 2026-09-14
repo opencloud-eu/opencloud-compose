@@ -1,0 +1,22 @@
+---
+services:
+  opencloud:
+    environment:
+      WEB_OPTION_YJS_SERVER_URL: wss://${OC_DOMAIN:-cloud.opencloud.test}${TRAEFIK_PORT_HTTPS:+:}${TRAEFIK_PORT_HTTPS:-}/yjs
+    volumes:
+      # the /yjs route is configured in the proxy
+      - ./config/opencloud/proxy.yaml:/etc/opencloud/proxy.yaml
+  yjs:
+    image: ${YJS_DOCKER_IMAGE:-opencloudeu/yjs}:${YJS_DOCKER_TAG:-1.0.0}
+    user: ${OC_CONTAINER_UID_GID:-1000:1000}
+    networks:
+      opencloud-net:
+    environment:
+      PORT: '1234'
+      # internal address, no TLS between the containers
+      OPENCLOUD_URL: ${YJS_OPENCLOUD_URL:-http://opencloud:9200}
+      SHUTDOWN_GRACE_PERIOD_MS: '${YJS_SHUTDOWN_GRACE_PERIOD_MS:-15000}'
+    logging:
+      driver: ${LOG_DRIVER:-local}
+    restart: always
+    stop_grace_period: 20s

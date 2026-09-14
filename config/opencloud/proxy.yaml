@@ -1,9 +1,13 @@
-# This adds four additional routes to the proxy. Forwarding
+# This adds additional routes to the proxy. Forwarding
 # request on '/carddav/', '/caldav/' and the respective '/.well-knwown'
 # endpoints to the radicale container and setting the required headers.
+# '/yjs' is forwarded to the yjs container.
 additional_policies:
   - name: default
     routes:
+      - endpoint: /yjs
+        backend: http://yjs:1234
+        unprotected: true
       - endpoint: /caldav/
         backend: http://radicale:5232
         remote_user_header: X-Remote-User

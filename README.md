@@ -195,6 +195,22 @@ By default, OpenCloud Compose uses `apache/tika:latest` which provides:
 
 The base variant is recommended for most use cases. If you need advanced features like specialized OCR processing or specific image format support, you can override the image by setting `TIKA_IMAGE=apache/tika:latest-full` in your `.env` file.
 
+### With the Yjs Server
+
+The yjs server enables collaborative editing of files. The browser connects to `wss://{OC_DOMAIN}/yjs`. The OpenCloud proxy forwards this route to the yjs container, so no extra DNS entry or port is needed.
+
+Using `-f` flags:
+```bash
+docker compose -f docker-compose.yml -f yjs/yjs.yml -f traefik/opencloud.yml up -d
+```
+
+Or by setting in `.env`:
+```
+COMPOSE_FILE=docker-compose.yml:yjs/yjs.yml:traefik/opencloud.yml
+```
+
+The service keeps documents in memory only. All users of one file must reach the same instance, so run a single instance.
+
 ### With Radicale
 
 Enable CalDAV (calendars, to-do lists) and CardDAV (contacts) server.
@@ -466,6 +482,7 @@ This repository uses a modular approach with multiple compose files:
 - `traefik/` - Traefik reverse proxy configurations
 - `external-proxy/` - Configuration for external reverse proxies
 - `radicale/` - Radicale configuration
+- `yjs/` - Yjs server configuration (collaborative editing)
 - `config/` - Configuration files for OpenCloud, Keycloak, and LDAP
 
 ## Advanced Usage
