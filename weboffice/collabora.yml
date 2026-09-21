@@ -13,8 +13,7 @@ services:
       FRONTEND_APP_HANDLER_SECURE_VIEW_APP_ADDR: eu.opencloud.api.collaboration
       GRAPH_AVAILABLE_ROLES: "b1e2218d-eef8-4d4c-b82d-0f1a1b48f3b5,a8d5fe5e-96e3-418d-825b-534dbdf22b99,fb6c3e19-e378-47e5-b277-9732f9de6e21,58c63c02-1d89-4572-916a-870abc5a1b7d,2d00ce52-1fc2-4dbc-8b95-a73b73395f5a,1c996275-f1c9-4e71-abdf-a42f6495e960,312c0871-5ef7-4b3a-85b6-0e4074c64049,aa97fe03-7980-45ac-9e50-b325749fd7e6"
       # collaboration service configuration; the WOPI endpoint is served by the
-      # opencloud proxy on the opencloud domain (/wopi and /collaboration routes),
-      # so no separate wopiserver domain, route or port is needed
+      # opencloud proxy on the opencloud domain (/wopi and /collaboration routes)
       COLLABORATION_WOPI_SRC: https://${OC_DOMAIN:-cloud.opencloud.test}${TRAEFIK_PORT_HTTPS:+:}${TRAEFIK_PORT_HTTPS:-}
       COLLABORATION_APP_NAME: "CollaboraOnline"
       COLLABORATION_APP_PRODUCT: "Collabora"
@@ -22,6 +21,29 @@ services:
       COLLABORATION_APP_ICON: https://${COLLABORA_DOMAIN:-collabora.opencloud.test}${TRAEFIK_PORT_HTTPS:+:}${TRAEFIK_PORT_HTTPS:-}/favicon.ico
       COLLABORATION_APP_INSECURE: "${INSECURE:-true}"
       COLLABORATION_CS3API_DATAGATEWAY_INSECURE: "${INSECURE:-true}"
+      # serve the collaboration HTTP service on the docker network so that
+      # collabora can fetch the font configuration and font files directly,
+      # bypassing the opencloud proxy
+      COLLABORATION_HTTP_ADDR: "0.0.0.0:9300"
+      # base URL for the font files; must match the remote_font_config.url
+      # configured for collabora
+      COLLABORATION_FONT_BASE_URL: "https://${OC_DOMAIN:-cloud.opencloud.test}:${COLLABORATION_FONT_PORT:-8443}/collaboration/fonts"
+      # enable the office-settings app that provides the font management UI
+      WEB_UI_CORE_APPS: "files,search,text-editor,pdf-viewer,external,admin-settings,epub-reader,preview,app-store,rclone-crypt,office-settings"
+    labels:
+      # internal route for direct font access to the collaboration service;
+      # only reachable on the internal entrypoint (not published to the host)
+      - "traefik.http.routers.collab-fonts.entrypoints=internal"
+      - "traefik.http.routers.collab-fonts.rule=Host(`${OC_DOMAIN:-cloud.opencloud.test}`) && PathPrefix(`/collaboration/fonts`)"
+      - "traefik.http.routers.collab-fonts.${TRAEFIK_SERVICES_TLS_CONFIG}"
+      - "traefik.http.routers.collab-fonts.service=collab-fonts"
+      - "traefik.http.services.collab-fonts.loadbalancer.server.port=9300"
+
+  traefik:
+    environment:
+      # internal (non-published) entrypoint for the direct font access to the
+      # collaboration service; reachable only by containers on opencloud-net
+      - "TRAEFIK_CUSTOM_ARGS=${TRAEFIK_CUSTOM_ARGS:-} --entryPoints.internal.address=:${COLLABORATION_FONT_PORT:-8443}"
 
   # One-shot service that generates the WOPI proof key on first start and
   # keeps it in a named volume, like the proofKeyGeneration feature of the
@@ -68,6 +90,7 @@ services:
         --o:net.frame_ancestors=${OC_DOMAIN:-cloud.opencloud.test}${TRAEFIK_PORT_HTTPS:+:}${TRAEFIK_PORT_HTTPS:-}
         --o:net.lok_allow.host[14]=${OC_DOMAIN:-cloud.opencloud.test}${TRAEFIK_PORT_HTTPS:+:}${TRAEFIK_PORT_HTTPS:-}
         --o:home_mode.enable=${COLLABORA_HOME_MODE:-false}
+        --o:remote_font_config.url=https://${OC_DOMAIN:-cloud.opencloud.test}:${COLLABORATION_FONT_PORT:-8443}/collaboration/fonts/
       username: ${COLLABORA_ADMIN_USER:-admin}
       password: ${COLLABORA_ADMIN_PASSWORD:-admin}
     cap_add:
