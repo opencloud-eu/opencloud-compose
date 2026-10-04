@@ -56,6 +56,9 @@ services:
       OC_PASSWORD_POLICY_MIN_SPECIAL_CHARACTERS: "${OC_PASSWORD_POLICY_MIN_SPECIAL_CHARACTERS:-1}"
       # default language for services/WebUI; defaults to English, language code (ISO 639-1, e.g. de, en, fr)
       OC_DEFAULT_LANGUAGE: ${DEFAULT_LANGUAGE}
+      # When you have directories with a lot of files and listing those failes with an internal server error (500),
+      # you may want to increase this limit.
+      OC_GRPC_MAX_RECEIVED_MESSAGE_SIZE: "${OC_GRPC_MAX_RECEIVED_MESSAGE_SIZE:-10240000}"
     volumes:
       - ./config/opencloud/csp.yaml:/etc/opencloud/csp.yaml
       - ./config/opencloud/apps.yaml:/etc/opencloud/apps.yaml
