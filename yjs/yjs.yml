@@ -8,7 +8,7 @@ services:
       - ./config/opencloud/proxy.yaml:/etc/opencloud/proxy.yaml
   yjs:
     # renovate: depName=opencloudeu/yjs
-    image: ${YJS_DOCKER_IMAGE:-opencloudeu/yjs}:${YJS_DOCKER_TAG:-1.0.0}
+    image: ${YJS_DOCKER_IMAGE:-opencloudeu/yjs}:${YJS_DOCKER_TAG:-1.1.0}
     user: ${OC_CONTAINER_UID_GID:-1000:1000}
     networks:
       opencloud-net:
