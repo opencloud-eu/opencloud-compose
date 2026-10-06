@@ -56,9 +56,14 @@ services:
       OC_PASSWORD_POLICY_MIN_SPECIAL_CHARACTERS: "${OC_PASSWORD_POLICY_MIN_SPECIAL_CHARACTERS:-1}"
       # default language for services/WebUI; defaults to English, language code (ISO 639-1, e.g. de, en, fr)
       OC_DEFAULT_LANGUAGE: ${DEFAULT_LANGUAGE}
-      # When you have directories with a lot of files and listing those failes with an internal server error (500),
-      # you may want to increase this limit.
-      OC_GRPC_MAX_RECEIVED_MESSAGE_SIZE: "${OC_GRPC_MAX_RECEIVED_MESSAGE_SIZE:-10240000}"
+      # Opencloud sets a maximum size for GRPC requests. Having a large amount of file per directory 
+      # can exceed these limits resulting in internal server errors and log messages like:
+      #
+      # grpc: received message larger than max (X vs. 10240000)
+      #
+      # with X being a number larger than 10240000. You can set a custom limit, for example 20480000.
+      # Keep in mind that doubling the GRPC_MAX_RECEIVED_MESSAGE_SIZE limit may also double your peak RAM usage.
+      OC_GRPC_MAX_RECEIVED_MESSAGE_SIZE:
     volumes:
       - ./config/opencloud/csp.yaml:/etc/opencloud/csp.yaml
       - ./config/opencloud/apps.yaml:/etc/opencloud/apps.yaml
