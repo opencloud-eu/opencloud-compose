@@ -15,6 +15,7 @@ OpenCloud Compose offers a modular approach to deploying OpenCloud with several 
 - **Euro Office** integration for document editing
 - **Keycloak and LDAP** integration for centralized identity management
 - **Full text search** with Apache Tika for content extraction and metadata analysis
+- **HEIC, HEIF and AVIF previews** with imagor
 - **Monitoring** with metrics endpoints for observability and performance monitoring
 - **Radicale** integration for Calendar and Contacts
 - **ClamAV** antivirus scanning with ClamAV
@@ -194,6 +195,32 @@ By default, OpenCloud Compose uses `apache/tika:latest` which provides:
 - Core text extraction functionality for common document formats (PDF, Office docs, text files, etc.)
 
 The base variant is recommended for most use cases. If you need advanced features like specialized OCR processing or specific image format support, you can override the image by setting `TIKA_IMAGE=apache/tika:latest-full` in your `.env` file.
+
+### With imagor Previews
+
+The OpenCloud image ships no libheif on purpose, so a heic, heif or avif is refused with `406 unreadable image`. imagor reads those formats. Enable it using either method:
+
+> **Version Requirement**: This setup needs OpenCloud 9.0.0 or newer.
+
+Using `-f` flags:
+```bash
+docker compose -f docker-compose.yml -f thumbnails/imagor.yml -f traefik/opencloud.yml up -d
+```
+
+Or by setting in `.env`:
+```
+COMPOSE_FILE=docker-compose.yml:thumbnails/imagor.yml:traefik/opencloud.yml
+```
+
+This setup includes:
+- imagor as the preview generator OpenCloud posts source images to
+- Previews for heic, heif and avif files, including image sequences, in the file list and the preview app
+- imagor on an internal network without a route to the outside, with a read-only filesystem and no capabilities
+
+Set `THUMBNAILS_ADDITIONAL_SOURCE_TYPES` in `.env` to announce previews for further formats imagor reads.
+
+**ImageMagick Variant:**
+libvips does not read PSD, XCF, BMP and some legacy formats. The `ghcr.io/cshum/imagor-magick` image adds ImageMagick for those. It is slower, needs more memory and widens the attack surface, so imagor recommends the standard image for most setups. To use it anyway, set `IMAGOR_DOCKER_IMAGE=ghcr.io/cshum/imagor-magick` in your `.env` file and add the mime types to `THUMBNAILS_ADDITIONAL_SOURCE_TYPES`.
 
 ### With the Yjs Server
 
@@ -422,6 +449,8 @@ Key variables:
 | `EURO_OFFICE_DOCKER_IMAGE`    | Euro Office Docker image                              | ghcr.io/euro-office/documentserver |
 | `EURO_OFFICE_DOCKER_TAG`      | Euro Office Docker tag                                | latest                       |
 | `TIKA_IMAGE`                  | Apache Tika image tag                                 | apache/tika:slim             |
+| `IMAGOR_DOCKER_IMAGE`         | imagor Docker image                                   | shumc/imagor                 |
+| `IMAGOR_DOCKER_TAG`           | imagor Docker tag                                     | 1.9.14                       |
 | `KEYCLOAK_DOMAIN`             | Keycloak domain                                       | keycloak.opencloud.test      |
 | `KEYCLOAK_ADMIN`              | Keycloak admin username                               | kcadmin                      |
 | `KEYCLOAK_ADMIN_PASSWORD`     | Keycloak admin password                               | admin                        |
@@ -477,6 +506,7 @@ This repository uses a modular approach with multiple compose files:
 - `weboffice/` - Web office integrations (Collabora Online)
 - `storage/` - Storage backend configurations (decomposeds3)
 - `search/` - Search and content analysis services (Apache Tika)
+- `thumbnails/` - Preview generator (imagor)
 - `monitoring/` - Monitoring and metrics configurations
 - `idm/` - Identity management configurations (Keycloak & LDAP)
 - `traefik/` - Traefik reverse proxy configurations

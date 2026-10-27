@@ -34,7 +34,8 @@
       "managerFilePatterns": [
         "/^docker-compose\\.yml$/",
         "/^weboffice\\/collabora\\.yml$/",
-        "/^yjs\\/yjs\\.yml$/"
+        "/^yjs\\/yjs\\.yml$/",
+        "/^thumbnails\\/imagor\\.yml$/"
       ],
       "matchStrings": [
         "# renovate: depName=(?<depName>[^\\s]+)\\n\\s+image: \\$\\{[^}]+\\}:\\$\\{[^}]+-(?<currentValue>[0-9]+\\.[0-9]+\\.[0-9]+)\\}"
