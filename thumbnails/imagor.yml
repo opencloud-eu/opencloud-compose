@@ -36,8 +36,6 @@ services:
       OC_THUMBNAILS_ADDITIONAL_SOURCE_TYPES: ${THUMBNAILS_ADDITIONAL_SOURCE_TYPES:-image/heic,image/heif,image/avif,image/heic-sequence,image/heif-sequence}
     networks:
       imagor-net:
-    labels:
-      - "traefik.docker.network=${COMPOSE_PROJECT_NAME}_opencloud-net"
     depends_on:
       imagor:
         condition: service_healthy

@@ -3,6 +3,7 @@ services:
   opencloud:
     labels:
       - "traefik.enable=true"
+      - "traefik.docker.network=${COMPOSE_PROJECT_NAME}_opencloud-net"
       # define middleware here, to make sure its loaded with the first defined container (opencloud)
       # if defined in the traefik container with a disabled dashboard it won't be loaded fast enough
       - "traefik.http.middlewares.hsts-header.headers.stsSeconds=31536000"
