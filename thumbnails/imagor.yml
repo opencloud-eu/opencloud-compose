@@ -37,7 +37,6 @@ services:
     networks:
       imagor-net:
     labels:
-      # opencloud is in two networks now, tell traefik which one it can reach it through
       - "traefik.docker.network=${COMPOSE_PROJECT_NAME}_opencloud-net"
     depends_on:
       imagor:
