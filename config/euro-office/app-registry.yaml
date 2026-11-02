@@ -27,13 +27,14 @@ app_registry:
       description: OpenDocument presentation document
       icon: ''
       default_app: Collabora
+      allow_creation: true
     - mime_type: application/vnd.oasis.opendocument.graphics
       extension: odg
       name: OpenGraphics
       description: OpenDocument graphics document
       icon: ''
       default_app: Collabora
-      allow_creation: true
+      allow_creation: false
     - mime_type: application/vnd.openxmlformats-officedocument.wordprocessingml.document
       extension: docx
       name: Microsoft Word
