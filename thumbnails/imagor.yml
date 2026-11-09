@@ -1,0 +1,45 @@
+---
+services:
+  opencloud:
+    environment:
+      # webdav posts the image to imagor instead of the built-in thumbnails service
+      WEBDAV_THUMBNAILS_GENERATOR_URL: http://imagor:8000
+      # announce previews for the formats imagor-magick reads on top of the built-in list
+      OC_THUMBNAILS_ADDITIONAL_SOURCE_TYPES: ${IMAGOR_ADDITIONAL_SOURCE_TYPES:-image/heic,image/heif,image/avif,image/jp2,image/vnd.adobe.photoshop,image/x-tga,image/x-pcx,image/svg+xml,image/x-icon,image/vnd.microsoft.icon}
+      # in bytes, the same value is handed to imagor below so both refuse the same files
+      OC_THUMBNAILS_MAX_INPUT_IMAGE_FILE_SIZE: "${IMAGOR_MAX_INPUT_FILE_SIZE:-50000000}"
+      # the built-in thumbnails service is not needed when imagor makes the thumbnails
+      # compose takes this value from the last file in COMPOSE_FILE, so when combining with
+      # idm/ldap-keycloak.yml or idm/external-idp.yml set EXCLUDE_ADDITIONAL_SERVICES=idm,idp,thumbnails
+      OC_EXCLUDE_RUN_SERVICES: ${EXCLUDE_ADDITIONAL_SERVICES:-}${EXCLUDE_ADDITIONAL_SERVICES:+,}thumbnails
+    depends_on:
+      imagor:
+        condition: service_healthy
+
+  imagor:
+    # renovate: depName=ghcr.io/cshum/imagor-magick
+    image: ${IMAGOR_DOCKER_IMAGE:-ghcr.io/cshum/imagor-magick}:${IMAGOR_DOCKER_TAG:-1.9.11}
+    networks:
+      opencloud-net:
+    environment:
+      # webdav only sends unsigned /unsafe/ URLs. imagor is only reachable on the
+      # internal opencloud-net bridge and no port is published to the host.
+      # Do NOT publish a port or expose imagor via the reverse proxy.
+      IMAGOR_UNSAFE: "true"
+      # webdav posts the image, imagor must not fetch anything by itself
+      UPLOAD_LOADER_ENABLE: "true"
+      HTTP_LOADER_DISABLE: "true"
+      # quoted, an unquoted large number reaches imagor as 5e+07 which it cannot parse
+      UPLOAD_LOADER_MAX_ALLOWED_SIZE: "${IMAGOR_MAX_INPUT_FILE_SIZE:-50000000}"
+      # the limits of the built-in thumbnails service
+      VIPS_MAX_WIDTH: ${IMAGOR_MAX_WIDTH:-7680}
+      VIPS_MAX_HEIGHT: ${IMAGOR_MAX_HEIGHT:-7680}
+      VIPS_MAX_ANIMATION_FRAMES: ${IMAGOR_MAX_ANIMATION_FRAMES:-100}
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:8000/healthcheck"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+    logging:
+      driver: ${LOG_DRIVER:-local}
+    restart: always

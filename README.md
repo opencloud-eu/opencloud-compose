@@ -195,6 +195,27 @@ By default, OpenCloud Compose uses `apache/tika:latest` which provides:
 
 The base variant is recommended for most use cases. If you need advanced features like specialized OCR processing or specific image format support, you can override the image by setting `TIKA_IMAGE=apache/tika:latest-full` in your `.env` file.
 
+### With Imagor Thumbnails
+
+[Imagor](https://imagor.net) makes the thumbnails instead of the thumbnails service built into OpenCloud, which only supports a minimal set of formats. All `COMPOSE_FILE` examples in `.env.example` include it.
+
+Using `-f` flags:
+```bash
+docker compose -f docker-compose.yml -f thumbnails/imagor.yml -f traefik/opencloud.yml up -d
+```
+
+Or by setting in `.env`:
+```
+COMPOSE_FILE=docker-compose.yml:thumbnails/imagor.yml:traefik/opencloud.yml
+```
+
+This setup includes:
+- the `ghcr.io/cshum/imagor-magick` image, which is only reachable on the internal network
+- previews for HEIC, HEIF, AVIF, JPEG 2000, PSD, TGA, PCX, SVG and ICO files on top of the built-in formats, configurable with `IMAGOR_ADDITIONAL_SOURCE_TYPES`
+- the built-in thumbnails service is not started
+
+`thumbnails/imagor.yml` and the `idm/` files each set `OC_EXCLUDE_RUN_SERVICES`, and docker compose only keeps the value of the last file. When combining them, set `EXCLUDE_ADDITIONAL_SERVICES=idm,idp,thumbnails` in `.env`.
+
 ### With the Yjs Server
 
 The yjs server enables collaborative editing of files. The browser connects to `wss://{OC_DOMAIN}/yjs`. The OpenCloud proxy forwards this route to the yjs container, so no extra DNS entry or port is needed.
@@ -422,6 +443,8 @@ Key variables:
 | `EURO_OFFICE_DOCKER_IMAGE`    | Euro Office Docker image                              | ghcr.io/euro-office/documentserver |
 | `EURO_OFFICE_DOCKER_TAG`      | Euro Office Docker tag                                | latest                       |
 | `TIKA_IMAGE`                  | Apache Tika image tag                                 | apache/tika:slim             |
+| `IMAGOR_DOCKER_TAG`           | Imagor image tag                                      | 1.9.11                       |
+| `EXCLUDE_ADDITIONAL_SERVICES` | Services not to start, see imagor and idm sections    | (no value)                   |
 | `KEYCLOAK_DOMAIN`             | Keycloak domain                                       | keycloak.opencloud.test      |
 | `KEYCLOAK_ADMIN`              | Keycloak admin username                               | kcadmin                      |
 | `KEYCLOAK_ADMIN_PASSWORD`     | Keycloak admin password                               | admin                        |
@@ -477,6 +500,7 @@ This repository uses a modular approach with multiple compose files:
 - `weboffice/` - Web office integrations (Collabora Online)
 - `storage/` - Storage backend configurations (decomposeds3)
 - `search/` - Search and content analysis services (Apache Tika)
+- `thumbnails/` - Thumbnail generator (imagor)
 - `monitoring/` - Monitoring and metrics configurations
 - `idm/` - Identity management configurations (Keycloak & LDAP)
 - `traefik/` - Traefik reverse proxy configurations
