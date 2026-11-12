@@ -189,12 +189,12 @@ This setup includes:
 - Support for documents, PDFs, images, and other file types
 
 **Tika Image Variant:**
-By default, OpenCloud Compose uses `apache/tika:latest` which provides:
+By default, OpenCloud Compose uses the base variant of `apache/tika` which provides:
 - Smaller image size (~300MB vs ~1.2GB for the full variant)
 - Faster container startup and deployment
 - Core text extraction functionality for common document formats (PDF, Office docs, text files, etc.)
 
-The base variant is recommended for most use cases. If you need advanced features like specialized OCR processing or specific image format support, you can override the image by setting `TIKA_IMAGE=apache/tika:latest-full` in your `.env` file.
+The base variant is recommended for most use cases. If you need advanced features like specialized OCR processing or specific image format support, you can switch to the full variant by setting `TIKA_DOCKER_VARIANT=full` in your `.env` file.
 
 ### With imagor Previews
 
@@ -448,7 +448,9 @@ Key variables:
 | `EURO_OFFICE_JWT_SECRET`      | JWT secret for Euro Office (change for production!)   | changeme                     |
 | `EURO_OFFICE_DOCKER_IMAGE`    | Euro Office Docker image                              | ghcr.io/euro-office/documentserver |
 | `EURO_OFFICE_DOCKER_TAG`      | Euro Office Docker tag                                | latest                       |
-| `TIKA_IMAGE`                  | Apache Tika image tag                                 | apache/tika:slim             |
+| `TIKA_DOCKER_IMAGE`           | Apache Tika Docker image                              | apache/tika                  |
+| `TIKA_DOCKER_TAG`             | Apache Tika Docker tag                                | latest                       |
+| `TIKA_DOCKER_VARIANT`         | Apache Tika image variant, `full` for the full image  | (base variant)               |
 | `IMAGOR_DOCKER_IMAGE`         | imagor Docker image                                   | shumc/imagor                 |
 | `IMAGOR_DOCKER_TAG`           | imagor Docker tag                                     | 1.9.14                       |
 | `KEYCLOAK_DOMAIN`             | Keycloak domain                                       | keycloak.opencloud.test      |

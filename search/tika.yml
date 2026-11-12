@@ -1,7 +1,9 @@
 ---
+x-removed-variables:
+  TIKA_IMAGE: "${TIKA_IMAGE:+${TIKA_IMAGE_REMOVED:?TIKA_IMAGE (image:tag) is now TIKA_DOCKER_IMAGE and TIKA_DOCKER_TAG}}"
 services:
   tika:
-    image: ${TIKA_IMAGE:-apache/tika:latest}
+    image: ${TIKA_DOCKER_IMAGE:-apache/tika}:${TIKA_DOCKER_TAG:-latest}${TIKA_DOCKER_VARIANT:+-}${TIKA_DOCKER_VARIANT:-}
     # Using the base variant for smaller image size and faster startup
     # The base variant includes core functionality for text extraction
     # Full variant is only needed for specialized OCR/image processing
