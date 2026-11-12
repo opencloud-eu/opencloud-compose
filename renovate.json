@@ -31,14 +31,9 @@
   "customManagers": [
     {
       "customType": "regex",
-      "managerFilePatterns": [
-        "/^docker-compose\\.yml$/",
-        "/^weboffice\\/collabora\\.yml$/",
-        "/^yjs\\/yjs\\.yml$/",
-        "/^thumbnails\\/imagor\\.yml$/"
-      ],
+      "managerFilePatterns": ["/.+\\.ya?ml$/"],
       "matchStrings": [
-        "# renovate: depName=(?<depName>[^\\s]+)\\n\\s+image: \\$\\{[^}]+\\}:\\$\\{[^}]+-(?<currentValue>[0-9]+\\.[0-9]+\\.[0-9]+)\\}"
+        "image: \\$\\{[^}:]+:-(?<depName>[^}]+)\\}:\\$\\{[^}:]+:-(?<currentValue>[^@}]+)(?:@(?<currentDigest>sha256:[a-f0-9]+))?\\}"
       ],
       "datasourceTemplate": "docker"
     }
