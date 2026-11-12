@@ -4,7 +4,7 @@
 # This is not a production ready setup.
 services:
   ldap-manager:
-    image: phpldapadmin/phpldapadmin:latest
+    image: ${LDAP_MANAGER_DOCKER_IMAGE:-phpldapadmin/phpldapadmin}:${LDAP_MANAGER_DOCKER_TAG:-latest}
     networks:
       opencloud-net:
     environment:
