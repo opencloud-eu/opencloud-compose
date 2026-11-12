@@ -447,9 +447,9 @@ Key variables:
 | `EURO_OFFICE_DOMAIN`          | Euro Office document server domain                    | euro-office.opencloud.test   |
 | `EURO_OFFICE_JWT_SECRET`      | JWT secret for Euro Office (change for production!)   | changeme                     |
 | `EURO_OFFICE_DOCKER_IMAGE`    | Euro Office Docker image                              | ghcr.io/euro-office/documentserver |
-| `EURO_OFFICE_DOCKER_TAG`      | Euro Office Docker tag                                | latest                       |
+| `EURO_OFFICE_DOCKER_TAG`      | Euro Office Docker tag                                | (pinned digest)              |
 | `TIKA_DOCKER_IMAGE`           | Apache Tika Docker image                              | apache/tika                  |
-| `TIKA_DOCKER_TAG`             | Apache Tika Docker tag                                | latest                       |
+| `TIKA_DOCKER_TAG`             | Apache Tika Docker tag                                | (pinned version)             |
 | `TIKA_DOCKER_VARIANT`         | Apache Tika image variant, `full` for the full image  | (base variant)               |
 | `IMAGOR_DOCKER_IMAGE`         | imagor Docker image                                   | shumc/imagor                 |
 | `IMAGOR_DOCKER_TAG`           | imagor Docker tag                                     | 1.9.14                       |
