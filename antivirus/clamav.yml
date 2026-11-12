@@ -16,7 +16,7 @@ services:
       clamav:
         condition: service_healthy
   clamav:
-    image: ${CLAMAV_DOCKER_IMAGE:-clamav/clamav}:${CLAMAV_DOCKER_TAG:-latest}
+    image: ${CLAMAV_DOCKER_IMAGE:-clamav/clamav}:${CLAMAV_DOCKER_TAG:-1.5.4}
     environment:
       # Accepts a number with optional K, M or G suffix. Must be greater or equal to ANTIVIRUS_MAX_SCAN_SIZE above.
       # K = KiB (1024), M = MiB (1024 * 1024), G = GiB (1024 * 1024 * 1024)
