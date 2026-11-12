@@ -1,7 +1,6 @@
 ---
 services:
   opencloud:
-    # renovate: depName=opencloudeu/opencloud-rolling
     image: ${OC_DOCKER_IMAGE:-opencloudeu/opencloud-rolling}:${OC_DOCKER_TAG:-9.1.0}
     # changelog: https://github.com/opencloud-eu/opencloud/tree/main/changelog
     # release notes: https://docs.opencloud.eu/opencloud_release_notes.html
