@@ -439,7 +439,7 @@ Key variables:
 | `COMPOSE_FILE`                | Colon-separated list of compose files to use          | (commented out)              |
 | `OC_DOMAIN`                   | OpenCloud domain                                      | cloud.opencloud.test         |
 | `INITIAL_ADMIN_PASSWORD `     | OpenCloud password for the admin user                 | (no value)                   |
-| `OC_DOCKER_TAG`               | OpenCloud image tag                                   | latest                       |
+| `OC_DOCKER_TAG`               | OpenCloud image tag                                   | (pinned version)             |
 | `OC_CONFIG_DIR`               | Config directory path                                 | (Docker volume)              |
 | `OC_DATA_DIR`                 | Data directory path                                   | (Docker volume)              |
 | `INSECURE`                    | Skip certificate validation                           | true                         |
@@ -452,7 +452,7 @@ Key variables:
 | `TIKA_DOCKER_TAG`             | Apache Tika Docker tag                                | (pinned version)             |
 | `TIKA_DOCKER_VARIANT`         | Apache Tika image variant, `full` for the full image  | (base variant)               |
 | `IMAGOR_DOCKER_IMAGE`         | imagor Docker image                                   | shumc/imagor                 |
-| `IMAGOR_DOCKER_TAG`           | imagor Docker tag                                     | 1.9.14                       |
+| `IMAGOR_DOCKER_TAG`           | imagor Docker tag                                     | (pinned version)             |
 | `KEYCLOAK_DOMAIN`             | Keycloak domain                                       | keycloak.opencloud.test      |
 | `KEYCLOAK_ADMIN`              | Keycloak admin username                               | kcadmin                      |
 | `KEYCLOAK_ADMIN_PASSWORD`     | Keycloak admin password                               | admin                        |
