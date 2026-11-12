@@ -10,7 +10,6 @@
       "labels": ["Type:Dependencies", "Bot:Renovate"]
     },
     {
-      "matchManagers": ["docker-compose"],
       "matchUpdateTypes": ["patch"],
       "automerge": true
     },
