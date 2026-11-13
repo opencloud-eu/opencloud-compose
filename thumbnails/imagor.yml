@@ -2,7 +2,7 @@
 services:
   imagor:
     # renovate: depName=shumc/imagor
-    image: ${IMAGOR_DOCKER_IMAGE:-shumc/imagor}:${IMAGOR_DOCKER_TAG:-1.10.1}
+    image: ${IMAGOR_DOCKER_IMAGE:-shumc/imagor}:${IMAGOR_DOCKER_TAG:-1.10.3}
     environment:
       IMAGOR_UNSAFE: "true"
       UPLOAD_LOADER_ENABLE: "true"
