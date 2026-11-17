@@ -28,7 +28,9 @@ services:
       PROXY_ROLE_ASSIGNMENT_DRIVER: ${PROXY_ROLE_ASSIGNMENT_DRIVER:-oidc}
       OC_OIDC_ISSUER: ${IDP_ISSUER_URL:-https://keycloak.opencloud.test/realms/openCloud}
       # This specifies to start all services except idm and idp. These are replaced by external services.
-      OC_EXCLUDE_RUN_SERVICES: idm,idp
+      # compose takes this value from the last file in COMPOSE_FILE, so when combining with
+      # thumbnails/imagor.yml set EXCLUDE_ADDITIONAL_SERVICES=idm,idp,thumbnails
+      OC_EXCLUDE_RUN_SERVICES: ${EXCLUDE_ADDITIONAL_SERVICES:-}${EXCLUDE_ADDITIONAL_SERVICES:+,}idm,idp
       # IdP specific configuration for auto-provisioning
       OC_LDAP_SERVER_WRITE_ENABLED: "true"
       PROXY_AUTOPROVISION_ACCOUNTS: "true"

@@ -6,11 +6,13 @@ services:
     environment:
       IMAGOR_UNSAFE: "true"
       UPLOAD_LOADER_ENABLE: "true"
-      UPLOAD_LOADER_MAX_ALLOWED_SIZE: ${IMAGOR_MAX_SOURCE_SIZE:-50000000}
+      # quoted, an unquoted large number reaches imagor as 5e+07 which it cannot parse
+      UPLOAD_LOADER_MAX_ALLOWED_SIZE: "${IMAGOR_MAX_SOURCE_SIZE:-50000000}"
       HTTP_LOADER_DISABLE: "true"
-      VIPS_MAX_WIDTH: "7680"
-      VIPS_MAX_HEIGHT: "7680"
-      VIPS_MAX_ANIMATION_FRAMES: "100"
+      # the limits of the built-in thumbnails service
+      VIPS_MAX_WIDTH: "${IMAGOR_MAX_WIDTH:-7680}"
+      VIPS_MAX_HEIGHT: "${IMAGOR_MAX_HEIGHT:-7680}"
+      VIPS_MAX_ANIMATION_FRAMES: "${IMAGOR_MAX_ANIMATION_FRAMES:-100}"
     networks:
       imagor-net:
     read_only: true
@@ -34,6 +36,12 @@ services:
     environment:
       WEBDAV_THUMBNAILS_GENERATOR_URL: http://imagor:8000
       OC_THUMBNAILS_ADDITIONAL_SOURCE_TYPES: ${THUMBNAILS_ADDITIONAL_SOURCE_TYPES:-image/heic,image/heif,image/avif,image/heic-sequence,image/heif-sequence}
+      # in bytes, the same value is handed to imagor above so both refuse the same files
+      OC_THUMBNAILS_MAX_INPUT_IMAGE_FILE_SIZE: "${IMAGOR_MAX_SOURCE_SIZE:-50000000}"
+      # the built-in thumbnails service is not needed when imagor makes the thumbnails
+      # compose takes this value from the last file in COMPOSE_FILE, so when combining with
+      # idm/ldap-keycloak.yml or idm/external-idp.yml set EXCLUDE_ADDITIONAL_SERVICES=idm,idp,thumbnails
+      OC_EXCLUDE_RUN_SERVICES: ${EXCLUDE_ADDITIONAL_SERVICES:-}${EXCLUDE_ADDITIONAL_SERVICES:+,}thumbnails
     networks:
       imagor-net:
     depends_on:

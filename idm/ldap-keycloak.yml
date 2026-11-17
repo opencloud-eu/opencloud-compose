@@ -19,7 +19,9 @@ services:
       FRONTEND_READONLY_USER_ATTRIBUTES: "user.onPremisesSamAccountName,user.displayName,user.mail,user.passwordProfile,user.accountEnabled,user.appRoleAssignments"
       OC_LDAP_SERVER_WRITE_ENABLED: "false" # the ldap is managed by Keycloak, so it is not writable by OpenCloud
       # This specifies to start all services except idm and idp. These are replaced by external services.
-      OC_EXCLUDE_RUN_SERVICES: idm,idp
+      # compose takes this value from the last file in COMPOSE_FILE, so when combining with
+      # thumbnails/imagor.yml set EXCLUDE_ADDITIONAL_SERVICES=idm,idp,thumbnails
+      OC_EXCLUDE_RUN_SERVICES: ${EXCLUDE_ADDITIONAL_SERVICES:-}${EXCLUDE_ADDITIONAL_SERVICES:+,}idm,idp
       # Keycloak IDP specific configuration
       PROXY_AUTOPROVISION_ACCOUNTS: "false"
       PROXY_ROLE_ASSIGNMENT_DRIVER: "oidc"
