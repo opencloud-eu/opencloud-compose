@@ -3,7 +3,7 @@
   "dependencyDashboard": true,
   "platformAutomerge": true,
   "enabledManagers": ["docker-compose", "custom.regex"],
-  "baseBranchPatterns": ["main", "stable-4.0", "stable-7.2"],
+  "baseBranchPatterns": ["main", "stable-4.0", "stable-7.2", "stable-9.1"],
   "packageRules": [
     {
       "matchManagers": ["docker-compose", "custom.regex"],
@@ -15,7 +15,7 @@
       "automerge": true
     },
     {
-      "matchBaseBranches": ["stable-4.0", "stable-7.2"],
+      "matchBaseBranches": ["stable-4.0", "stable-7.2", "stable-9.1"],
       "matchUpdateTypes": ["major", "minor"],
       "enabled": false
     },
