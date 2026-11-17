@@ -216,8 +216,11 @@ This setup includes:
 - imagor as the preview generator OpenCloud posts source images to
 - Previews for heic, heif and avif files, including image sequences, in the file list and the preview app
 - imagor on an internal network without a route to the outside, with a read-only filesystem and no capabilities
+- imagor makes all thumbnails, the built-in thumbnails service is not started
 
-Set `THUMBNAILS_ADDITIONAL_SOURCE_TYPES` in `.env` to announce previews for further formats imagor reads.
+Set `THUMBNAILS_ADDITIONAL_SOURCE_TYPES` in `.env` to announce previews for further formats imagor reads. All `COMPOSE_FILE` examples in `.env.example` include `thumbnails/imagor.yml`.
+
+`thumbnails/imagor.yml` and the `idm/` files each set `OC_EXCLUDE_RUN_SERVICES`, and docker compose only keeps the value of the last file. When combining them, set `EXCLUDE_ADDITIONAL_SERVICES=idm,idp,thumbnails` in `.env`. Without it the order in `COMPOSE_FILE` decides, so keep `thumbnails/imagor.yml` before the `idm/` file: then only the idle built-in thumbnails service keeps running. The other way round idm and idp are started again next to Keycloak or the external IdP.
 
 **ImageMagick Variant:**
 libvips does not read PSD, XCF, BMP and some legacy formats. The `ghcr.io/cshum/imagor-magick` image adds ImageMagick for those. It is slower, needs more memory and widens the attack surface, so imagor recommends the standard image for most setups. To use it anyway, set `IMAGOR_DOCKER_IMAGE=ghcr.io/cshum/imagor-magick` in your `.env` file and add the mime types to `THUMBNAILS_ADDITIONAL_SOURCE_TYPES`.
@@ -450,7 +453,8 @@ Key variables:
 | `EURO_OFFICE_DOCKER_TAG`      | Euro Office Docker tag                                | latest                       |
 | `TIKA_IMAGE`                  | Apache Tika image tag                                 | apache/tika:slim             |
 | `IMAGOR_DOCKER_IMAGE`         | imagor Docker image                                   | shumc/imagor                 |
-| `IMAGOR_DOCKER_TAG`           | imagor Docker tag                                     | 1.9.14                       |
+| `IMAGOR_DOCKER_TAG`           | imagor Docker tag                                     | 1.10.4                       |
+| `EXCLUDE_ADDITIONAL_SERVICES` | Services not to start, see imagor and idm sections    | (no value)                   |
 | `KEYCLOAK_DOMAIN`             | Keycloak domain                                       | keycloak.opencloud.test      |
 | `KEYCLOAK_ADMIN`              | Keycloak admin username                               | kcadmin                      |
 | `KEYCLOAK_ADMIN_PASSWORD`     | Keycloak admin password                               | admin                        |
