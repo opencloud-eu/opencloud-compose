@@ -206,7 +206,7 @@ The webdav service posts the source images to `http://thumbnails:9186`. The addi
 
 The OpenCloud image ships no libheif on purpose, so a heic, heif or avif is refused with `406 unreadable image`. imagor reads those formats. Enable it using either method:
 
-> **Version Requirement**: This setup needs OpenCloud 9.0.0 or newer.
+> **Version Requirement**: This setup needs OpenCloud 9.0.0 or newer and Docker Compose 2.24.4 or newer, which understands the `!override` tag.
 
 Using `-f` flags:
 ```bash
@@ -219,7 +219,7 @@ COMPOSE_FILE=docker-compose.yml:thumbnails/imagor.yml:traefik/opencloud.yml
 ```
 
 This setup includes:
-- imagor as the preview generator OpenCloud posts source images to, the `thumbnails` container stays idle
+- imagor as the preview generator OpenCloud posts source images to, replacing the `thumbnails` container, which is scaled to 0
 - Previews for heic, heif and avif files, including image sequences, in the file list and the preview app
 - imagor on an internal network without a route to the outside, with a read-only filesystem and no capabilities
 
