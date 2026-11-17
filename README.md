@@ -196,11 +196,17 @@ By default, OpenCloud Compose uses `apache/tika:latest` which provides:
 
 The base variant is recommended for most use cases. If you need advanced features like specialized OCR processing or specific image format support, you can override the image by setting `TIKA_IMAGE=apache/tika:latest-full` in your `.env` file.
 
+### Thumbnails
+
+The thumbnails service of OpenCloud runs in its own `thumbnails` container, started from the same image as `opencloud`. Decoding untrusted images is a classic attack surface, so it happens in a container without access to the config, the secrets or the data of OpenCloud: a read-only filesystem, no capabilities and only the internal `thumbnails-net` network, which has no route to the outside. The service has no authentication, so never publish its port or route to it through the reverse proxy.
+
+The webdav service posts the source images to `http://thumbnails:9186`. The additional container needs about 50 MB of RAM.
+
 ### With imagor Previews
 
 The OpenCloud image ships no libheif on purpose, so a heic, heif or avif is refused with `406 unreadable image`. imagor reads those formats. Enable it using either method:
 
-> **Version Requirement**: This setup needs OpenCloud 9.0.0 or newer.
+> **Version Requirement**: This setup needs OpenCloud 9.0.0 or newer and Docker Compose 2.24.4 or newer, which understands the `!override` tag.
 
 Using `-f` flags:
 ```bash
@@ -213,7 +219,7 @@ COMPOSE_FILE=docker-compose.yml:thumbnails/imagor.yml:traefik/opencloud.yml
 ```
 
 This setup includes:
-- imagor as the preview generator OpenCloud posts source images to
+- imagor as the preview generator OpenCloud posts source images to, replacing the `thumbnails` container, which is scaled to 0
 - Previews for heic, heif and avif files, including image sequences, in the file list and the preview app
 - imagor on an internal network without a route to the outside, with a read-only filesystem and no capabilities
 

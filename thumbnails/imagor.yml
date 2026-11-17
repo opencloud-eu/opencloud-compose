@@ -36,9 +36,16 @@ services:
       OC_THUMBNAILS_ADDITIONAL_SOURCE_TYPES: ${THUMBNAILS_ADDITIONAL_SOURCE_TYPES:-image/heic,image/heif,image/avif,image/heic-sequence,image/heif-sequence}
     networks:
       imagor-net:
-    depends_on:
+    # replaces the thumbnails container, so opencloud must not wait for it
+    depends_on: !override
       imagor:
         condition: service_healthy
+
+  # imagor replaces the built-in thumbnails container. Scaling it to 0 also stops
+  # it when imagor is added to an existing deployment.
+  thumbnails:
+    deploy:
+      replicas: 0
 
 networks:
   imagor-net:
