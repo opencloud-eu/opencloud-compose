@@ -57,6 +57,7 @@ Every new image follows one schema. Renovate detects it from the schema alone, t
   ```
 
 - **Version limits:** an image that must stay on one major gets an `allowedVersions` rule by package name, like `postgres`.
+- **Update frequency:** an image pinned by digest gets a PR for every new `latest`. If that is too often, limit it with a `schedule` rule by package name, like `ghcr.io/euro-office/documentserver` (weekly).
 - **Tag suffix variants:** a variant published as a tag suffix is a third variable appended to the tag, like `TIKA_DOCKER_VARIANT` in `search/tika.yml`. A variant published as a separate image needs nothing, the image variable selects it.
 - **Stable branches:** `renovate.json` on `main` also governs `stable-*`. Check a pattern change against the `image:` lines on those branches.
 
