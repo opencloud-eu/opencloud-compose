@@ -19,7 +19,8 @@ services:
       FRONTEND_READONLY_USER_ATTRIBUTES: "user.onPremisesSamAccountName,user.displayName,user.mail,user.passwordProfile,user.accountEnabled,user.appRoleAssignments"
       OC_LDAP_SERVER_WRITE_ENABLED: "false" # the ldap is managed by Keycloak, so it is not writable by OpenCloud
       # This specifies to start all services except idm and idp. These are replaced by external services.
-      OC_EXCLUDE_RUN_SERVICES: idm,idp
+      # thumbnails runs in its own container, see docker-compose.yml
+      OC_EXCLUDE_RUN_SERVICES: idm,idp,thumbnails
       # Keycloak IDP specific configuration
       PROXY_AUTOPROVISION_ACCOUNTS: "false"
       PROXY_ROLE_ASSIGNMENT_DRIVER: "oidc"
