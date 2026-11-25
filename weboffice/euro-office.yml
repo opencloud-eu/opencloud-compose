@@ -24,7 +24,7 @@ services:
       - ./config/euro-office/app-registry.yaml:/etc/opencloud/app-registry.yaml
 
   euro-office:
-    image: ${EURO_OFFICE_DOCKER_IMAGE:-ghcr.io/euro-office/documentserver}:${EURO_OFFICE_DOCKER_TAG:-latest}
+    image: ${EURO_OFFICE_DOCKER_IMAGE:-ghcr.io/euro-office/documentserver}:${EURO_OFFICE_DOCKER_TAG:-latest@sha256:2fadc1b3dc99250d6576fc0c0f34349db6725b752b08e91db9831fbb803fc5c2}
     # changelog https://github.com/EURO-office/DocumentServer/releases
     networks:
       opencloud-net:
