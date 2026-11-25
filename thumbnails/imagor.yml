@@ -1,7 +1,7 @@
 ---
 services:
   imagor:
-    image: ${IMAGOR_DOCKER_IMAGE:-shumc/imagor}:${IMAGOR_DOCKER_TAG:-1.10.4}
+    image: ${IMAGOR_DOCKER_IMAGE:-shumc/imagor}:${IMAGOR_DOCKER_TAG:-1.10.5}
     environment:
       IMAGOR_UNSAFE: "true"
       UPLOAD_LOADER_ENABLE: "true"
