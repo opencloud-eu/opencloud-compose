@@ -8,6 +8,10 @@ services:
     networks:
       opencloud-net:
       thumbnails-net:
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
     entrypoint:
       - /bin/sh
     # run opencloud init to initialize a configuration file with random secrets
