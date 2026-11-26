@@ -12,7 +12,7 @@ services:
         condition: service_healthy
 
   opensearch:
-    image: ${OPENSEARCH_DOCKER_IMAGE:-opensearchproject/opensearch}:${OPENSEARCH_DOCKER_TAG:-2.19.5}
+    image: ${OPENSEARCH_DOCKER_IMAGE:-opensearchproject/opensearch}:${OPENSEARCH_DOCKER_TAG:-3.10.1}
     environment:
       discovery.type: single-node
       bootstrap.memory_lock: "true"
