@@ -91,7 +91,7 @@ services:
   thumbnails:
     # same image as opencloud, keep both tags in sync
     # renovate: depName=opencloudeu/opencloud-rolling
-    image: ${OC_DOCKER_IMAGE:-opencloudeu/opencloud-rolling}:${OC_DOCKER_TAG:-9.1.0}
+    image: ${OC_DOCKER_IMAGE:-opencloudeu/opencloud-rolling}:${OC_DOCKER_TAG:-9.2.0}
     user: ${OC_CONTAINER_UID_GID:-1000:1000}
     command: ["thumbnails", "server"]
     environment:
